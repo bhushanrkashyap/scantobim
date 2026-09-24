@@ -1,0 +1,4 @@
+{
+  "storeys_detected": 2,
+  "detection_method": "Z-Histogram Peak Prominence with Boundary Zero-Padding"
+}

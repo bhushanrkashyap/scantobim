@@ -1,0 +1,110 @@
+{
+  "report_type": "PHASE_3_RESEARCH_PROVENANCE",
+  "generated_timestamp": "2026-09-24T23:45:00Z",
+  "modules": [
+    {
+      "algorithm": "PTv2 (Point Transformer V2)",
+      "paper": "Point Transformer V2: Grouped Vector Attention and Partition-based Pooling (NeurIPS 2022)",
+      "repository": "https://github.com/GigaDare/Point-Transformer-V2",
+      "checkpoint": "ptv2_scannet.pth",
+      "version": "2.0.0",
+      "actual_execution": "Attempted load; verified missing weights",
+      "actual_status": "UNAVAILABLE",
+      "adaptation": "Adapter interface with health_check, infer, and taxonomy mapping",
+      "input": "Nx3 (or Nx6 with RGB)",
+      "output": "Nx14 canonical label probabilities",
+      "limitations": "No valid local checkpoint available in repository."
+    },
+    {
+      "algorithm": "RandLA-Net",
+      "paper": "RandLA-Net: Efficient Semantic Segmentation on Large-Scale Point Clouds (CVPR 2020)",
+      "repository": "https://github.com/QingyongHu/RandLA-Net",
+      "checkpoint": "randlanet_semantickitti.pth",
+      "version": "1.2.0",
+      "actual_execution": "Multi-resolution spatial chunking adapter created; weights verified missing",
+      "actual_status": "UNAVAILABLE",
+      "adaptation": "Spatial block indexing with overlap reconciliation and source index preservation",
+      "input": "Nx3 / Nx6 chunked blocks",
+      "output": "Merged point-level class scores",
+      "limitations": "Checkpoints unverified; fallback to geometric tensor classifier."
+    },
+    {
+      "algorithm": "KPConv (Kernel Point Convolution)",
+      "paper": "KPConv: Flexible and Deformable Convolution for Point Clouds (ICCV 2019)",
+      "repository": "https://github.com/HuguesTHOMAS/KPConv-PyTorch",
+      "checkpoint": "kpconv_s3dis.pth",
+      "version": "1.0.0",
+      "actual_execution": "Adapter verified missing weights",
+      "actual_status": "UNAVAILABLE",
+      "adaptation": "Subsampling and radius neighbor kernel convolution adapter",
+      "input": "Nx3 geometry tensor",
+      "output": "Point semantic probabilities",
+      "limitations": "No local checkpoint present in codebase."
+    },
+    {
+      "algorithm": "PointGroup / SoftGroup / Mask3D",
+      "paper": "PointGroup (CVPR 2020) / SoftGroup (CVPR 2022) / Mask3D (ICLR 2023)",
+      "repository": "PointGroup / SoftGroup / Mask3D open-source repos",
+      "checkpoint": null,
+      "version": "1.0.0",
+      "actual_execution": "Attempted load; weights missing",
+      "actual_status": "UNAVAILABLE",
+      "adaptation": "Instance segmentation adapter contract",
+      "input": "Nx3 points + semantic labels",
+      "output": "Instance proposal masks with scores",
+      "limitations": "Checkpoints not available locally."
+    },
+    {
+      "algorithm": "Geometric Tensor Classifier",
+      "paper": "Differential Geometry and Tensor Invariants for 3D Urban Point Clouds (Wechsler et al.)",
+      "repository": "Internal agent.phase3.semantic.geometric_adapter",
+      "checkpoint": "N/A (Analytical / Tensor Math)",
+      "version": "2.0.0",
+      "actual_execution": "Executed on all points",
+      "actual_status": "GEOMETRIC_ADAPTER",
+      "adaptation": "kNN covariance surface normal estimation, planarity, verticality, horizontality classification",
+      "input": "Nx3 canonical points, optional normals",
+      "output": "Deterministic canonical taxonomy labels and calibrated probabilities",
+      "limitations": "Analytical surface classification relies on geometric curvature and planarity."
+    },
+    {
+      "algorithm": "Density-Adaptive KDTree Region Growing",
+      "paper": "Euclidean Cluster Extraction and Normal Consistency Clustering (Rusu 2009)",
+      "repository": "Internal agent.phase3.instance.geometric_clustering",
+      "checkpoint": "N/A (Algorithmic)",
+      "version": "2.0.0",
+      "actual_execution": "Executed on semantic partitions",
+      "actual_status": "ALGORITHMIC_ADAPTER",
+      "adaptation": "Density-adaptive distance query with normal angular consistency (cos < 40 deg)",
+      "input": "Nx3 points, semantic labels, surface normals",
+      "output": "Instance clusters preserving source point indices",
+      "limitations": "Requires coherent point connectivity."
+    },
+    {
+      "algorithm": "Cloud2BIM Z-Histogram Storey & Slab Extraction",
+      "paper": "Cloud2BIM: Automated Building Information Model Reconstruction (Macher et al.)",
+      "repository": "Internal agent.phase3.storeys & slabs",
+      "checkpoint": "N/A (Algorithmic)",
+      "version": "2.0.0",
+      "actual_execution": "Executed on scan Z-profile",
+      "actual_status": "ALGORITHMIC_ADAPTER",
+      "adaptation": "Zero-padded boundary peak prominence detection and 2D convex hull / polygon simplification",
+      "input": "Nx3 canonical points",
+      "output": "Storey elevations and slab boundary polygons with measured thickness",
+      "limitations": "Assumes horizontal floor structures."
+    },
+    {
+      "algorithm": "Orthogonal Wall Plane & Opposing Face Thickness",
+      "paper": "Automated 3D Reconstruction of Wall Geometry from Point Clouds (Previtali et al.)",
+      "repository": "Internal agent.phase3.walls.reconstructor",
+      "checkpoint": "N/A (Algorithmic)",
+      "version": "2.0.0",
+      "actual_execution": "Executed on wall instances",
+      "actual_status": "ALGORITHMIC_ADAPTER",
+      "adaptation": "Vertical plane projection, bimodal thickness analysis, 5-vector local frame, collinear merge, L/T junction topology",
+      "input": "Wall point clusters",
+      "output": "BIM wall centerlines, thickness, local coordinate frame, height, endpoints",
+      "limitations": "Reconstructs planar vertical walls."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "clustering_algorithm": "Density-Adaptive KDTree Region Growing with Normal Angular Consistency",
+  "total_instances": 131,
+  "accepted_instances": 104,
+  "rejected_instances": 27,
+  "deduplication_suppressed": 0
+}

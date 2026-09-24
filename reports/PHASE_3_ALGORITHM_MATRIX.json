@@ -1,0 +1,101 @@
+[
+  {
+    "algorithm": "PTv2",
+    "available": false,
+    "checkpoint": "Missing",
+    "loaded": false,
+    "forward_run": false,
+    "status": "UNAVAILABLE",
+    "fallback": "Geometric Tensor Classifier"
+  },
+  {
+    "algorithm": "RandLA-Net",
+    "available": false,
+    "checkpoint": "Missing",
+    "loaded": false,
+    "forward_run": false,
+    "status": "UNAVAILABLE",
+    "fallback": "Geometric Tensor Classifier"
+  },
+  {
+    "algorithm": "KPConv",
+    "available": false,
+    "checkpoint": "Missing",
+    "loaded": false,
+    "forward_run": false,
+    "status": "UNAVAILABLE",
+    "fallback": "Geometric Tensor Classifier"
+  },
+  {
+    "algorithm": "PointGroup",
+    "available": false,
+    "checkpoint": "Missing",
+    "loaded": false,
+    "forward_run": false,
+    "status": "UNAVAILABLE",
+    "fallback": "Density-Adaptive KDTree"
+  },
+  {
+    "algorithm": "SoftGroup",
+    "available": false,
+    "checkpoint": "Missing",
+    "loaded": false,
+    "forward_run": false,
+    "status": "UNAVAILABLE",
+    "fallback": "Density-Adaptive KDTree"
+  },
+  {
+    "algorithm": "Mask3D",
+    "available": false,
+    "checkpoint": "Missing",
+    "loaded": false,
+    "forward_run": false,
+    "status": "UNAVAILABLE",
+    "fallback": "Density-Adaptive KDTree"
+  },
+  {
+    "algorithm": "Geometric Tensor Classifier",
+    "available": true,
+    "checkpoint": "N/A",
+    "loaded": true,
+    "forward_run": true,
+    "status": "GEOMETRIC_ADAPTER",
+    "fallback": "None (Active)"
+  },
+  {
+    "algorithm": "Plane fitting (SVD / RANSAC)",
+    "available": true,
+    "checkpoint": "N/A",
+    "loaded": true,
+    "forward_run": true,
+    "status": "ALGORITHMIC_ADAPTER",
+    "fallback": "None (Active)"
+  },
+  {
+    "algorithm": "Cylinder fitting (RANSAC)",
+    "available": true,
+    "checkpoint": "N/A",
+    "loaded": true,
+    "forward_run": true,
+    "status": "ALGORITHMIC_ADAPTER",
+    "fallback": "None (Active)"
+  },
+  {
+    "algorithm": "HDBSCAN / KDTree Clustering",
+    "available": true,
+    "checkpoint": "N/A",
+    "loaded": true,
+    "forward_run": true,
+    "status": "ALGORITHMIC_ADAPTER",
+    "fallback": "None (Active)"
+  },
+  {
+    "algorithm": "PCA / Oriented Bounding Box",
+    "available": true,
+    "checkpoint": "N/A",
+    "loaded": true,
+    "forward_run": true,
+    "status": "ALGORITHMIC_ADAPTER",
+    "fallback": "None (Active)"
+  }
+]

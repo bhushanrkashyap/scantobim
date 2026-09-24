@@ -1,0 +1,735 @@
+{
+  "reconstructed_slabs_count": 73,
+  "slabs": [
+    {
+      "candidate_id": "FLOOR_120",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7199,
+      "bottom_elevation_m": -12.8359,
+      "thickness_m": 0.116,
+      "area_m2": 34.981,
+      "point_count": 683,
+      "confidence": 0.8041
+    },
+    {
+      "candidate_id": "FLOOR_139",
+      "type": "FLOOR",
+      "top_elevation_m": -9.305,
+      "bottom_elevation_m": -9.8408,
+      "thickness_m": 0.5358,
+      "area_m2": 21.009,
+      "point_count": 675,
+      "confidence": 0.766
+    },
+    {
+      "candidate_id": "FLOOR_126",
+      "type": "FLOOR",
+      "top_elevation_m": -12.5379,
+      "bottom_elevation_m": -12.8069,
+      "thickness_m": 0.269,
+      "area_m2": 23.569,
+      "point_count": 544,
+      "confidence": 0.8614
+    },
+    {
+      "candidate_id": "CEILING_013",
+      "type": "CEILING",
+      "top_elevation_m": 2.96,
+      "bottom_elevation_m": 2.474,
+      "thickness_m": 0.486,
+      "area_m2": 11.094,
+      "point_count": 462,
+      "confidence": 0.7897
+    },
+    {
+      "candidate_id": "FLOOR_130",
+      "type": "FLOOR",
+      "top_elevation_m": -12.2594,
+      "bottom_elevation_m": -12.7289,
+      "thickness_m": 0.4695,
+      "area_m2": 23.877,
+      "point_count": 381,
+      "confidence": 0.7445
+    },
+    {
+      "candidate_id": "FLOOR_117",
+      "type": "FLOOR",
+      "top_elevation_m": -12.6379,
+      "bottom_elevation_m": -12.8479,
+      "thickness_m": 0.21,
+      "area_m2": 20.372,
+      "point_count": 341,
+      "confidence": 0.7774
+    },
+    {
+      "candidate_id": "FLOOR_141",
+      "type": "FLOOR",
+      "top_elevation_m": -9.483,
+      "bottom_elevation_m": -10.264,
+      "thickness_m": 0.781,
+      "area_m2": 8.549,
+      "point_count": 304,
+      "confidence": 0.716
+    },
+    {
+      "candidate_id": "CEILING_002",
+      "type": "CEILING",
+      "top_elevation_m": 0.1065,
+      "bottom_elevation_m": -0.582,
+      "thickness_m": 0.6885,
+      "area_m2": 6.881,
+      "point_count": 239,
+      "confidence": 0.7794
+    },
+    {
+      "candidate_id": "FLOOR_118",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7459,
+      "bottom_elevation_m": -12.8459,
+      "thickness_m": 0.1,
+      "area_m2": 8.434,
+      "point_count": 190,
+      "confidence": 0.9117
+    },
+    {
+      "candidate_id": "FLOOR_142",
+      "type": "FLOOR",
+      "top_elevation_m": -5.803,
+      "bottom_elevation_m": -6.7745,
+      "thickness_m": 0.9715,
+      "area_m2": 4.199,
+      "point_count": 179,
+      "confidence": 0.7238
+    },
+    {
+      "candidate_id": "CEILING_003",
+      "type": "CEILING",
+      "top_elevation_m": 9.4374,
+      "bottom_elevation_m": 9.2264,
+      "thickness_m": 0.211,
+      "area_m2": 7.667,
+      "point_count": 171,
+      "confidence": 0.7791
+    },
+    {
+      "candidate_id": "FLOOR_145",
+      "type": "FLOOR",
+      "top_elevation_m": -12.5164,
+      "bottom_elevation_m": -12.7117,
+      "thickness_m": 0.1952,
+      "area_m2": 6.223,
+      "point_count": 166,
+      "confidence": 0.8416
+    },
+    {
+      "candidate_id": "FLOOR_122",
+      "type": "FLOOR",
+      "top_elevation_m": -2.6945,
+      "bottom_elevation_m": -3.7445,
+      "thickness_m": 1.05,
+      "area_m2": 4.654,
+      "point_count": 163,
+      "confidence": 0.7292
+    },
+    {
+      "candidate_id": "CEILING_026",
+      "type": "CEILING",
+      "top_elevation_m": 9.3804,
+      "bottom_elevation_m": 9.2804,
+      "thickness_m": 0.1,
+      "area_m2": 6.332,
+      "point_count": 155,
+      "confidence": 0.8493
+    },
+    {
+      "candidate_id": "CEILING_025",
+      "type": "CEILING",
+      "top_elevation_m": 6.638,
+      "bottom_elevation_m": 6.463,
+      "thickness_m": 0.175,
+      "area_m2": 6.549,
+      "point_count": 147,
+      "confidence": 0.7975
+    },
+    {
+      "candidate_id": "FLOOR_140",
+      "type": "FLOOR",
+      "top_elevation_m": -6.6385,
+      "bottom_elevation_m": -6.8952,
+      "thickness_m": 0.2568,
+      "area_m2": 5.878,
+      "point_count": 146,
+      "confidence": 0.8321
+    },
+    {
+      "candidate_id": "CEILING_006",
+      "type": "CEILING",
+      "top_elevation_m": -0.0315,
+      "bottom_elevation_m": -0.3059,
+      "thickness_m": 0.2744,
+      "area_m2": 6.145,
+      "point_count": 133,
+      "confidence": 0.8142
+    },
+    {
+      "candidate_id": "CEILING_020",
+      "type": "CEILING",
+      "top_elevation_m": 5.1925,
+      "bottom_elevation_m": 5.0109,
+      "thickness_m": 0.1816,
+      "area_m2": 4.738,
+      "point_count": 122,
+      "confidence": 0.7853
+    },
+    {
+      "candidate_id": "FLOOR_144",
+      "type": "FLOOR",
+      "top_elevation_m": -6.6275,
+      "bottom_elevation_m": -6.9335,
+      "thickness_m": 0.306,
+      "area_m2": 5.151,
+      "point_count": 119,
+      "confidence": 0.7302
+    },
+    {
+      "candidate_id": "CEILING_008",
+      "type": "CEILING",
+      "top_elevation_m": 2.716,
+      "bottom_elevation_m": 1.8065,
+      "thickness_m": 0.9095,
+      "area_m2": 4.608,
+      "point_count": 109,
+      "confidence": 0.769
+    },
+    {
+      "candidate_id": "FLOOR_123",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7909,
+      "bottom_elevation_m": -12.8909,
+      "thickness_m": 0.1,
+      "area_m2": 3.804,
+      "point_count": 108,
+      "confidence": 0.8071
+    },
+    {
+      "candidate_id": "CEILING_027",
+      "type": "CEILING",
+      "top_elevation_m": 9.4094,
+      "bottom_elevation_m": 9.3094,
+      "thickness_m": 0.1,
+      "area_m2": 4.05,
+      "point_count": 99,
+      "confidence": 0.9112
+    },
+    {
+      "candidate_id": "CEILING_016",
+      "type": "CEILING",
+      "top_elevation_m": 5.3355,
+      "bottom_elevation_m": 5.0265,
+      "thickness_m": 0.309,
+      "area_m2": 3.937,
+      "point_count": 96,
+      "confidence": 0.6985
+    },
+    {
+      "candidate_id": "FLOOR_136",
+      "type": "FLOOR",
+      "top_elevation_m": -12.3884,
+      "bottom_elevation_m": -12.4884,
+      "thickness_m": 0.1,
+      "area_m2": 3.035,
+      "point_count": 89,
+      "confidence": 0.8699
+    },
+    {
+      "candidate_id": "FLOOR_137",
+      "type": "FLOOR",
+      "top_elevation_m": -12.3064,
+      "bottom_elevation_m": -12.4677,
+      "thickness_m": 0.1613,
+      "area_m2": 3.101,
+      "point_count": 82,
+      "confidence": 0.7593
+    },
+    {
+      "candidate_id": "FLOOR_147",
+      "type": "FLOOR",
+      "top_elevation_m": -3.6115,
+      "bottom_elevation_m": -3.7555,
+      "thickness_m": 0.144,
+      "area_m2": 2.993,
+      "point_count": 81,
+      "confidence": 0.7711
+    },
+    {
+      "candidate_id": "CEILING_011",
+      "type": "CEILING",
+      "top_elevation_m": 1.2485,
+      "bottom_elevation_m": 0.2695,
+      "thickness_m": 0.979,
+      "area_m2": 1.83,
+      "point_count": 80,
+      "confidence": 0.6973
+    },
+    {
+      "candidate_id": "CEILING_021",
+      "type": "CEILING",
+      "top_elevation_m": 5.3255,
+      "bottom_elevation_m": 5.1562,
+      "thickness_m": 0.1692,
+      "area_m2": 2.753,
+      "point_count": 80,
+      "confidence": 0.7897
+    },
+    {
+      "candidate_id": "FLOOR_138",
+      "type": "FLOOR",
+      "top_elevation_m": -12.1464,
+      "bottom_elevation_m": -12.4896,
+      "thickness_m": 0.3432,
+      "area_m2": 2.988,
+      "point_count": 74,
+      "confidence": 0.7023
+    },
+    {
+      "candidate_id": "FLOOR_128",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7839,
+      "bottom_elevation_m": -12.8839,
+      "thickness_m": 0.1,
+      "area_m2": 2.579,
+      "point_count": 72,
+      "confidence": 0.8093
+    },
+    {
+      "candidate_id": "FLOOR_134",
+      "type": "FLOOR",
+      "top_elevation_m": -12.2544,
+      "bottom_elevation_m": -12.7589,
+      "thickness_m": 0.5045,
+      "area_m2": 2.543,
+      "point_count": 72,
+      "confidence": 0.726
+    },
+    {
+      "candidate_id": "FLOOR_154",
+      "type": "FLOOR",
+      "top_elevation_m": -11.0082,
+      "bottom_elevation_m": -11.8844,
+      "thickness_m": 0.8762,
+      "area_m2": 1.618,
+      "point_count": 71,
+      "confidence": 0.7356
+    },
+    {
+      "candidate_id": "CEILING_007",
+      "type": "CEILING",
+      "top_elevation_m": -0.601,
+      "bottom_elevation_m": -0.711,
+      "thickness_m": 0.11,
+      "area_m2": 2.262,
+      "point_count": 70,
+      "confidence": 0.832
+    },
+    {
+      "candidate_id": "FLOOR_143",
+      "type": "FLOOR",
+      "top_elevation_m": -7.1425,
+      "bottom_elevation_m": -8.1785,
+      "thickness_m": 1.036,
+      "area_m2": 1.237,
+      "point_count": 68,
+      "confidence": 0.6831
+    },
+    {
+      "candidate_id": "CEILING_004",
+      "type": "CEILING",
+      "top_elevation_m": 9.3574,
+      "bottom_elevation_m": 9.2574,
+      "thickness_m": 0.1,
+      "area_m2": 1.59,
+      "point_count": 61,
+      "confidence": 0.9432
+    },
+    {
+      "candidate_id": "FLOOR_124",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7779,
+      "bottom_elevation_m": -12.8779,
+      "thickness_m": 0.1,
+      "area_m2": 1.716,
+      "point_count": 60,
+      "confidence": 0.8806
+    },
+    {
+      "candidate_id": "FLOOR_129",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7199,
+      "bottom_elevation_m": -12.8199,
+      "thickness_m": 0.1,
+      "area_m2": 2.895,
+      "point_count": 60,
+      "confidence": 0.7853
+    },
+    {
+      "candidate_id": "CEILING_017",
+      "type": "CEILING",
+      "top_elevation_m": 2.852,
+      "bottom_elevation_m": 2.738,
+      "thickness_m": 0.114,
+      "area_m2": 1.887,
+      "point_count": 59,
+      "confidence": 0.8206
+    },
+    {
+      "candidate_id": "FLOOR_116",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7449,
+      "bottom_elevation_m": -12.8449,
+      "thickness_m": 0.1,
+      "area_m2": 2.372,
+      "point_count": 59,
+      "confidence": 0.8311
+    },
+    {
+      "candidate_id": "FLOOR_125",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7489,
+      "bottom_elevation_m": -12.8489,
+      "thickness_m": 0.1,
+      "area_m2": 1.689,
+      "point_count": 58,
+      "confidence": 0.871
+    },
+    {
+      "candidate_id": "FLOOR_121",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7609,
+      "bottom_elevation_m": -12.8609,
+      "thickness_m": 0.1,
+      "area_m2": 1.857,
+      "point_count": 57,
+      "confidence": 0.9565
+    },
+    {
+      "candidate_id": "CEILING_014",
+      "type": "CEILING",
+      "top_elevation_m": 5.5635,
+      "bottom_elevation_m": 5.1825,
+      "thickness_m": 0.381,
+      "area_m2": 2.131,
+      "point_count": 56,
+      "confidence": 0.7202
+    },
+    {
+      "candidate_id": "CEILING_029",
+      "type": "CEILING",
+      "top_elevation_m": 5.4535,
+      "bottom_elevation_m": 5.1968,
+      "thickness_m": 0.2567,
+      "area_m2": 1.632,
+      "point_count": 54,
+      "confidence": 0.84
+    },
+    {
+      "candidate_id": "CEILING_023",
+      "type": "CEILING",
+      "top_elevation_m": 9.3904,
+      "bottom_elevation_m": 9.2191,
+      "thickness_m": 0.1713,
+      "area_m2": 1.328,
+      "point_count": 53,
+      "confidence": 0.7992
+    },
+    {
+      "candidate_id": "FLOOR_149",
+      "type": "FLOOR",
+      "top_elevation_m": -3.3305,
+      "bottom_elevation_m": -3.4305,
+      "thickness_m": 0.1,
+      "area_m2": 1.507,
+      "point_count": 50,
+      "confidence": 0.8121
+    },
+    {
+      "candidate_id": "CEILING_005",
+      "type": "CEILING",
+      "top_elevation_m": 5.5515,
+      "bottom_elevation_m": 5.25,
+      "thickness_m": 0.3015,
+      "area_m2": 1.737,
+      "point_count": 43,
+      "confidence": 0.694
+    },
+    {
+      "candidate_id": "CEILING_019",
+      "type": "CEILING",
+      "top_elevation_m": 5.4605,
+      "bottom_elevation_m": 5.1962,
+      "thickness_m": 0.2643,
+      "area_m2": 1.155,
+      "point_count": 41,
+      "confidence": 0.7243
+    },
+    {
+      "candidate_id": "FLOOR_131",
+      "type": "FLOOR",
+      "top_elevation_m": -11.9064,
+      "bottom_elevation_m": -12.1764,
+      "thickness_m": 0.27,
+      "area_m2": 1.026,
+      "point_count": 41,
+      "confidence": 0.6913
+    },
+    {
+      "candidate_id": "CEILING_010",
+      "type": "CEILING",
+      "top_elevation_m": -1.781,
+      "bottom_elevation_m": -2.1876,
+      "thickness_m": 0.4066,
+      "area_m2": 0.673,
+      "point_count": 40,
+      "confidence": 0.69
+    },
+    {
+      "candidate_id": "FLOOR_135",
+      "type": "FLOOR",
+      "top_elevation_m": -12.2944,
+      "bottom_elevation_m": -12.4802,
+      "thickness_m": 0.1857,
+      "area_m2": 0.933,
+      "point_count": 39,
+      "confidence": 0.738
+    },
+    {
+      "candidate_id": "FLOOR_146",
+      "type": "FLOOR",
+      "top_elevation_m": -8.2865,
+      "bottom_elevation_m": -8.7427,
+      "thickness_m": 0.4562,
+      "area_m2": 0.558,
+      "point_count": 39,
+      "confidence": 0.7171
+    },
+    {
+      "candidate_id": "FLOOR_152",
+      "type": "FLOOR",
+      "top_elevation_m": -12.3284,
+      "bottom_elevation_m": -12.7449,
+      "thickness_m": 0.4165,
+      "area_m2": 1.073,
+      "point_count": 39,
+      "confidence": 0.6754
+    },
+    {
+      "candidate_id": "CEILING_031",
+      "type": "CEILING",
+      "top_elevation_m": 5.4455,
+      "bottom_elevation_m": 5.3455,
+      "thickness_m": 0.1,
+      "area_m2": 1.052,
+      "point_count": 38,
+      "confidence": 0.7846
+    },
+    {
+      "candidate_id": "FLOOR_119",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7779,
+      "bottom_elevation_m": -12.8779,
+      "thickness_m": 0.1,
+      "area_m2": 0.917,
+      "point_count": 37,
+      "confidence": 0.8658
+    },
+    {
+      "candidate_id": "FLOOR_133",
+      "type": "FLOOR",
+      "top_elevation_m": -12.6149,
+      "bottom_elevation_m": -12.7499,
+      "thickness_m": 0.135,
+      "area_m2": 0.772,
+      "point_count": 37,
+      "confidence": 0.7716
+    },
+    {
+      "candidate_id": "CEILING_009",
+      "type": "CEILING",
+      "top_elevation_m": -0.64,
+      "bottom_elevation_m": -0.74,
+      "thickness_m": 0.1,
+      "area_m2": 1.06,
+      "point_count": 36,
+      "confidence": 0.76
+    },
+    {
+      "candidate_id": "CEILING_022",
+      "type": "CEILING",
+      "top_elevation_m": 5.1845,
+      "bottom_elevation_m": 4.9915,
+      "thickness_m": 0.193,
+      "area_m2": 0.855,
+      "point_count": 36,
+      "confidence": 0.7098
+    },
+    {
+      "candidate_id": "CEILING_012",
+      "type": "CEILING",
+      "top_elevation_m": -2.1805,
+      "bottom_elevation_m": -2.5635,
+      "thickness_m": 0.383,
+      "area_m2": 0.623,
+      "point_count": 35,
+      "confidence": 0.7571
+    },
+    {
+      "candidate_id": "FLOOR_150",
+      "type": "FLOOR",
+      "top_elevation_m": -4.297,
+      "bottom_elevation_m": -4.875,
+      "thickness_m": 0.578,
+      "area_m2": 0.488,
+      "point_count": 35,
+      "confidence": 0.6993
+    },
+    {
+      "candidate_id": "FLOOR_115",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7729,
+      "bottom_elevation_m": -12.8729,
+      "thickness_m": 0.1,
+      "area_m2": 1.426,
+      "point_count": 34,
+      "confidence": 0.8245
+    },
+    {
+      "candidate_id": "FLOOR_151",
+      "type": "FLOOR",
+      "top_elevation_m": -5.379,
+      "bottom_elevation_m": -5.6618,
+      "thickness_m": 0.2828,
+      "area_m2": 0.575,
+      "point_count": 33,
+      "confidence": 0.6683
+    },
+    {
+      "candidate_id": "CEILING_032",
+      "type": "CEILING",
+      "top_elevation_m": 5.4405,
+      "bottom_elevation_m": 5.1999,
+      "thickness_m": 0.2405,
+      "area_m2": 0.702,
+      "point_count": 32,
+      "confidence": 0.7556
+    },
+    {
+      "candidate_id": "CEILING_015",
+      "type": "CEILING",
+      "top_elevation_m": 5.6165,
+      "bottom_elevation_m": 5.3465,
+      "thickness_m": 0.27,
+      "area_m2": 0.324,
+      "point_count": 31,
+      "confidence": 0.667
+    },
+    {
+      "candidate_id": "CEILING_024",
+      "type": "CEILING",
+      "top_elevation_m": 9.3554,
+      "bottom_elevation_m": 9.2554,
+      "thickness_m": 0.1,
+      "area_m2": 0.812,
+      "point_count": 31,
+      "confidence": 0.8176
+    },
+    {
+      "candidate_id": "FLOOR_153",
+      "type": "FLOOR",
+      "top_elevation_m": -9.391,
+      "bottom_elevation_m": -9.848,
+      "thickness_m": 0.457,
+      "area_m2": 0.846,
+      "point_count": 31,
+      "confidence": 0.6732
+    },
+    {
+      "candidate_id": "FLOOR_127",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7379,
+      "bottom_elevation_m": -12.8379,
+      "thickness_m": 0.1,
+      "area_m2": 0.942,
+      "point_count": 29,
+      "confidence": 0.7403
+    },
+    {
+      "candidate_id": "FLOOR_132",
+      "type": "FLOOR",
+      "top_elevation_m": -12.6649,
+      "bottom_elevation_m": -12.7999,
+      "thickness_m": 0.135,
+      "area_m2": 0.906,
+      "point_count": 29,
+      "confidence": 0.7361
+    },
+    {
+      "candidate_id": "CEILING_028",
+      "type": "CEILING",
+      "top_elevation_m": 9.3634,
+      "bottom_elevation_m": 9.2634,
+      "thickness_m": 0.1,
+      "area_m2": 0.854,
+      "point_count": 28,
+      "confidence": 0.8008
+    },
+    {
+      "candidate_id": "FLOOR_114",
+      "type": "FLOOR",
+      "top_elevation_m": -12.7579,
+      "bottom_elevation_m": -12.8579,
+      "thickness_m": 0.1,
+      "area_m2": 0.933,
+      "point_count": 28,
+      "confidence": 0.7906
+    },
+    {
+      "candidate_id": "FLOOR_148",
+      "type": "FLOOR",
+      "top_elevation_m": -3.1205,
+      "bottom_elevation_m": -3.3843,
+      "thickness_m": 0.2638,
+      "area_m2": 0.616,
+      "point_count": 28,
+      "confidence": 0.6763
+    },
+    {
+      "candidate_id": "CEILING_001",
+      "type": "CEILING",
+      "top_elevation_m": 5.4385,
+      "bottom_elevation_m": 5.1503,
+      "thickness_m": 0.2882,
+      "area_m2": 0.489,
+      "point_count": 27,
+      "confidence": 0.6928
+    },
+    {
+      "candidate_id": "CEILING_018",
+      "type": "CEILING",
+      "top_elevation_m": 5.6965,
+      "bottom_elevation_m": 5.3145,
+      "thickness_m": 0.382,
+      "area_m2": 0.672,
+      "point_count": 27,
+      "confidence": 0.6727
+    },
+    {
+      "candidate_id": "CEILING_030",
+      "type": "CEILING",
+      "top_elevation_m": 2.857,
+      "bottom_elevation_m": 2.615,
+      "thickness_m": 0.242,
+      "area_m2": 0.632,
+      "point_count": 26,
+      "confidence": 0.7795
+    }
+  ]
+}

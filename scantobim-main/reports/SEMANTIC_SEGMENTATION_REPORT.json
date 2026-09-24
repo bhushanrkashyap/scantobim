@@ -1,0 +1,23 @@
+{
+  "selected_model": "GeometricTensorClassifier",
+  "status": "GEOMETRIC_ADAPTER",
+  "total_points": 35004,
+  "selection_rationale": "Neural checkpoints unavailable or unverified. Selected GEOMETRIC_ADAPTER to guarantee non-fabricated, mathematically verifiable semantic segmentation.",
+  "taxonomy": "SCANTO_BIM_14_CANONICAL_TAXONOMY",
+  "supported_classes": [
+    "WALL",
+    "FLOOR",
+    "CEILING",
+    "COLUMN",
+    "BEAM",
+    "DOOR",
+    "WINDOW",
+    "STAIR",
+    "PIPE",
+    "DUCT",
+    "CABLE_TRAY",
+    "VALVE",
+    "EQUIPMENT",
+    "UNKNOWN"
+  ]
+}

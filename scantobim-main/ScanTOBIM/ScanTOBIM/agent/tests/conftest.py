@@ -36,7 +36,7 @@ def _mock_open3d() -> None:
 
     o3d.geometry.PointCloud.return_value = pcd
     o3d.io.read_point_cloud.return_value = pcd
-    o3d.utility.Vector3dVector.return_value = MagicMock()
+    o3d.utility.Vector3dVector.side_effect = lambda arr=None: np.asarray(arr) if arr is not None else np.zeros((500, 3))
 
     # RANSAC / segmentation return values
     plane_model = [0.0, 0.0, 1.0, 0.0]  # horizontal plane normal
@@ -173,3 +173,20 @@ def ns_segment_dict() -> dict:
 @pytest.fixture
 def session_id() -> str:
     return str(uuid.uuid4())
+
+
+@pytest.fixture(autouse=True)
+def reset_o3d_pcd():
+    import numpy as np
+    if "open3d" in sys.modules:
+        o3d = sys.modules["open3d"]
+        if hasattr(o3d, "geometry") and hasattr(o3d.geometry, "PointCloud"):
+            pcd = o3d.geometry.PointCloud.return_value
+            pcd.points = np.zeros((500, 3))
+    yield
+    if "open3d" in sys.modules:
+        o3d = sys.modules["open3d"]
+        if hasattr(o3d, "geometry") and hasattr(o3d.geometry, "PointCloud"):
+            pcd = o3d.geometry.PointCloud.return_value
+            pcd.points = np.zeros((500, 3))
+
