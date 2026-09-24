@@ -15,6 +15,8 @@ Implements:
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import structlog
 
@@ -1133,7 +1135,7 @@ def wall_angle_degrees(axis: np.ndarray | list[float] | tuple[float, ...]) -> fl
 
 def classify_plane_orientation(
     normal: np.ndarray | list[float],
-    up_axis: np.ndarray | list[float] | None = None,
+    up_axis: Any | None = None,
     vertical_max: float = 0.25,
     horizontal_min: float = 0.85,
 ) -> str:
@@ -1145,6 +1147,7 @@ def classify_plane_orientation(
       - otherwise                     → 'plane_sloped'
 
     Normal sign (+n vs -n) produces the identical orientation class.
+    Accepts up_axis as a vector or an AuthoritativeTransform instance.
     """
     n = np.asarray(normal, dtype=float)
     norm_n = float(np.linalg.norm(n))
@@ -1155,11 +1158,15 @@ def classify_plane_orientation(
 
     if up_axis is None:
         up = np.array([0.0, 0.0, 1.0], dtype=float)
+    elif hasattr(up_axis, "up_axis_estimated"):
+        up = np.asarray(up_axis.up_axis_estimated, dtype=float)
+    elif hasattr(up_axis, "up_axis"):
+        up = np.asarray(up_axis.up_axis, dtype=float)
     else:
         up = np.asarray(up_axis, dtype=float)
-        norm_up = float(np.linalg.norm(up))
-        if norm_up > 1e-9:
-            up = up / norm_up
+    norm_up = float(np.linalg.norm(up))
+    if norm_up > 1e-9:
+        up = up / norm_up
 
     abs_n_up = abs(float(np.dot(n, up)))
     if abs_n_up < vertical_max:
@@ -1171,13 +1178,15 @@ def classify_plane_orientation(
 
 
 # ── Explicit Named Unit Conversions ──────────────────────────────────────────
-# Standard conversion factors: 1 meter = 1000 mm, 1 foot = 0.3048 meters = 304.8 mm
-MM_PER_METER: float = 1000.0
-METERS_PER_MM: float = 0.001
-FEET_PER_METER: float = 1.0 / 0.3048
-METERS_PER_FOOT: float = 0.3048
-FEET_PER_MM: float = 1.0 / 304.8
-MM_PER_FOOT: float = 304.8
+# Re-exported from authoritative coordinate system module (Phase 2 single source of truth)
+from agent.tools.coordinate_system import (  # noqa: E402
+    FEET_PER_METER,
+    FEET_PER_MM,
+    METERS_PER_FOOT,
+    METERS_PER_MM,
+    MM_PER_FOOT,
+    MM_PER_METER,
+)
 
 
 def meters_to_mm(meters: float) -> float:

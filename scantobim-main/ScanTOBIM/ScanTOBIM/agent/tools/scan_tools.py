@@ -491,25 +491,17 @@ def _load_las(file_path: Path) -> open3d.geometry.PointCloud:
     las = laspy.read(str(file_path))
     points = np.vstack((las.x, las.y, las.z)).T
 
-    # Scale inspection: check metadata, environment override, or coordinate distribution
-    scale_to_m = 1.0
+    # Scale inspection: authoritative unit resolution (Phase 2)
     try:
-        if "STB_INPUT_UNIT" in os.environ:
-            u = os.environ["STB_INPUT_UNIT"].strip().lower()
-            if u in {"mm", "millimeter", "millimeters"}:
-                scale_to_m = 0.001
-            elif u in {"ft", "feet", "foot"}:
-                scale_to_m = 0.3048
-        elif len(points) > 50:
-            pt_span = np.ptp(points, axis=0)
-            if np.all(pt_span > 500.0) and np.median(pt_span) > 2000.0 and np.all(pt_span < 500000.0):
-                logger.info("las_unit_auto_detected_mm", span=pt_span.tolist())
-                scale_to_m = 0.001
+        from agent.tools.unit_resolution import resolve_units
+        unit_res = resolve_units(points=points, file_path=file_path, file_format="las")
+        if unit_res.status in ("UNIT_VERIFIED", "UNIT_INFERRED") and abs(unit_res.scale_to_meters - 1.0) > 1e-6:
+            points = points * unit_res.scale_to_meters
+            logger.info("las_unit_scaled_to_meters", scale=unit_res.scale_to_meters, unit=unit_res.detected_unit, status=unit_res.status)
+        else:
+            logger.info("las_unit_resolved", unit=unit_res.detected_unit, status=unit_res.status)
     except Exception as exc:
         logger.warning("las_unit_check_warning", error=str(exc))
-
-    if abs(scale_to_m - 1.0) > 1e-5:
-        points = points * scale_to_m
 
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(points)

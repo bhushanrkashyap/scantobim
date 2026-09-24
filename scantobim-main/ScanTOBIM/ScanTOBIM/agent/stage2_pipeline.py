@@ -100,7 +100,11 @@ def extract_vertical_surfaces(
     if up_axis is None:
         try:
             from agent.tools.coordinate_system import GLOBAL_TRANSFORM
-            up_axis = getattr(GLOBAL_TRANSFORM, "up_axis", np.array([0.0, 0.0, 1.0], dtype=float))
+            up_axis = getattr(
+                GLOBAL_TRANSFORM,
+                "up_axis_estimated",
+                getattr(GLOBAL_TRANSFORM, "up_axis", np.array([0.0, 0.0, 1.0], dtype=float)),
+            )
         except Exception:
             up_axis = np.array([0.0, 0.0, 1.0], dtype=float)
 
