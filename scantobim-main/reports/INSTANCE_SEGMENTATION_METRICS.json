@@ -1,0 +1,10 @@
+{
+  "total_proposals": 117,
+  "mean_precision": 0.9597,
+  "mean_recall": 0.8635,
+  "mean_f1": 0.9078,
+  "false_positive_rate": 0.0403,
+  "false_negative_rate": 0.1365,
+  "duplicate_rate": 0.083,
+  "fragment_merge_rate": 0.125
+}

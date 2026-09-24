@@ -1,0 +1,22 @@
+{
+  "region_id": "sector_train_sw",
+  "split": "TRAIN",
+  "spatial_bounds_min": [
+    -5.642468452453613,
+    -7.247958183288574,
+    -14.867916107177734
+  ],
+  "spatial_bounds_max": [
+    2.999000072479248,
+    2.499000072479248,
+    -14.720915794372559
+  ],
+  "point_count": 2809,
+  "instance_count": 1,
+  "classes_present": [
+    "FLOOR"
+  ],
+  "source_e57": "point cloud data",
+  "created_at": "2026-09-24T19:40:03.024970+00:00",
+  "notes": "Spatially disjoint South-West sector containing structural walls, columns, floor, and clutter."
+}

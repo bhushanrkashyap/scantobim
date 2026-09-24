@@ -1,0 +1,13 @@
+{
+  "status": "CPU_ONLY_VALIDATED",
+  "pytorch_version": "2.1.2",
+  "cuda_available": false,
+  "cuda_is_available_call": false,
+  "cuda_device_count": 0,
+  "execution_device": "CPU",
+  "gpu_operators_used": false,
+  "runtime_os": "Darwin",
+  "runtime_arch": "arm64",
+  "max_rss_mb": 1525.8,
+  "assertion_passed": true
+}

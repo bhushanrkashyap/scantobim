@@ -1,0 +1,30 @@
+{
+  "title": "Open-World 3D Object Detection Report",
+  "open_vocabulary_status": "OPEN_VOCABULARY_UNAVAILABLE",
+  "total_proposals_discovered": 117,
+  "supported_semantic_classes_detected": [
+    "UNKNOWN_OBJECT",
+    "WALL",
+    "UNKNOWN_MEP",
+    "COLUMN",
+    "BEAM",
+    "UNKNOWN_STRUCTURAL",
+    "PIPE"
+  ],
+  "categories_detected": {
+    "OTHER": 57,
+    "STRUCTURAL": 54,
+    "MEP": 6
+  },
+  "unknown_objects": {
+    "count": 57,
+    "percentage": 48.72,
+    "classes": [
+      "UNKNOWN_OBJECT",
+      "UNKNOWN_MEP",
+      "UNKNOWN_STRUCTURAL"
+    ]
+  },
+  "topology_relations_discovered": 4,
+  "revit_element_instructions_generated": 113
+}

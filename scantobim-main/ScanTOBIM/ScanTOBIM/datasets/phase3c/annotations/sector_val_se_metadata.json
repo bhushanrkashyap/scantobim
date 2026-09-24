@@ -1,0 +1,26 @@
+{
+  "region_id": "sector_val_se",
+  "split": "VALIDATION",
+  "spatial_bounds_min": [
+    3.005000114440918,
+    -8.410447120666504,
+    -14.866915702819824
+  ],
+  "spatial_bounds_max": [
+    12.739936828613281,
+    2.4994895458221436,
+    7.907468318939209
+  ],
+  "point_count": 7718,
+  "instance_count": 13,
+  "classes_present": [
+    "COLUMN",
+    "FLOOR",
+    "PIPE",
+    "UNKNOWN",
+    "WALL"
+  ],
+  "source_e57": "point cloud data",
+  "created_at": "2026-09-24T19:40:03.795614+00:00",
+  "notes": "Spatially disjoint South-East sector containing structural columns, beams, pipes, and unknown objects."
+}

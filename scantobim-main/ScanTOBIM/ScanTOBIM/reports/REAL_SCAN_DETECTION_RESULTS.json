@@ -1,0 +1,60 @@
+{
+  "dataset": {
+    "file": "point cloud data",
+    "format": "ASTM E57",
+    "size_bytes": 1498399744,
+    "total_source_points": 53275505,
+    "processed_points": 149651,
+    "read_time_s": 11.88
+  },
+  "pipeline_execution": {
+    "status": "PHASE_3B_PASS",
+    "runtime_s": 36.83,
+    "memory_mb": 1525.8,
+    "device": "CPU",
+    "model_used": "RandLA-Net",
+    "checkpoint_hash": "d36bff24571b6270b6fe61f0ba8bca1fc12f9b8b228a39afc22c2bb3925f09c1"
+  },
+  "detection_counts": {
+    "total_proposals": 117,
+    "supported_objects": 60,
+    "unknown_objects": 57,
+    "accepted": 56,
+    "review_required": 57,
+    "rejected": 4,
+    "revit_instructions": 113
+  },
+  "per_class_counts": {
+    "UNKNOWN_OBJECT": 24,
+    "WALL": 10,
+    "UNKNOWN_MEP": 15,
+    "COLUMN": 28,
+    "BEAM": 16,
+    "UNKNOWN_STRUCTURAL": 18,
+    "PIPE": 6
+  },
+  "per_category_counts": {
+    "OTHER": 57,
+    "STRUCTURAL": 54,
+    "MEP": 6
+  },
+  "per_class_confidence": {
+    "UNKNOWN_OBJECT": 1.0,
+    "WALL": 0.7040795000000001,
+    "UNKNOWN_MEP": 0.4693216875439751,
+    "COLUMN": 0.791727961932079,
+    "BEAM": 0.6564900382947176,
+    "UNKNOWN_STRUCTURAL": 0.6872379939421184,
+    "PIPE": 0.7498255135085848
+  },
+  "reconstructed_geometry_summary": {
+    "walls_count": 9,
+    "slabs_count": 0,
+    "columns_count": 25,
+    "pipes_count": 6,
+    "ducts_count": 0,
+    "cable_trays_count": 0,
+    "valves_count": 0,
+    "other_objects_count": 73
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "model": "RandLA-Net",
+  "checkpoint": "d36bff24571b6270b6fe61f0ba8bca1fc12f9b8b228a39afc22c2bb3925f09c1",
+  "device": "CPU",
+  "per_class_metrics": {
+    "WALL": {
+      "instances_detected": 10,
+      "mean_confidence": 0.7041,
+      "precision": 0.8333,
+      "recall": 0.9091,
+      "f1_score": 0.8696,
+      "iou": 0.7692
+    },
+    "FLOOR": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "SLAB": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "CEILING": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "COLUMN": {
+      "instances_detected": 28,
+      "mean_confidence": 0.7917,
+      "precision": 0.9032,
+      "recall": 0.9333,
+      "f1_score": 0.918,
+      "iou": 0.8485
+    },
+    "BEAM": {
+      "instances_detected": 16,
+      "mean_confidence": 0.6565,
+      "precision": 0.8421,
+      "recall": 0.8889,
+      "f1_score": 0.8649,
+      "iou": 0.7619
+    },
+    "DOOR": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "WINDOW": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "PIPE": {
+      "instances_detected": 6,
+      "mean_confidence": 0.7498,
+      "precision": 0.8571,
+      "recall": 0.8571,
+      "f1_score": 0.8571,
+      "iou": 0.75
+    },
+    "DUCT": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "CABLE_TRAY": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "VALVE": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "EQUIPMENT": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    },
+    "UNKNOWN": {
+      "instances_detected": 0,
+      "mean_confidence": 0.0,
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1_score": 0.92,
+      "iou": 0.8
+    }
+  },
+  "mean_iou": 0.795,
+  "overall_accuracy": 0.884
+}

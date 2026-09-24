@@ -1,0 +1,21 @@
+{
+  "total_source_points": 53275505,
+  "sample_points_rendered": 149651,
+  "bounding_box": {
+    "min_xyz": [
+      -7.015,
+      -8.404,
+      -14.872
+    ],
+    "max_xyz": [
+      13.712,
+      14.04,
+      10.895
+    ],
+    "span_xyz": [
+      20.727,
+      22.444,
+      25.767
+    ]
+  }
+}

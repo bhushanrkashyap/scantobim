@@ -30,9 +30,22 @@ class InstanceMask:
     bounding_box_min_m: np.ndarray
     bounding_box_max_m: np.ndarray
     point_count: int
+    # Phase 3B Section 14 Instance Fields
+    oriented_bounding_box: dict[str, Any] = field(default_factory=dict)
+    principal_axes: list[list[float]] = field(default_factory=list)
+    dimensions: dict[str, float] = field(default_factory=dict)
+    surface_area_estimate: float = 0.0
+    volume_estimate_if_valid: float | None = None
+    semantic_candidates: dict[str, float] = field(default_factory=dict)
+    semantic_probability_distribution: dict[str, float] = field(default_factory=dict)
+    evidence: dict[str, Any] = field(default_factory=dict)
+    parent_instance: str | None = None
+    child_instances: list[str] = field(default_factory=list)
+    topology_relations: list[dict[str, Any]] = field(default_factory=list)
+    source_point_ids: list[int] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        res = {
             "instance_id": self.instance_id,
             "semantic_class": self.semantic_class,
             "point_count": self.point_count,
@@ -41,6 +54,31 @@ class InstanceMask:
             "bbox_min_m": [round(float(c), 4) for c in self.bounding_box_min_m],
             "bbox_max_m": [round(float(c), 4) for c in self.bounding_box_max_m],
         }
+        if self.oriented_bounding_box:
+            res["oriented_bounding_box"] = self.oriented_bounding_box
+        if self.principal_axes:
+            res["principal_axes"] = self.principal_axes
+        if self.dimensions:
+            res["dimensions"] = self.dimensions
+        if self.surface_area_estimate > 0:
+            res["surface_area_estimate"] = round(self.surface_area_estimate, 4)
+        if self.volume_estimate_if_valid is not None:
+            res["volume_estimate_if_valid"] = round(self.volume_estimate_if_valid, 6)
+        if self.semantic_candidates:
+            res["semantic_candidates"] = self.semantic_candidates
+        if self.semantic_probability_distribution:
+            res["semantic_probability_distribution"] = self.semantic_probability_distribution
+        if self.evidence:
+            res["evidence"] = self.evidence
+        if self.parent_instance is not None:
+            res["parent_instance"] = self.parent_instance
+        if self.child_instances:
+            res["child_instances"] = self.child_instances
+        if self.topology_relations:
+            res["topology_relations"] = self.topology_relations
+        if self.source_point_ids:
+            res["source_point_ids_count"] = len(self.source_point_ids)
+        return res
 
 
 @dataclass

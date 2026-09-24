@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "metadata": {
+    "processor_version": "1.0.0",
+    "processed_at": "2026-09-24T14:09:29.844071+00:00",
+    "input_file": "scan.xyz",
+    "input_path": "/private/var/folders/dj/c24z7rn96gj9493srkk0khy00000gn/T/pytest-of-bhushanrkaashyap/pytest-19/test_stdout_when_no_output_pat0/scan.xyz",
+    "file_size_bytes": 0,
+    "file_format": "e57",
+    "point_count_raw": 50000,
+    "zone_id": "zone-001",
+    "voxel_size_m": 0.01,
+    "segment_count": 1,
+    "processing_time_s": 0.0,
+    "semantic": {
+      "enabled": false,
+      "model": null,
+      "success": false,
+      "provider": "none",
+      "message": "semantic stage not run",
+      "wall_points": 0,
+      "total_points": 0
+    }
+  },
+  "segments": [
+    {
+      "segment_id": "54508e89-09f3-40a4-8fe2-ff5391f0961c",
+      "zone_id": "zone-001",
+      "shape": "plane_vertical",
+      "normal": null,
+      "centroid": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 1500.0
+      },
+      "bounding_box": {
+        "min_x": 0.0,
+        "min_y": 0.0,
+        "min_z": 0.0,
+        "max_x": 5000.0,
+        "max_y": 200.0,
+        "max_z": 3000.0
+      },
+      "point_count": 5000,
+      "confidence": 0.92,
+      "scan_station_id": null,
+      "source_file": null,
+      "tags": {},
+      "element_type": null,
+      "semantic_confidence": null,
+      "dominant_color": null,
+      "color_variance": null,
+      "classification_reason": null,
+      "safety_category": null
+    }
+  ],
+  "storeys": [],
+  "execution_timestamp": "2026-09-24T14:09:29.844176+00:00",
+  "scan_source": "scan.xyz",
+  "raw_point_count": null,
+  "level0_points_preserved": null,
+  "level1_adaptive_points": null,
+  "total_detected_elements": 1,
+  "revit_native_elements": 1,
+  "element_counts_by_type": {
+    "NONE": 1
+  },
+  "point_counts_by_type": {
+    "NONE": 5000
+  },
+  "storeys_detected": 0,
+  "storeys_summary": [],
+  "fusion_audit": null,
+  "full_resolution_verified_elements": 1,
+  "coordinate_system": "Survey Local Metres [m] -> BIM Millimetres [mm] -> Revit Internal Feet [ft]",
+  "authoritative_transform": null
+}

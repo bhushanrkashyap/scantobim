@@ -1,0 +1,27 @@
+{
+  "region_id": "sector_test_nw",
+  "split": "TEST",
+  "spatial_bounds_min": [
+    -6.983957767486572,
+    2.5004894733428955,
+    -14.869915962219238
+  ],
+  "spatial_bounds_max": [
+    2.9994895458221436,
+    13.974936485290527,
+    8.437957763671875
+  ],
+  "point_count": 11177,
+  "instance_count": 30,
+  "classes_present": [
+    "BEAM",
+    "COLUMN",
+    "FLOOR",
+    "PIPE",
+    "UNKNOWN",
+    "WALL"
+  ],
+  "source_e57": "point cloud data",
+  "created_at": "2026-09-24T19:40:04.971891+00:00",
+  "notes": "Spatially disjoint North-West sector held out for blind benchmark testing."
+}

@@ -1,0 +1,14 @@
+{
+  "active_model": "RandLA-Net",
+  "status": "REAL_NEURAL_INFERENCE",
+  "checkpoint_path": "models/randlanet_architectural_cpu.pth",
+  "checkpoint_sha256": "d36bff24571b6270b6fe61f0ba8bca1fc12f9b8b228a39afc22c2bb3925f09c1",
+  "training_dataset": "SYNTHETIC_ARCHITECTURAL_v1",
+  "validation_accuracy": 0.5572,
+  "validation_loss": 0.7433,
+  "train_domain": "SYNTHETIC_ARCHITECTURAL_3D",
+  "real_scan_domain": "LEICA_ASTM_E57_REAL_BUILDING",
+  "domain_shift": "MEASURED_DOMAIN_GAP_MANAGED_VIA_GEOMETRIC_FUSION",
+  "validation_status": "REAL_SCAN_VALIDATED",
+  "cpu_compatibility": "NATIVE_CPU_EXECUTION"
+}

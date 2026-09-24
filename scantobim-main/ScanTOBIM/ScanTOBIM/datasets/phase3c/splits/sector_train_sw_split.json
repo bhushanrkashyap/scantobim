@@ -1,0 +1,38 @@
+{
+  "region_id": "sector_train_sw",
+  "split": "TRAIN",
+  "point_count": 2809,
+  "instance_count": 1,
+  "classes_present": [
+    "FLOOR"
+  ],
+  "classes_absent_in_scan": [
+    "WALL",
+    "SLAB",
+    "CEILING",
+    "COLUMN",
+    "BEAM",
+    "PIPE",
+    "DUCT",
+    "CABLE_TRAY",
+    "CONDUIT",
+    "VALVE",
+    "FITTING",
+    "EQUIPMENT",
+    "DOOR",
+    "WINDOW",
+    "STAIR",
+    "RAILING",
+    "OPENING"
+  ],
+  "spatial_bounds_min": [
+    -7.0,
+    -8.5,
+    -15.0
+  ],
+  "spatial_bounds_max": [
+    3.0,
+    2.5,
+    11.0
+  ]
+}

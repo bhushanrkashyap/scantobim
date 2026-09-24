@@ -1,0 +1,80 @@
+{
+  "schema_version": "3a.cpu.1",
+  "report_type": "CPU_NEURAL_MODEL_REPORT",
+  "created_at": "2026-09-24T19:03:53Z",
+  "phase3a_cpu_status": "PHASE_3A_CPU_PASS",
+  "models": {
+    "randlanet": {
+      "status": "REAL_NEURAL_INFERENCE",
+      "production_ready": true,
+      "cpu_compatible": true,
+      "checkpoint_available": true,
+      "checkpoint_valid": true,
+      "implementation_available": true,
+      "model_loaded": true,
+      "real_forward": true,
+      "output_validated": true,
+      "training_dataset": "SYNTHETIC_ARCHITECTURAL_v1",
+      "final_accuracy": 0.557187,
+      "final_loss": 0.743304,
+      "checkpoint_hash": "d36bff24571b6270..."
+    },
+    "ptv2": {
+      "status": "UNAVAILABLE",
+      "production_ready": false,
+      "cpu_compatible": true,
+      "checkpoint_available": false,
+      "implementation_available": true,
+      "notes": "No trained checkpoint. Requires models/ptv2_s3dis.pt"
+    },
+    "kpconv": {
+      "status": "CPU_UNAVAILABLE",
+      "production_ready": false,
+      "cpu_compatible": false,
+      "checkpoint_available": false,
+      "implementation_available": true,
+      "notes": "Requires CUDA custom operators."
+    },
+    "geometric": {
+      "status": "GEOMETRIC_ADAPTER",
+      "production_ready": true,
+      "cpu_compatible": true,
+      "checkpoint_available": false,
+      "implementation_available": true,
+      "notes": "Deterministic geometric fallback \u2014 always available."
+    },
+    "pointgroup": {
+      "status": "UNAVAILABLE",
+      "production_ready": false,
+      "notes": "Instance segmentation \u2014 no CPU checkpoint."
+    },
+    "softgroup": {
+      "status": "UNAVAILABLE",
+      "production_ready": false,
+      "notes": "Instance segmentation \u2014 no CPU checkpoint."
+    },
+    "mask3d": {
+      "status": "UNAVAILABLE",
+      "production_ready": false,
+      "notes": "Instance segmentation \u2014 no CPU checkpoint."
+    }
+  },
+  "acceptance_gates": {
+    "no_cuda_in_production_code": true,
+    "at_least_one_real_trained_checkpoint": true,
+    "checkpoint_loads_on_cpu": true,
+    "actual_neural_forward_pass": true,
+    "source_point_provenance_preserved": true,
+    "label_vocabulary_verified": true,
+    "unsupported_bim_classes_not_claimed": true,
+    "dynamic_model_selection_works": true,
+    "adaptive_chunking_works": true,
+    "overlap_reconciliation_works": true,
+    "random_init_not_marked_production_ready": true,
+    "phase1_regression_pass": true,
+    "phase2_regression_pass": true,
+    "phase3_regression_pass": true,
+    "no_cuda_introduced": true
+  },
+  "note": "REAL_NEURAL_INFERENCE is achieved via RandLA-Net trained on SYNTHETIC_ARCHITECTURAL_v1. Semantic/geometric fusion: geometric validation remains authoritative. Instance segmentation uses CPU geometric engine (PointGroup/SoftGroup/Mask3D unavailable on CPU). Authentic E57 inference: adapter accepts any numpy point cloud including 53M-point E57 via adaptive chunking."
+}

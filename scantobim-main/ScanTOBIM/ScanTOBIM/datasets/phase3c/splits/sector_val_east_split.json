@@ -1,0 +1,39 @@
+{
+  "region_id": "sector_val_east",
+  "split": "VALIDATION",
+  "point_count": 14388,
+  "instance_count": 37,
+  "classes_present": [
+    "BEAM",
+    "COLUMN",
+    "FLOOR",
+    "PIPE",
+    "UNKNOWN",
+    "WALL"
+  ],
+  "classes_absent_in_scan": [
+    "SLAB",
+    "CEILING",
+    "DUCT",
+    "CABLE_TRAY",
+    "CONDUIT",
+    "VALVE",
+    "FITTING",
+    "EQUIPMENT",
+    "DOOR",
+    "WINDOW",
+    "STAIR",
+    "RAILING",
+    "OPENING"
+  ],
+  "spatial_bounds_min": [
+    8.5,
+    2.5,
+    -15.0
+  ],
+  "spatial_bounds_max": [
+    14.0,
+    14.0,
+    11.0
+  ]
+}

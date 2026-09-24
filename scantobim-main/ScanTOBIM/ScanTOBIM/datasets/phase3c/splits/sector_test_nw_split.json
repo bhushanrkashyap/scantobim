@@ -1,0 +1,39 @@
+{
+  "region_id": "sector_test_nw",
+  "split": "TEST",
+  "point_count": 11177,
+  "instance_count": 30,
+  "classes_present": [
+    "BEAM",
+    "COLUMN",
+    "FLOOR",
+    "PIPE",
+    "UNKNOWN",
+    "WALL"
+  ],
+  "classes_absent_in_scan": [
+    "SLAB",
+    "CEILING",
+    "DUCT",
+    "CABLE_TRAY",
+    "CONDUIT",
+    "VALVE",
+    "FITTING",
+    "EQUIPMENT",
+    "DOOR",
+    "WINDOW",
+    "STAIR",
+    "RAILING",
+    "OPENING"
+  ],
+  "spatial_bounds_min": [
+    -7.0,
+    2.5,
+    -15.0
+  ],
+  "spatial_bounds_max": [
+    3.0,
+    14.0,
+    11.0
+  ]
+}

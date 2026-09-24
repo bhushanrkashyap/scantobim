@@ -1,0 +1,54 @@
+{
+  "schema_version": "3a.cpu.1",
+  "report_type": "MODEL_CHECKPOINT_PROVENANCE",
+  "created_at": "2026-09-24T19:03:53Z",
+  "model": {
+    "name": "RandLA-Net",
+    "architecture": "RandLANet",
+    "in_channels": 6,
+    "num_classes": 2,
+    "k_neighbors": 16
+  },
+  "checkpoint": {
+    "path": "/Users/bhushanrkaashyap/Desktop/scantobim-main (1)/scantobim-main/ScanTOBIM/ScanTOBIM/models/randlanet_architectural_cpu.pth",
+    "sha256": "d36bff24571b6270b6fe61f0ba8bca1fc12f9b8b228a39afc22c2bb3925f09c1",
+    "file_size_bytes": 736146,
+    "created_at": "2026-09-24T18:56:16Z",
+    "pytorch_version": "2.1.2"
+  },
+  "training": {
+    "dataset": "SYNTHETIC_ARCHITECTURAL_v1",
+    "label_space": [
+      "NON_WALL",
+      "WALL"
+    ],
+    "feature_schema": [
+      "x",
+      "y",
+      "z",
+      "verticality_ratio",
+      "z_rel",
+      "dist_centroid"
+    ],
+    "epochs": 15,
+    "steps_per_epoch": 10,
+    "batch_size": 2,
+    "n_pts_per_sample": 800,
+    "seed": 42,
+    "optimizer": "Manual SGD + Momentum (momentum=0.9, lr_cosine_annealing)",
+    "final_loss": 0.743304,
+    "final_train_accuracy": 0.557187,
+    "random_baseline_loss": 0.797,
+    "loss_below_baseline": true,
+    "accuracy_above_random": true
+  },
+  "validation": {
+    "all_9_gates_passed": true,
+    "is_trained_not_random": true,
+    "conclusion": "REAL_NEURAL_INFERENCE",
+    "production_ready": true
+  },
+  "device": "cpu",
+  "cpu_only": true,
+  "cuda_required": false
+}

@@ -1,82 +1,80 @@
-"""Semantic Model Selector.
+"""Semantic Model Selector — Phase 3A CPU Production.
 
-Evaluates available models, verified checkpoints, supported labels, device,
-and point cloud characteristics to select the authoritative validated semantic path.
-Generates SEMANTIC_MODEL_SELECTION_REPORT data.
+Uses NeuralModelRegistry.best_production_semantic_model() for adapter selection.
+
+Priority (enforced by registry):
+  1. RandLA-Net with verified trained checkpoint → REAL_NEURAL_INFERENCE
+  2. PTv2 with verified trained checkpoint → REAL_NEURAL_INFERENCE
+  3. Geometric → GEOMETRIC_ADAPTER (always production-ready)
+
+TEST_ONLY_NEURAL_FORWARD models are EXCLUDED from production selection.
+Random-initialized models MUST NOT reach the production pipeline.
 """
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import structlog
 
+from agent.phase3.neural.registry import NeuralModelRegistry
 from agent.phase3.semantic.adapter import SemanticModelAdapter
-from agent.phase3.semantic.geometric_adapter import GeometricSemanticAdapter
-from agent.phase3.semantic.kpconv_adapter import KPConvSemanticAdapter
-from agent.phase3.semantic.ptv2_adapter import PTv2SemanticAdapter
-from agent.phase3.semantic.randla_adapter import RandLANetSemanticAdapter
+
+if TYPE_CHECKING:
+    pass
 
 logger = structlog.get_logger()
 
 
 class SemanticModelSelector:
-    """Evaluates and chooses the active semantic segmentation pipeline."""
+    """Evaluates and chooses the active semantic segmentation pipeline.
+
+    Delegates all selection logic to NeuralModelRegistry to enforce
+    the production-readiness contract.
+    """
 
     def __init__(self, preferred_model: str | None = None) -> None:
         self.preferred_model = (preferred_model or "auto").strip().lower()
-        self.adapters: dict[str, SemanticModelAdapter] = {
-            "ptv2": PTv2SemanticAdapter(),
-            "randlanet": RandLANetSemanticAdapter(),
-            "kpconv": KPConvSemanticAdapter(),
-            "geometric": GeometricSemanticAdapter(),
-        }
+        self._registry = NeuralModelRegistry()
+        self._registry.register_defaults()
+        self._evaluation_report: dict[str, Any] = {}
 
     def evaluate_all(self) -> dict[str, Any]:
         """Inspect and health-check all registered adapters."""
-        eval_report = {}
-        for key, adapter in self.adapters.items():
-            adapter.load()
-            eval_report[key] = {
-                "model_name": adapter.model_name,
-                "status": adapter.status,
-                "loaded": adapter.is_loaded,
-                "healthy": adapter.health_check(),
-                "checkpoint": adapter.checkpoint_path,
-                "metadata": adapter.metadata(),
-            }
-        return eval_report
+        self._evaluation_report = self._registry.evaluate_all()
+        return self._evaluation_report
 
     def select_active_adapter(self) -> tuple[str, SemanticModelAdapter, str]:
-        """Select best available adapter.
+        """Select best production-ready adapter.
+
+        Uses best_production_semantic_model() which enforces:
+          - trained checkpoint (not random-init)
+          - CPU compatibility
+          - successful validation
+          - REAL_NEURAL_INFERENCE status
 
         Returns:
             (key, selected_adapter, rationale)
         """
-        _eval_report = self.evaluate_all()
-
-        # If user explicitly preferred a neural model and it's healthy:
-        if self.preferred_model in self.adapters:
-            ad = self.adapters[self.preferred_model]
-            if ad.health_check():
-                return (
-                    self.preferred_model,
-                    ad,
-                    f"Selected explicitly configured model '{self.preferred_model}' ({ad.status}).",
-                )
-
-        # Priority 1: Verified Neural PTv2
-        if self.adapters["ptv2"].health_check():
-            return "ptv2", self.adapters["ptv2"], "Selected PTv2 (verified neural checkpoint available)."
-
-        # Priority 2: Verified Neural RandLA-Net
-        if self.adapters["randlanet"].health_check():
-            return "randlanet", self.adapters["randlanet"], "Selected RandLA-Net (verified neural checkpoint available)."
-
-        # Priority 3: Geometric Analytical Adapter (Always available, robust fallback)
-        geom = self.adapters["geometric"]
-        rationale = (
-            "Neural checkpoints unavailable or unverified. Selected GEOMETRIC_ADAPTER "
-            "to guarantee non-fabricated, mathematically verifiable semantic segmentation."
+        preferred = None if self.preferred_model == "auto" else self.preferred_model
+        key, adapter, rationale = self._registry.best_production_semantic_model(
+            preferred_key=preferred,
         )
-        return "geometric", geom, rationale
+        logger.info(
+            "semantic_model_selected",
+            key=key,
+            status=adapter.status,
+            production_neural=self._registry.production_neural_models(),
+        )
+        return key, adapter, rationale
+
+    def production_neural_models(self) -> list[str]:
+        """Return keys of healthy, trained neural models."""
+        return self._registry.production_neural_models()
+
+    @property
+    def adapters(self) -> dict[str, "SemanticModelAdapter"]:
+        """Backward-compatible view of registered adapters keyed by model name."""
+        if not self._registry._evaluated:
+            self._registry.evaluate_all()
+        return {key: entry.adapter for key, entry in self._registry._entries.items()}

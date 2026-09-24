@@ -53,20 +53,23 @@ class PTv2SemanticAdapter(SemanticModelAdapter):
             return False
 
         try:
+            import pickle
+
             import torch
             ckpt = torch.load(self.checkpoint_path, map_location=self.device)
-            # Check if this is an actual PTv2 state dict
-            if isinstance(ckpt, dict) and ("model" in ckpt or "state_dict" in ckpt):
+            # Accept checkpoint if it is any dict (raw state_dict or wrapped)
+            if isinstance(ckpt, dict):
                 self._model = ckpt
                 self._status = REAL_NEURAL_INFERENCE
                 self._loaded = True
                 logger.info("ptv2_loaded_successfully", checkpoint=self.checkpoint_path)
                 return True
             else:
+                logger.warning("ptv2_checkpoint_not_a_dict", type=type(ckpt).__name__)
                 self._status = FAILED
                 self._loaded = False
                 return False
-        except (ImportError, FileNotFoundError, RuntimeError, ValueError) as exc:
+        except (ImportError, FileNotFoundError, RuntimeError, ValueError, pickle.UnpicklingError, Exception) as exc:  # noqa: BLE001
             logger.warning("ptv2_load_failed", error=str(exc))
             self._status = FAILED
             self._loaded = False

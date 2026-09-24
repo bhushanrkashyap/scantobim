@@ -1,0 +1,60 @@
+{
+  "source_file": "point cloud data",
+  "source_path": "/Users/bhushanrkaashyap/Desktop/point cloud data",
+  "source_point_count": 53275505,
+  "loaded_point_count": 53275505,
+  "level1_point_count": 1207133,
+  "bounding_box_m": {
+    "min_x": -7.12,
+    "max_x": 13.817,
+    "min_y": -8.453,
+    "max_y": 14.271,
+    "min_z": -14.903,
+    "max_z": 11.408,
+    "span_x": 20.937,
+    "span_y": 22.724,
+    "span_z": 26.311
+  },
+  "stages": [
+    {
+      "stage_name": "SOURCE_E57_PRESERVATION",
+      "input_point_count": 53275505,
+      "output_point_count": 53275505,
+      "reduction_ratio": 1.0,
+      "sampling_method": "raw_source_indexing",
+      "voxel_size_m": null,
+      "bounding_box": {
+        "min_x": -7.12,
+        "max_x": 13.8169,
+        "min_y": -8.4534,
+        "max_y": 14.2709,
+        "min_z": -14.9029,
+        "max_z": 11.408
+      },
+      "coordinate_system": "local_scan_meters",
+      "units": "meters",
+      "purpose": "Source of truth point preservation (Level 0)",
+      "source_mapping_retained": true
+    },
+    {
+      "stage_name": "LEVEL1_ADAPTIVE_DETECTION_REPRESENTATION",
+      "input_point_count": 53275505,
+      "output_point_count": 1207133,
+      "reduction_ratio": 0.022658,
+      "sampling_method": "adaptive_voxel_stratification",
+      "voxel_size_m": 0.05,
+      "bounding_box": {
+        "min_x": -7.12,
+        "max_x": 13.8169,
+        "min_y": -8.4534,
+        "max_y": 14.2709,
+        "min_z": -14.9029,
+        "max_z": 11.408
+      },
+      "coordinate_system": "local_scan_meters",
+      "units": "meters",
+      "purpose": "Detection representation for global detectors (storeys, RANSAC, YOLO)",
+      "source_mapping_retained": true
+    }
+  ]
+}

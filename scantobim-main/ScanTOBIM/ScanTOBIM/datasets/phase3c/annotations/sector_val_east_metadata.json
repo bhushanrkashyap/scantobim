@@ -1,0 +1,27 @@
+{
+  "region_id": "sector_val_east",
+  "split": "VALIDATION",
+  "spatial_bounds_min": [
+    8.500957489013672,
+    2.5024895668029785,
+    -14.769915580749512
+  ],
+  "spatial_bounds_max": [
+    13.743936538696289,
+    8.981958389282227,
+    10.204957962036133
+  ],
+  "point_count": 14388,
+  "instance_count": 37,
+  "classes_present": [
+    "BEAM",
+    "COLUMN",
+    "FLOOR",
+    "PIPE",
+    "UNKNOWN",
+    "WALL"
+  ],
+  "source_e57": "point cloud data",
+  "created_at": "2026-09-24T19:41:14.944900+00:00",
+  "notes": "Spatially disjoint Eastern sector (Validation) containing columns, pipes, walls, and unknown equipment."
+}

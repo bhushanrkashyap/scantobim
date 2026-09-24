@@ -1,0 +1,236 @@
+{
+  "schema_version": "3a.2",
+  "report_type": "MODEL_LABEL_SPACE",
+  "created_at": "2026-09-24T19:03:56Z",
+  "canonical_classes": [
+    "WALL",
+    "FLOOR",
+    "CEILING",
+    "COLUMN",
+    "BEAM",
+    "DOOR",
+    "WINDOW",
+    "STAIR",
+    "PIPE",
+    "DUCT",
+    "CABLE_TRAY",
+    "VALVE",
+    "EQUIPMENT",
+    "UNKNOWN"
+  ],
+  "models": {
+    "randlanet": {
+      "model_key": "randlanet",
+      "model_name": "RandLA-Net",
+      "training_dataset": "SYNTHETIC_ARCHITECTURAL_v1",
+      "classifier_type": "BINARY",
+      "num_classes": 2,
+      "supported_scan_to_bim_classes": [
+        "WALL"
+      ],
+      "unsupported_scan_to_bim_classes": [
+        "FLOOR",
+        "CEILING",
+        "COLUMN",
+        "BEAM",
+        "DOOR",
+        "WINDOW",
+        "STAIR",
+        "PIPE",
+        "DUCT",
+        "CABLE_TRAY",
+        "VALVE",
+        "EQUIPMENT"
+      ],
+      "classes": [
+        {
+          "class_id": 0,
+          "class_name": "NON_WALL",
+          "scan_to_bim_class": null,
+          "mapping_status": "AMBIGUOUS",
+          "notes": "Aggregated non-wall class. Sub-classification (FLOOR/CEILING/COLUMN/EQUIPMENT) requires geometric post-processing. Model does not distinguish sub-classes."
+        },
+        {
+          "class_id": 1,
+          "class_name": "WALL",
+          "scan_to_bim_class": "WALL",
+          "mapping_status": "SUPPORTED",
+          "notes": "Trained on synthetic vertical planar surfaces."
+        }
+      ],
+      "notes": "Binary wall classifier. NON_WALL sub-classification (FLOOR, CEILING, COLUMN, EQUIPMENT) is performed by the downstream geometric adapter."
+    },
+    "ptv2": {
+      "model_key": "ptv2",
+      "model_name": "Point Transformer V2",
+      "training_dataset": "S3DIS (when checkpoint available)",
+      "classifier_type": "MULTI_CLASS",
+      "num_classes": 13,
+      "supported_scan_to_bim_classes": [
+        "CEILING",
+        "FLOOR",
+        "WALL",
+        "BEAM",
+        "COLUMN",
+        "WINDOW",
+        "DOOR",
+        "EQUIPMENT"
+      ],
+      "unsupported_scan_to_bim_classes": [
+        "PIPE",
+        "DUCT",
+        "CABLE_TRAY",
+        "VALVE",
+        "STAIR"
+      ],
+      "classes": [
+        {
+          "class_id": 0,
+          "class_name": "ceiling",
+          "scan_to_bim_class": "CEILING",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 1,
+          "class_name": "floor",
+          "scan_to_bim_class": "FLOOR",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 2,
+          "class_name": "wall",
+          "scan_to_bim_class": "WALL",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 3,
+          "class_name": "beam",
+          "scan_to_bim_class": "BEAM",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 4,
+          "class_name": "column",
+          "scan_to_bim_class": "COLUMN",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 5,
+          "class_name": "window",
+          "scan_to_bim_class": "WINDOW",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 6,
+          "class_name": "door",
+          "scan_to_bim_class": "DOOR",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 7,
+          "class_name": "table",
+          "scan_to_bim_class": "EQUIPMENT",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 8,
+          "class_name": "chair",
+          "scan_to_bim_class": "EQUIPMENT",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 9,
+          "class_name": "sofa",
+          "scan_to_bim_class": "EQUIPMENT",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 10,
+          "class_name": "bookcase",
+          "scan_to_bim_class": "EQUIPMENT",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 11,
+          "class_name": "board",
+          "scan_to_bim_class": "EQUIPMENT",
+          "mapping_status": "SUPPORTED"
+        },
+        {
+          "class_id": 12,
+          "class_name": "clutter",
+          "scan_to_bim_class": "UNKNOWN",
+          "mapping_status": "AMBIGUOUS"
+        },
+        {
+          "class_id": -1,
+          "class_name": "PIPE",
+          "scan_to_bim_class": null,
+          "mapping_status": "UNSUPPORTED"
+        },
+        {
+          "class_id": -1,
+          "class_name": "DUCT",
+          "scan_to_bim_class": null,
+          "mapping_status": "UNSUPPORTED"
+        },
+        {
+          "class_id": -1,
+          "class_name": "CABLE_TRAY",
+          "scan_to_bim_class": null,
+          "mapping_status": "UNSUPPORTED"
+        },
+        {
+          "class_id": -1,
+          "class_name": "VALVE",
+          "scan_to_bim_class": null,
+          "mapping_status": "UNSUPPORTED"
+        }
+      ],
+      "notes": "Multi-class S3DIS classifier. Checkpoint not available \u2014 UNAVAILABLE."
+    },
+    "kpconv": {
+      "model_key": "kpconv",
+      "model_name": "KPConv",
+      "training_dataset": "N/A",
+      "classifier_type": "GEOMETRIC",
+      "num_classes": 0,
+      "supported_scan_to_bim_classes": [
+        "WALL",
+        "FLOOR",
+        "CEILING",
+        "COLUMN"
+      ],
+      "unsupported_scan_to_bim_classes": [
+        "PIPE",
+        "DUCT",
+        "CABLE_TRAY",
+        "VALVE"
+      ],
+      "classes": [],
+      "notes": "Geometric/analytical \u2014 no trained weights."
+    },
+    "geometric": {
+      "model_key": "geometric",
+      "model_name": "Geometric Analytical Adapter",
+      "training_dataset": "N/A",
+      "classifier_type": "GEOMETRIC",
+      "num_classes": 0,
+      "supported_scan_to_bim_classes": [
+        "WALL",
+        "FLOOR",
+        "CEILING",
+        "COLUMN"
+      ],
+      "unsupported_scan_to_bim_classes": [
+        "PIPE",
+        "DUCT",
+        "CABLE_TRAY",
+        "VALVE"
+      ],
+      "classes": [],
+      "notes": "Geometric/analytical \u2014 no trained weights."
+    }
+  },
+  "engineering_note": "A model MUST NOT be used to classify a ScanTOBIM class it was not trained on. UNSUPPORTED classes must be handled by geometric/contextual processing."
+}

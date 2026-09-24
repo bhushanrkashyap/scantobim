@@ -1,0 +1,216 @@
+{
+  "schema_version": "3a.2",
+  "evaluated_at": "2026-09-24T19:32:45Z",
+  "models": {
+    "randlanet": {
+      "key": "randlanet",
+      "display_name": "RandLA-Net (CPU production \u2014 trained checkpoint required)",
+      "model_type": "neural_semantic",
+      "priority": 1,
+      "cpu_compatible": true,
+      "requires_checkpoint": true,
+      "status": "REAL_NEURAL_INFERENCE",
+      "loaded": true,
+      "healthy": true,
+      "production_ready": true,
+      "load_time_s": 0.0508,
+      "load_error": null,
+      "checkpoint": "models/randlanet_architectural_cpu.pth",
+      "diagnostics": {
+        "model_name": "RandLA-Net",
+        "version": "2.0.0",
+        "status": "REAL_NEURAL_INFERENCE",
+        "production_ready": true,
+        "is_trained": true,
+        "checkpoint_path": "models/randlanet_architectural_cpu.pth",
+        "checkpoint_hash": "d36bff24571b6270b6fe61f0ba8bca1fc12f9b8b228a39afc22c2bb3925f09c1",
+        "device": "cpu",
+        "architecture": "RandLANet (Random Sampling + LFA encoder/decoder)",
+        "in_channels": 6,
+        "num_classes": 2,
+        "k_neighbors": 16,
+        "training_dataset": "SYNTHETIC_ARCHITECTURAL_v1",
+        "training_label_space": [
+          "NON_WALL",
+          "WALL"
+        ],
+        "supported_scan_to_bim_classes": [
+          "WALL"
+        ],
+        "unsupported_scan_to_bim_classes": [
+          "FLOOR",
+          "CEILING",
+          "COLUMN",
+          "BEAM",
+          "DOOR",
+          "WINDOW",
+          "STAIR",
+          "PIPE",
+          "DUCT",
+          "CABLE_TRAY",
+          "VALVE",
+          "EQUIPMENT"
+        ],
+        "feature_schema": [
+          "x",
+          "y",
+          "z",
+          "verticality_ratio",
+          "z_rel",
+          "dist_centroid"
+        ],
+        "overlap_fraction": 0.15,
+        "inference_engine": "agent.tools.randla_net.RandLANet",
+        "cpu_only": true,
+        "cuda_required": false,
+        "checkpoint_validation": {
+          "checkpoint_path": "models/randlanet_architectural_cpu.pth",
+          "gates": {
+            "file_exists": true,
+            "file_readable": true,
+            "hash_matches": null,
+            "is_valid_dict": true,
+            "has_state_dict": true,
+            "architecture_matches": true,
+            "num_classes_match": true,
+            "in_channels_match": true,
+            "state_dict_loads": true,
+            "cpu_forward_pass": true,
+            "is_trained_not_random": true
+          },
+          "overall_valid": true,
+          "errors": [],
+          "metadata": {
+            "sha256": "d36bff24571b6270b6fe61f0ba8bca1fc12f9b8b228a39afc22c2bb3925f09c1",
+            "architecture": "RandLANet",
+            "in_channels": 6,
+            "num_classes": 2,
+            "k_neighbors": 16,
+            "training_dataset": "SYNTHETIC_ARCHITECTURAL_v1",
+            "training_label_space": [
+              "NON_WALL",
+              "WALL"
+            ],
+            "feature_schema": [
+              "x",
+              "y",
+              "z",
+              "verticality_ratio",
+              "z_rel",
+              "dist_centroid"
+            ],
+            "wall_class_id": 1,
+            "epochs": 15,
+            "final_loss": 0.743304,
+            "final_train_accuracy": 0.557187,
+            "created_at": "2026-09-24T18:56:16Z",
+            "pytorch_version": "2.1.2",
+            "architecture_found": "RandLANet",
+            "output_shape": [
+              1,
+              2,
+              64
+            ],
+            "trained_evidence": {
+              "final_loss": 0.743304,
+              "final_accuracy": 0.557187,
+              "random_baseline_loss": 0.7971192576439371,
+              "conclusion": "TRAINED"
+            }
+          },
+          "validation_time_s": 0.0327
+        }
+      }
+    },
+    "ptv2": {
+      "key": "ptv2",
+      "display_name": "Point Transformer V2 (checkpoint required, S3DIS)",
+      "model_type": "neural_semantic",
+      "priority": 2,
+      "cpu_compatible": true,
+      "requires_checkpoint": true,
+      "status": "UNAVAILABLE",
+      "loaded": false,
+      "healthy": false,
+      "production_ready": false,
+      "load_time_s": 0.0001,
+      "load_error": null,
+      "checkpoint": null,
+      "diagnostics": {
+        "model_name": "PointTransformerV2",
+        "version": "2.1.0",
+        "status": "UNAVAILABLE",
+        "checkpoint_path": null,
+        "device": "cpu",
+        "supported_classes": [
+          "CEILING",
+          "FLOOR",
+          "WALL",
+          "BEAM",
+          "COLUMN",
+          "WINDOW",
+          "DOOR",
+          "EQUIPMENT",
+          "EQUIPMENT",
+          "EQUIPMENT",
+          "EQUIPMENT",
+          "EQUIPMENT",
+          "UNKNOWN"
+        ],
+        "preprocessing": "Grid voxelization + relative coordinate normalization",
+        "output_schema": "Per-point S3DIS class distribution mapped to canonical ScanTOBIM taxonomy"
+      }
+    },
+    "kpconv": {
+      "key": "kpconv",
+      "display_name": "KPConv (CUDA custom operators \u2014 CPU_UNAVAILABLE)",
+      "model_type": "neural_semantic",
+      "priority": 3,
+      "cpu_compatible": false,
+      "requires_checkpoint": true,
+      "status": "UNAVAILABLE",
+      "loaded": false,
+      "healthy": false,
+      "production_ready": false,
+      "load_time_s": 0.0,
+      "load_error": "CPU_UNAVAILABLE: requires CUDA custom operators",
+      "checkpoint": null,
+      "diagnostics": {}
+    },
+    "geometric": {
+      "key": "geometric",
+      "display_name": "Geometric Analytical Adapter (deterministic CPU fallback)",
+      "model_type": "geometric_semantic",
+      "priority": 99,
+      "cpu_compatible": true,
+      "requires_checkpoint": false,
+      "status": "GEOMETRIC_ADAPTER",
+      "loaded": true,
+      "healthy": true,
+      "production_ready": true,
+      "load_time_s": 0.0,
+      "load_error": null,
+      "checkpoint": null,
+      "diagnostics": {
+        "model_name": "GeometricTensorClassifier",
+        "version": "2.0.0",
+        "status": "GEOMETRIC_ADAPTER",
+        "device": "cpu",
+        "supported_classes": [
+          "WALL",
+          "FLOOR",
+          "CEILING",
+          "COLUMN",
+          "BEAM",
+          "PIPE",
+          "DUCT",
+          "UNKNOWN"
+        ],
+        "preprocessing": "KNN surface normal estimation if not supplied",
+        "output_schema": "Canonical per-point taxonomy labels with planarity/verticality confidence"
+      }
+    }
+  },
+  "production_ready_count": 2,
+  "real_neural_count": 1
+}

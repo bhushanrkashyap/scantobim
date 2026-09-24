@@ -1,0 +1,148 @@
+{
+  "dataset_name": "Phase3C_Authentic_ASTM_E57_Ground_Truth",
+  "created_at": "2026-09-24T19:41:16Z",
+  "source_cloud": "/Users/bhushanrkaashyap/Desktop/point cloud data",
+  "source_point_count": 53275505,
+  "sample_point_count": 119990,
+  "label_space": [
+    "UNKNOWN",
+    "WALL",
+    "FLOOR",
+    "SLAB",
+    "CEILING",
+    "COLUMN",
+    "BEAM",
+    "PIPE",
+    "DUCT",
+    "CABLE_TRAY",
+    "CONDUIT",
+    "VALVE",
+    "FITTING",
+    "EQUIPMENT",
+    "DOOR",
+    "WINDOW",
+    "STAIR",
+    "RAILING",
+    "OPENING"
+  ],
+  "splits": {
+    "sector_train_central": {
+      "region_id": "sector_train_central",
+      "split": "TRAIN",
+      "point_count": 83896,
+      "instance_count": 236,
+      "classes_present": [
+        "BEAM",
+        "COLUMN",
+        "FLOOR",
+        "PIPE",
+        "UNKNOWN",
+        "WALL"
+      ],
+      "classes_absent_in_scan": [
+        "SLAB",
+        "CEILING",
+        "DUCT",
+        "CABLE_TRAY",
+        "CONDUIT",
+        "VALVE",
+        "FITTING",
+        "EQUIPMENT",
+        "DOOR",
+        "WINDOW",
+        "STAIR",
+        "RAILING",
+        "OPENING"
+      ],
+      "spatial_bounds_min": [
+        3.0,
+        2.5,
+        -15.0
+      ],
+      "spatial_bounds_max": [
+        8.5,
+        14.0,
+        11.0
+      ]
+    },
+    "sector_val_east": {
+      "region_id": "sector_val_east",
+      "split": "VALIDATION",
+      "point_count": 14388,
+      "instance_count": 37,
+      "classes_present": [
+        "BEAM",
+        "COLUMN",
+        "FLOOR",
+        "PIPE",
+        "UNKNOWN",
+        "WALL"
+      ],
+      "classes_absent_in_scan": [
+        "SLAB",
+        "CEILING",
+        "DUCT",
+        "CABLE_TRAY",
+        "CONDUIT",
+        "VALVE",
+        "FITTING",
+        "EQUIPMENT",
+        "DOOR",
+        "WINDOW",
+        "STAIR",
+        "RAILING",
+        "OPENING"
+      ],
+      "spatial_bounds_min": [
+        8.5,
+        2.5,
+        -15.0
+      ],
+      "spatial_bounds_max": [
+        14.0,
+        14.0,
+        11.0
+      ]
+    },
+    "sector_test_west": {
+      "region_id": "sector_test_west",
+      "split": "TEST",
+      "point_count": 13986,
+      "instance_count": 33,
+      "classes_present": [
+        "COLUMN",
+        "FLOOR",
+        "PIPE",
+        "UNKNOWN",
+        "WALL"
+      ],
+      "classes_absent_in_scan": [
+        "SLAB",
+        "CEILING",
+        "BEAM",
+        "DUCT",
+        "CABLE_TRAY",
+        "CONDUIT",
+        "VALVE",
+        "FITTING",
+        "EQUIPMENT",
+        "DOOR",
+        "WINDOW",
+        "STAIR",
+        "RAILING",
+        "OPENING"
+      ],
+      "spatial_bounds_min": [
+        -7.0,
+        -8.5,
+        -15.0
+      ],
+      "spatial_bounds_max": [
+        3.0,
+        14.0,
+        11.0
+      ]
+    }
+  },
+  "data_leakage_guarantee": "STRICT_SPATIAL_DISJOINT_SECTORS"
+}

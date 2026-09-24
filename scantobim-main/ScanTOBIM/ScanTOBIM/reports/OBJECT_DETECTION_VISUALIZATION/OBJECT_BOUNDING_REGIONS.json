@@ -1,0 +1,1711 @@
+[
+  {
+    "object_id": "prop_0001",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      5.606350898742676,
+      5.819303512573242,
+      -6.30320405960083
+    ],
+    "dimensions_m": {
+      "length_m": 24.6296,
+      "width_m": 22.2233,
+      "height_m": 20.1563
+    },
+    "obb_extents": [
+      20.156307220458984,
+      22.223291397094727,
+      24.629560470581055
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0003",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      4.164658069610596,
+      4.108102798461914,
+      0.6313979625701904
+    ],
+    "dimensions_m": {
+      "length_m": 5.2404,
+      "width_m": 4.5704,
+      "height_m": 0.6672
+    },
+    "obb_extents": [
+      0.6671526432037354,
+      4.570425987243652,
+      5.240392208099365
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0004",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      7.562650680541992,
+      3.8420703411102295,
+      -13.043874740600586
+    ],
+    "dimensions_m": {
+      "length_m": 2.8467,
+      "width_m": 1.6454,
+      "height_m": 1.2053
+    },
+    "obb_extents": [
+      1.2053413391113281,
+      1.645362377166748,
+      2.8467462062835693
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0006",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      10.218945503234863,
+      5.941590785980225,
+      2.1514952182769775
+    ],
+    "dimensions_m": {
+      "length_m": 2.0912,
+      "width_m": 1.1288,
+      "height_m": 0.8499
+    },
+    "obb_extents": [
+      0.8499437570571899,
+      1.1288197040557861,
+      2.0912070274353027
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0008",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      7.159908771514893,
+      5.077973365783691,
+      0.20988582074642181
+    ],
+    "dimensions_m": {
+      "length_m": 4.2556,
+      "width_m": 2.9203,
+      "height_m": 2.0102
+    },
+    "obb_extents": [
+      2.0101938247680664,
+      2.9202895164489746,
+      4.2556281089782715
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0009",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      5.131651878356934,
+      4.077384948730469,
+      -12.616744995117188
+    ],
+    "dimensions_m": {
+      "length_m": 3.2661,
+      "width_m": 1.6509,
+      "height_m": 0.7044
+    },
+    "obb_extents": [
+      0.7043657302856445,
+      1.6508651971817017,
+      3.266118288040161
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0012",
+    "semantic_label": "BEAM",
+    "centroid": [
+      3.7647924423217773,
+      6.1397881507873535,
+      5.573518753051758
+    ],
+    "dimensions_m": {
+      "length_m": 2.4467,
+      "width_m": 2.0606,
+      "height_m": 0.68
+    },
+    "obb_extents": [
+      0.6799795627593994,
+      2.060575246810913,
+      2.4467456340789795
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0015",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      9.176904678344727,
+      4.451438903808594,
+      -3.374300956726074
+    ],
+    "dimensions_m": {
+      "length_m": 2.13,
+      "width_m": 0.7168,
+      "height_m": 0.227
+    },
+    "obb_extents": [
+      0.22697100043296814,
+      0.7167840003967285,
+      2.130000114440918
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0016",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.695868015289307,
+      2.1211564540863037,
+      1.9480963945388794
+    ],
+    "dimensions_m": {
+      "length_m": 2.7527,
+      "width_m": 1.3391,
+      "height_m": 0.8242
+    },
+    "obb_extents": [
+      0.8242150545120239,
+      1.3390979766845703,
+      2.752697706222534
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0019",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      5.22347354888916,
+      7.97369909286499,
+      5.125998020172119
+    ],
+    "dimensions_m": {
+      "length_m": 1.7122,
+      "width_m": 1.0904,
+      "height_m": 0.5305
+    },
+    "obb_extents": [
+      0.5304931998252869,
+      1.0904422998428345,
+      1.712223768234253
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0022",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      6.665969371795654,
+      6.335611343383789,
+      1.22853422164917
+    ],
+    "dimensions_m": {
+      "length_m": 2.8211,
+      "width_m": 1.0448,
+      "height_m": 0.9556
+    },
+    "obb_extents": [
+      0.9556227922439575,
+      1.0447790622711182,
+      2.8210806846618652
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0023",
+    "semantic_label": "BEAM",
+    "centroid": [
+      7.26885986328125,
+      6.088343143463135,
+      -11.737628936767578
+    ],
+    "dimensions_m": {
+      "length_m": 3.9816,
+      "width_m": 1.9738,
+      "height_m": 0.525
+    },
+    "obb_extents": [
+      0.5249996185302734,
+      1.973810076713562,
+      3.9816386699676514
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0026",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      6.971493244171143,
+      6.582772254943848,
+      -7.764216423034668
+    ],
+    "dimensions_m": {
+      "length_m": 1.7351,
+      "width_m": 1.0186,
+      "height_m": 0.408
+    },
+    "obb_extents": [
+      0.4080159068107605,
+      1.0186409950256348,
+      1.7351295948028564
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0027",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      3.6635653972625732,
+      8.46909236907959,
+      6.3877458572387695
+    ],
+    "dimensions_m": {
+      "length_m": 1.3161,
+      "width_m": 0.2865,
+      "height_m": 0.0444
+    },
+    "obb_extents": [
+      0.04435482621192932,
+      0.286451131105423,
+      1.316146969795227
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0028",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      3.9898650646209717,
+      8.852239608764648,
+      1.19168221950531
+    ],
+    "dimensions_m": {
+      "length_m": 4.3956,
+      "width_m": 0.9967,
+      "height_m": 0.187
+    },
+    "obb_extents": [
+      0.18696637451648712,
+      0.9967172145843506,
+      4.395594596862793
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0030",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      6.255317211151123,
+      6.510351657867432,
+      -5.001214027404785
+    ],
+    "dimensions_m": {
+      "length_m": 2.2805,
+      "width_m": 0.5642,
+      "height_m": 0.4113
+    },
+    "obb_extents": [
+      0.41133737564086914,
+      0.5641670823097229,
+      2.2804973125457764
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0031",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      7.725425720214844,
+      7.5038604736328125,
+      -3.9038517475128174
+    ],
+    "dimensions_m": {
+      "length_m": 4.5406,
+      "width_m": 1.5425,
+      "height_m": 0.6675
+    },
+    "obb_extents": [
+      0.6674813628196716,
+      1.5424944162368774,
+      4.540623664855957
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0035",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      6.709190368652344,
+      4.206134796142578,
+      -4.699663162231445
+    ],
+    "dimensions_m": {
+      "length_m": 0.6947,
+      "width_m": 0.6556,
+      "height_m": 0.122
+    },
+    "obb_extents": [
+      0.12203644216060638,
+      0.6556443572044373,
+      0.6947143077850342
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0036",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      9.014215469360352,
+      4.235148906707764,
+      0.9516450762748718
+    ],
+    "dimensions_m": {
+      "length_m": 1.2746,
+      "width_m": 0.6936,
+      "height_m": 0.0456
+    },
+    "obb_extents": [
+      0.04560353606939316,
+      0.6936133503913879,
+      1.274573564529419
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0037",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      7.998457431793213,
+      7.229986667633057,
+      -10.471503257751465
+    ],
+    "dimensions_m": {
+      "length_m": 2.9867,
+      "width_m": 0.8841,
+      "height_m": 0.5951
+    },
+    "obb_extents": [
+      0.5951018333435059,
+      0.8841386437416077,
+      2.986661434173584
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0039",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      8.515490531921387,
+      6.8163886070251465,
+      4.709038734436035
+    ],
+    "dimensions_m": {
+      "length_m": 0.9138,
+      "width_m": 0.7331,
+      "height_m": 0.4294
+    },
+    "obb_extents": [
+      0.42939063906669617,
+      0.733079731464386,
+      0.9137712121009827
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0040",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      5.387756824493408,
+      5.217434883117676,
+      -1.125698208808899
+    ],
+    "dimensions_m": {
+      "length_m": 3.2618,
+      "width_m": 0.3741,
+      "height_m": 0.3468
+    },
+    "obb_extents": [
+      0.34678739309310913,
+      0.37414270639419556,
+      3.2617526054382324
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0041",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      7.083873271942139,
+      4.195533275604248,
+      -11.81348991394043
+    ],
+    "dimensions_m": {
+      "length_m": 2.5446,
+      "width_m": 2.9276,
+      "height_m": 0.6254
+    },
+    "obb_extents": [
+      0.625424861907959,
+      2.9275736808776855,
+      2.544628620147705
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0042",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      2.2431747913360596,
+      8.507373809814453,
+      -9.121847152709961
+    ],
+    "dimensions_m": {
+      "length_m": 0.7903,
+      "width_m": 0.78,
+      "height_m": 0.0109
+    },
+    "obb_extents": [
+      0.010890872217714787,
+      0.7800031900405884,
+      0.7902867197990417
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0046",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      6.0423264503479,
+      7.226353168487549,
+      -1.858726978302002
+    ],
+    "dimensions_m": {
+      "length_m": 3.6556,
+      "width_m": 2.3023,
+      "height_m": 0.7049
+    },
+    "obb_extents": [
+      0.7048813104629517,
+      2.3022632598876953,
+      3.655585289001465
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0048",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      7.372539043426514,
+      5.750563144683838,
+      0.390812486410141
+    ],
+    "dimensions_m": {
+      "length_m": 2.5638,
+      "width_m": 0.3175,
+      "height_m": 0.1699
+    },
+    "obb_extents": [
+      0.16988037526607513,
+      0.31750184297561646,
+      2.563795566558838
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0049",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      7.720499515533447,
+      4.741540908813477,
+      1.663312315940857
+    ],
+    "dimensions_m": {
+      "length_m": 0.7306,
+      "width_m": 0.6324,
+      "height_m": 0.1697
+    },
+    "obb_extents": [
+      0.16966228187084198,
+      0.632420003414154,
+      0.73061603307724
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0050",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      4.060197830200195,
+      7.428930282592773,
+      5.365268707275391
+    ],
+    "dimensions_m": {
+      "length_m": 2.8837,
+      "width_m": 3.0188,
+      "height_m": 0.5624
+    },
+    "obb_extents": [
+      0.5623906850814819,
+      3.018791675567627,
+      2.8837385177612305
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0051",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      5.186884880065918,
+      6.765842914581299,
+      5.307947158813477
+    ],
+    "dimensions_m": {
+      "length_m": 0.618,
+      "width_m": 0.3983,
+      "height_m": 0.2227
+    },
+    "obb_extents": [
+      0.2226574718952179,
+      0.39828115701675415,
+      0.6180312633514404
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0052",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      2.2938072681427,
+      13.166976928710938,
+      -14.199589729309082
+    ],
+    "dimensions_m": {
+      "length_m": 0.6714,
+      "width_m": 0.41,
+      "height_m": 0.2437
+    },
+    "obb_extents": [
+      0.2437366545200348,
+      0.40999436378479004,
+      0.6713712215423584
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0053",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      3.820298433303833,
+      11.702186584472656,
+      -12.132316589355469
+    ],
+    "dimensions_m": {
+      "length_m": 1.1246,
+      "width_m": 0.244,
+      "height_m": 0.1632
+    },
+    "obb_extents": [
+      0.16323921084403992,
+      0.2440260648727417,
+      1.1245949268341064
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0054",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      4.898240566253662,
+      7.707314491271973,
+      -4.455766677856445
+    ],
+    "dimensions_m": {
+      "length_m": 3.3184,
+      "width_m": 1.0319,
+      "height_m": 0.3056
+    },
+    "obb_extents": [
+      0.3055688440799713,
+      1.0319099426269531,
+      3.318382978439331
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0055",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      8.379560470581055,
+      5.517467498779297,
+      -4.614490509033203
+    ],
+    "dimensions_m": {
+      "length_m": 1.0078,
+      "width_m": 0.6803,
+      "height_m": 0.284
+    },
+    "obb_extents": [
+      0.2839859426021576,
+      0.6803280115127563,
+      1.0078173875808716
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0056",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      4.556872844696045,
+      7.389690399169922,
+      3.8094308376312256
+    ],
+    "dimensions_m": {
+      "length_m": 3.5448,
+      "width_m": 1.1701,
+      "height_m": 1.391
+    },
+    "obb_extents": [
+      1.3909528255462646,
+      1.1700944900512695,
+      3.544755220413208
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0057",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      10.289787292480469,
+      3.1848533153533936,
+      -12.982274055480957
+    ],
+    "dimensions_m": {
+      "length_m": 0.8218,
+      "width_m": 0.2914,
+      "height_m": 0.2597
+    },
+    "obb_extents": [
+      0.25974515080451965,
+      0.29135575890541077,
+      0.8217949867248535
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0059",
+    "semantic_label": "BEAM",
+    "centroid": [
+      5.1161909103393555,
+      8.911445617675781,
+      -8.972904205322266
+    ],
+    "dimensions_m": {
+      "length_m": 2.5163,
+      "width_m": 0.8521,
+      "height_m": 0.4281
+    },
+    "obb_extents": [
+      0.4281148910522461,
+      0.852105975151062,
+      2.5162644386291504
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0060",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.746924877166748,
+      9.680564880371094,
+      1.5519821643829346
+    ],
+    "dimensions_m": {
+      "length_m": 3.4366,
+      "width_m": 1.4472,
+      "height_m": 0.2073
+    },
+    "obb_extents": [
+      0.20729202032089233,
+      1.4471967220306396,
+      3.4366321563720703
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0063",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      4.112247467041016,
+      3.262817859649658,
+      4.636462688446045
+    ],
+    "dimensions_m": {
+      "length_m": 0.7662,
+      "width_m": 0.594,
+      "height_m": 0.4935
+    },
+    "obb_extents": [
+      0.49350011348724365,
+      0.5940051078796387,
+      0.7662490010261536
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0066",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      3.7579267024993896,
+      5.970729351043701,
+      5.687854290008545
+    ],
+    "dimensions_m": {
+      "length_m": 0.6046,
+      "width_m": 0.4429,
+      "height_m": 0.2157
+    },
+    "obb_extents": [
+      0.21570739150047302,
+      0.44293487071990967,
+      0.6045678853988647
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0067",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      8.088613510131836,
+      3.9283435344696045,
+      1.9706611633300781
+    ],
+    "dimensions_m": {
+      "length_m": 2.0566,
+      "width_m": 0.881,
+      "height_m": 0.3109
+    },
+    "obb_extents": [
+      0.3109191954135895,
+      0.8810410499572754,
+      2.056598663330078
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0068",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.610103130340576,
+      8.345760345458984,
+      -3.3361122608184814
+    ],
+    "dimensions_m": {
+      "length_m": 2.9265,
+      "width_m": 1.0508,
+      "height_m": 0.2345
+    },
+    "obb_extents": [
+      0.2345050573348999,
+      1.0507876873016357,
+      2.9264862537384033
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0069",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.208187103271484,
+      7.932751178741455,
+      -2.610241413116455
+    ],
+    "dimensions_m": {
+      "length_m": 3.2759,
+      "width_m": 2.5358,
+      "height_m": 1.3285
+    },
+    "obb_extents": [
+      1.3284705877304077,
+      2.5358147621154785,
+      3.275858163833618
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0071",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      7.580620288848877,
+      6.861220836639404,
+      -11.31975269317627
+    ],
+    "dimensions_m": {
+      "length_m": 2.9275,
+      "width_m": 1.3394,
+      "height_m": 0.5263
+    },
+    "obb_extents": [
+      0.5263034105300903,
+      1.3393930196762085,
+      2.927459239959717
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0073",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.147031784057617,
+      9.14743709564209,
+      -9.751985549926758
+    ],
+    "dimensions_m": {
+      "length_m": 2.8197,
+      "width_m": 2.9313,
+      "height_m": 1.5389
+    },
+    "obb_extents": [
+      1.5389049053192139,
+      2.9313416481018066,
+      2.8197102546691895
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0074",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      8.341333389282227,
+      5.325366020202637,
+      -11.987259864807129
+    ],
+    "dimensions_m": {
+      "length_m": 1.1339,
+      "width_m": 0.3215,
+      "height_m": 0.1347
+    },
+    "obb_extents": [
+      0.13470397889614105,
+      0.32150667905807495,
+      1.1338852643966675
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0075",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.062093734741211,
+      8.208944320678711,
+      -0.5768809914588928
+    ],
+    "dimensions_m": {
+      "length_m": 2.3997,
+      "width_m": 1.159,
+      "height_m": 0.4458
+    },
+    "obb_extents": [
+      0.4457770586013794,
+      1.1589866876602173,
+      2.399695873260498
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0076",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      4.501418113708496,
+      8.62104320526123,
+      -11.29919719696045
+    ],
+    "dimensions_m": {
+      "length_m": 3.2147,
+      "width_m": 2.3786,
+      "height_m": 0.6185
+    },
+    "obb_extents": [
+      0.6185237169265747,
+      2.378596067428589,
+      3.214661121368408
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0078",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      3.351121187210083,
+      4.094900608062744,
+      7.294875621795654
+    ],
+    "dimensions_m": {
+      "length_m": 3.2993,
+      "width_m": 0.2827,
+      "height_m": 0.116
+    },
+    "obb_extents": [
+      0.11600866913795471,
+      0.28272539377212524,
+      3.29925537109375
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0079",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      3.351689338684082,
+      8.067702293395996,
+      -3.248412847518921
+    ],
+    "dimensions_m": {
+      "length_m": 0.7212,
+      "width_m": 0.7109,
+      "height_m": 0.2309
+    },
+    "obb_extents": [
+      0.23092332482337952,
+      0.7109233140945435,
+      0.7211806774139404
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0080",
+    "semantic_label": "BEAM",
+    "centroid": [
+      4.939682960510254,
+      9.564807891845703,
+      -7.171069622039795
+    ],
+    "dimensions_m": {
+      "length_m": 1.9843,
+      "width_m": 0.6298,
+      "height_m": 0.2902
+    },
+    "obb_extents": [
+      0.29017212986946106,
+      0.6298080682754517,
+      1.9842863082885742
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0082",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      8.133597373962402,
+      5.891487121582031,
+      -12.30499267578125
+    ],
+    "dimensions_m": {
+      "length_m": 3.9637,
+      "width_m": 1.9681,
+      "height_m": 0.9198
+    },
+    "obb_extents": [
+      0.9197788238525391,
+      1.9681073427200317,
+      3.9637398719787598
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0083",
+    "semantic_label": "BEAM",
+    "centroid": [
+      10.106146812438965,
+      7.11965274810791,
+      3.3365566730499268
+    ],
+    "dimensions_m": {
+      "length_m": 2.3516,
+      "width_m": 0.8431,
+      "height_m": 0.2845
+    },
+    "obb_extents": [
+      0.2844617962837219,
+      0.8430591821670532,
+      2.351602077484131
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0084",
+    "semantic_label": "BEAM",
+    "centroid": [
+      8.726777076721191,
+      3.580458164215088,
+      3.7023074626922607
+    ],
+    "dimensions_m": {
+      "length_m": 4.0871,
+      "width_m": 1.3444,
+      "height_m": 0.2357
+    },
+    "obb_extents": [
+      0.23571622371673584,
+      1.3443914651870728,
+      4.08708381652832
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0085",
+    "semantic_label": "BEAM",
+    "centroid": [
+      4.3270392417907715,
+      8.743966102600098,
+      -12.33486270904541
+    ],
+    "dimensions_m": {
+      "length_m": 3.045,
+      "width_m": 0.9741,
+      "height_m": 0.6844
+    },
+    "obb_extents": [
+      0.68438720703125,
+      0.9741302728652954,
+      3.044980764389038
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0087",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      4.062148571014404,
+      8.701512336730957,
+      -10.74642562866211
+    ],
+    "dimensions_m": {
+      "length_m": 3.5858,
+      "width_m": 2.6237,
+      "height_m": 0.3139
+    },
+    "obb_extents": [
+      0.3139265179634094,
+      2.6236653327941895,
+      3.5858449935913086
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0089",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      5.900187015533447,
+      8.783689498901367,
+      -13.332433700561523
+    ],
+    "dimensions_m": {
+      "length_m": 3.3487,
+      "width_m": 1.3319,
+      "height_m": 0.9162
+    },
+    "obb_extents": [
+      0.9161838889122009,
+      1.3318803310394287,
+      3.348722219467163
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0091",
+    "semantic_label": "BEAM",
+    "centroid": [
+      3.673910140991211,
+      8.276532173156738,
+      -12.740185737609863
+    ],
+    "dimensions_m": {
+      "length_m": 1.3807,
+      "width_m": 1.4066,
+      "height_m": 0.373
+    },
+    "obb_extents": [
+      0.3729511499404907,
+      1.4065959453582764,
+      1.3807483911514282
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0092",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      4.231276035308838,
+      8.96705436706543,
+      -11.751571655273438
+    ],
+    "dimensions_m": {
+      "length_m": 4.1575,
+      "width_m": 2.6926,
+      "height_m": 0.2881
+    },
+    "obb_extents": [
+      0.28807687759399414,
+      2.692596673965454,
+      4.157543182373047
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0093",
+    "semantic_label": "BEAM",
+    "centroid": [
+      6.116504192352295,
+      6.4652862548828125,
+      -12.083683013916016
+    ],
+    "dimensions_m": {
+      "length_m": 4.1131,
+      "width_m": 1.8081,
+      "height_m": 0.7448
+    },
+    "obb_extents": [
+      0.7447555065155029,
+      1.8080604076385498,
+      4.113107681274414
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0094",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      4.975670337677002,
+      9.663154602050781,
+      -10.496780395507812
+    ],
+    "dimensions_m": {
+      "length_m": 1.7168,
+      "width_m": 1.5689,
+      "height_m": 0.4457
+    },
+    "obb_extents": [
+      0.4457285404205322,
+      1.5688674449920654,
+      1.7167829275131226
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0095",
+    "semantic_label": "BEAM",
+    "centroid": [
+      5.316057205200195,
+      6.362395763397217,
+      -6.405608177185059
+    ],
+    "dimensions_m": {
+      "length_m": 3.1553,
+      "width_m": 0.8223,
+      "height_m": 0.3638
+    },
+    "obb_extents": [
+      0.3637882471084595,
+      0.822300374507904,
+      3.155276298522949
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0097",
+    "semantic_label": "BEAM",
+    "centroid": [
+      5.742725372314453,
+      6.752480983734131,
+      -12.441033363342285
+    ],
+    "dimensions_m": {
+      "length_m": 1.267,
+      "width_m": 0.7768,
+      "height_m": 0.2227
+    },
+    "obb_extents": [
+      0.22265160083770752,
+      0.7768102884292603,
+      1.267026662826538
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0098",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      8.80860710144043,
+      4.1354241371154785,
+      -12.512131690979004
+    ],
+    "dimensions_m": {
+      "length_m": 1.4691,
+      "width_m": 0.7148,
+      "height_m": 0.2498
+    },
+    "obb_extents": [
+      0.24980086088180542,
+      0.71479332447052,
+      1.4690747261047363
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0099",
+    "semantic_label": "BEAM",
+    "centroid": [
+      1.8816022872924805,
+      9.261269569396973,
+      -12.0829496383667
+    ],
+    "dimensions_m": {
+      "length_m": 2.5326,
+      "width_m": 1.7204,
+      "height_m": 0.318
+    },
+    "obb_extents": [
+      0.3179766535758972,
+      1.7203896045684814,
+      2.5325565338134766
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0100",
+    "semantic_label": "BEAM",
+    "centroid": [
+      5.426759243011475,
+      9.758482933044434,
+      -5.690518856048584
+    ],
+    "dimensions_m": {
+      "length_m": 2.0941,
+      "width_m": 2.2838,
+      "height_m": 0.3852
+    },
+    "obb_extents": [
+      0.38523343205451965,
+      2.283752918243408,
+      2.0941433906555176
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0101",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      2.823183059692383,
+      10.533011436462402,
+      -12.1526517868042
+    ],
+    "dimensions_m": {
+      "length_m": 0.9248,
+      "width_m": 0.4496,
+      "height_m": 0.2956
+    },
+    "obb_extents": [
+      0.29558616876602173,
+      0.4496401250362396,
+      0.924752950668335
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0104",
+    "semantic_label": "UNKNOWN_STRUCTURAL",
+    "centroid": [
+      4.509151458740234,
+      8.677815437316895,
+      -5.499168872833252
+    ],
+    "dimensions_m": {
+      "length_m": 0.8712,
+      "width_m": 0.378,
+      "height_m": 0.2754
+    },
+    "obb_extents": [
+      0.2753632366657257,
+      0.3779544234275818,
+      0.8711905479431152
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0106",
+    "semantic_label": "BEAM",
+    "centroid": [
+      6.553555011749268,
+      6.0856242179870605,
+      0.5752078294754028
+    ],
+    "dimensions_m": {
+      "length_m": 2.2065,
+      "width_m": 0.9862,
+      "height_m": 0.5563
+    },
+    "obb_extents": [
+      0.556272029876709,
+      0.9861807227134705,
+      2.206512928009033
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0107",
+    "semantic_label": "BEAM",
+    "centroid": [
+      5.679981708526611,
+      9.774112701416016,
+      -11.533119201660156
+    ],
+    "dimensions_m": {
+      "length_m": 1.9162,
+      "width_m": 0.7935,
+      "height_m": 0.2905
+    },
+    "obb_extents": [
+      0.2904796600341797,
+      0.7935076951980591,
+      1.9162242412567139
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0108",
+    "semantic_label": "BEAM",
+    "centroid": [
+      6.199374198913574,
+      8.267997741699219,
+      -1.602105975151062
+    ],
+    "dimensions_m": {
+      "length_m": 1.7629,
+      "width_m": 0.4763,
+      "height_m": 0.4853
+    },
+    "obb_extents": [
+      0.485302209854126,
+      0.4762740731239319,
+      1.762941837310791
+    ],
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0110",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      6.5643534660339355,
+      7.3547844886779785,
+      0.025903552770614624
+    ],
+    "dimensions_m": {
+      "length_m": 3.2428,
+      "width_m": 1.7389,
+      "height_m": 1.3907
+    },
+    "obb_extents": [
+      1.3907203674316406,
+      1.7388845682144165,
+      3.242828130722046
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0111",
+    "semantic_label": "UNKNOWN_MEP",
+    "centroid": [
+      5.029951572418213,
+      8.056061744689941,
+      -2.2303459644317627
+    ],
+    "dimensions_m": {
+      "length_m": 1.1765,
+      "width_m": 0.3837,
+      "height_m": 0.1221
+    },
+    "obb_extents": [
+      0.12213864177465439,
+      0.38374650478363037,
+      1.1764642000198364
+    ],
+    "status": "UNCERTAIN"
+  },
+  {
+    "object_id": "prop_0116",
+    "semantic_label": "UNKNOWN_OBJECT",
+    "centroid": [
+      7.1324663162231445,
+      9.264191627502441,
+      -10.929487228393555
+    ],
+    "dimensions_m": {
+      "length_m": 3.8314,
+      "width_m": 0.9944,
+      "height_m": 0.2567
+    },
+    "obb_extents": [
+      0.2567201852798462,
+      0.9943830370903015,
+      3.8314335346221924
+    ],
+    "status": "REVIEW_REQUIRED"
+  },
+  {
+    "object_id": "prop_0002",
+    "semantic_label": "WALL",
+    "start": [
+      5.708212282094396,
+      4.164088228983616,
+      -13.378926753997803
+    ],
+    "end": [
+      4.827385806565229,
+      5.089247671260421,
+      -13.378926753997803
+    ],
+    "length_m": 1.277409595089635,
+    "thickness_m": 0.14800568164287142,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0005",
+    "semantic_label": "WALL",
+    "start": [
+      5.501321060360027,
+      2.7761206623982173,
+      2.7714895009994507
+    ],
+    "end": [
+      3.149602005168058,
+      5.057218864426109,
+      2.7714895009994507
+    ],
+    "length_m": 3.2762770825813696,
+    "thickness_m": 0.1,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0010",
+    "semantic_label": "WALL",
+    "start": [
+      2.425993053506673,
+      7.163536097948372,
+      1.632999986410141
+    ],
+    "end": [
+      3.8341004328286097,
+      8.614564419881845,
+      1.632999986410141
+    ],
+    "length_m": 2.021942032491032,
+    "thickness_m": 0.1,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0017",
+    "semantic_label": "WALL",
+    "start": [
+      9.32725497347041,
+      3.8103165569373862,
+      2.277244746685028
+    ],
+    "end": [
+      8.628025925567435,
+      4.507032912352876,
+      2.277244746685028
+    ],
+    "length_m": 0.987084059913208,
+    "thickness_m": 0.17524018769980465,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0021",
+    "semantic_label": "WALL",
+    "start": [
+      10.113998517928056,
+      5.392477803143986,
+      -1.5559895038604736
+    ],
+    "end": [
+      9.252012719936658,
+      4.481571551253976,
+      -1.5559895038604736
+    ],
+    "length_m": 1.2541011584681563,
+    "thickness_m": 0.1,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0024",
+    "semantic_label": "WALL",
+    "start": [
+      2.4956922353729545,
+      8.244745613268961,
+      -3.0584789514541626
+    ],
+    "end": [
+      1.7138437978079333,
+      8.980977758986432,
+      -3.0584789514541626
+    ],
+    "length_m": 1.07392958414908,
+    "thickness_m": 0.1,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0034",
+    "semantic_label": "WALL",
+    "start": [
+      2.9803375705062525,
+      5.212861100642488,
+      0.6670000553131104
+    ],
+    "end": [
+      1.9208543646049452,
+      6.26829532795589,
+      0.6670000553131104
+    ],
+    "length_m": 1.495475199316776,
+    "thickness_m": 0.1,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0043",
+    "semantic_label": "WALL",
+    "start": [
+      2.4360485087052113,
+      8.31265751975311,
+      -5.887457847595215
+    ],
+    "end": [
+      1.94114936981497,
+      8.780115925574346,
+      -5.887457847595215
+    ],
+    "length_m": 0.6807661263952811,
+    "thickness_m": 0.11835112515683566,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0064",
+    "semantic_label": "WALL",
+    "start": [
+      8.157781562783168,
+      5.984114320980115,
+      -1.7702342569828033
+    ],
+    "end": [
+      6.522220788391501,
+      4.489428832141043,
+      -1.7702342569828033
+    ],
+    "length_m": 2.2156587637257603,
+    "thickness_m": 0.31986191581582823,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0086",
+    "semantic_label": "PIPE",
+    "start": [
+      3.4736692905426025,
+      7.305757522583008,
+      -6.561505317687988
+    ],
+    "end": [
+      5.983005523681641,
+      8.80843448638916,
+      -4.45088005065918
+    ],
+    "diameter_m": 0.20915569365024567,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0090",
+    "semantic_label": "PIPE",
+    "start": [
+      5.253283977508545,
+      9.40783405303955,
+      -10.496481895446777
+    ],
+    "end": [
+      5.896633148193359,
+      9.970769882202148,
+      -10.567262649536133
+    ],
+    "diameter_m": 0.16629354655742645,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0102",
+    "semantic_label": "PIPE",
+    "start": [
+      5.001699447631836,
+      7.151129722595215,
+      -11.426690101623535
+    ],
+    "end": [
+      5.697727680206299,
+      7.909663200378418,
+      -12.297459602355957
+    ],
+    "diameter_m": 0.1730303317308426,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0112",
+    "semantic_label": "PIPE",
+    "start": [
+      5.63344144821167,
+      7.883361339569092,
+      -3.1089978218078613
+    ],
+    "end": [
+      6.179108619689941,
+      8.391671180725098,
+      -3.728379249572754
+    ],
+    "diameter_m": 0.17743216454982758,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0114",
+    "semantic_label": "PIPE",
+    "start": [
+      4.6819748878479,
+      8.754322052001953,
+      -5.144165515899658
+    ],
+    "end": [
+      5.309694290161133,
+      9.341302871704102,
+      -4.493063926696777
+    ],
+    "diameter_m": 0.14677143096923828,
+    "status": "ACCEPTED"
+  },
+  {
+    "object_id": "prop_0117",
+    "semantic_label": "PIPE",
+    "start": [
+      5.594954967498779,
+      7.666980266571045,
+      -6.064524173736572
+    ],
+    "end": [
+      6.1072306632995605,
+      8.423239707946777,
+      -6.722519874572754
+    ],
+    "diameter_m": 0.1622224897146225,
+    "status": "ACCEPTED"
+  }
+]
