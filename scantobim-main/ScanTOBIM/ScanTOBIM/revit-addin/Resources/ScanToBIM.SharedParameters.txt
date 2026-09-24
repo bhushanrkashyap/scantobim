@@ -1,0 +1,20 @@
+# This is a Revit shared parameter file.
+# Do not edit manually — managed by ScanToBIM Agent.
+# P2.2a: 12 parameters total (4 original + 5 compliance + 3 USIBD LOA v3.1)
+*META	Version	MinVersion
+META	2	1
+*GROUP	Id	Name
+GROUP	1	ScanToBIM
+*PARAM	GUID	Name	Datatype	DataCategory	Group	Visible	Description	UserModifiable	HideWhenNoValue
+PARAM	e1a2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6	ScanToBIM_SafetyCategory	TEXT		1	1	NQA-1 Safety Category: SC1 / SC2 / SC3 / NS	0	0
+PARAM	a1b2c3d4-e5f6-7890-abcd-ef1234567891	ScanToBIM_ScanStationId	TEXT		1	1	Source point-cloud scan station identifier	0	0
+PARAM	b2c3d4e5-f6a7-8901-bcde-f12345678902	ScanToBIM_SegmentId	TEXT		1	1	Point-cloud geometry segment UUID	0	0
+PARAM	c3d4e5f6-a7b8-9012-cdef-123456789013	ScanToBIM_AgentSession	TEXT		1	1	Agent instruction / session ID	0	0
+PARAM	d4e5f6a7-b8c9-0123-defa-234567890124	ScanToBIM_DSEARZone	TEXT		1	1	DSEAR explosive atmosphere zone: Zone0 / Zone1 / Zone2 / None	0	0
+PARAM	e5f6a7b8-c9d0-1234-efab-345678901235	ScanToBIM_ApprovalSignature	TEXT		1	0	SC2 engineer approval HMAC-SHA256 signature	0	1
+PARAM	f6a7b8c9-d0e1-2345-fabc-456789012346	ScanToBIM_ApproverUPN	TEXT		1	1	SC2 approving engineer UPN (user principal name)	0	0
+PARAM	a7b8c9d0-e1f2-3456-abcd-567890123457	ScanToBIM_ApprovedAtUtc	TEXT		1	1	SC2 approval timestamp (ISO 8601 UTC)	0	0
+PARAM	b8c9d0e1-f2a3-4567-bcde-678901234568	ScanToBIM_NCRRef	TEXT		1	1	Non-Conformance Report reference (auto-populated if NCR raised)	0	1
+PARAM	c9d0e1f2-a3b4-5678-cdef-789012345679	ScanToBIM_LOATier	TEXT		1	1	USIBD LOA v3.1 effective tier: LOA10 / LOA20 / LOA30 / LOA40 / LOA50	0	0
+PARAM	d0e1f2a3-b4c5-6789-defa-89012345678a	ScanToBIM_LOASigmaMm	NUMBER		1	1	USIBD LOA v3.1 1-sigma point-to-fit residual (mm)	0	0
+PARAM	e1f2a3b4-c5d6-789a-efab-9012345678ab	ScanToBIM_LOAStandard	TEXT		1	1	USIBD LOA standard version (e.g. 'USIBD LOA v3.1')	0	0

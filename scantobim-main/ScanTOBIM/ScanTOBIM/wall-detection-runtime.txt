@@ -1,0 +1,17 @@
+# Minimal runtime dependencies for ScanToBIM wall detection
+# Keep this focused to geometry + point-cloud processing only.
+
+numpy==2.2.4
+scipy==1.15.2
+open3d==0.19.0
+pye57==0.4.16
+e57==0.2.1a1
+laspy[lazrs]>=2.5.0
+scikit-image==0.25.2
+opencv-python-headless==4.11.0.86
+pyquaternion==0.9.9
+tqdm==4.67.1
+PyYAML==6.0.2
+ConfigArgParse==1.7
+ifcopenshell==0.8.1.post1
+shapely==2.0.7

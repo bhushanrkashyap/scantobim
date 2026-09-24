@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanToBIM — Sign In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/ui/js/api.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 to-indigo-950 flex items-center justify-center p-4">
+
+<div class="w-full max-w-md">
+  <!-- Logo / Header -->
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 mb-4">
+      <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+      </svg>
+    </div>
+    <h1 class="text-2xl font-bold text-white">ScanToBIM</h1>
+    <p class="text-slate-400 text-sm mt-1">Enterprise Agentic Scan-to-BIM</p>
+  </div>
+
+  <!-- Card -->
+  <div class="bg-white rounded-2xl shadow-2xl p-8">
+    <h2 class="text-xl font-semibold text-gray-800 mb-6">Sign in to your account</h2>
+
+    <form id="loginForm" onsubmit="doLogin(event)">
+      <!-- Username -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+        <input id="username" type="text" required autocomplete="username"
+          placeholder="admin"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <input id="password" type="password" required autocomplete="current-password"
+          placeholder="••••••••"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+      </div>
+
+      <!-- Error -->
+      <div id="errorMsg" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"></div>
+
+      <!-- Submit -->
+      <button type="submit" id="submitBtn"
+        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm transition-colors">
+        Sign In
+      </button>
+    </form>
+
+    <!-- Demo credentials hint -->
+    <div class="mt-6 pt-5 border-t border-gray-100">
+      <p class="text-xs text-gray-400 text-center mb-3 font-medium uppercase tracking-wide">Demo credentials</p>
+      <div class="grid grid-cols-2 gap-2 text-xs text-gray-500">
+        <div class="bg-gray-50 rounded p-2">
+          <p class="font-medium text-gray-700">Admin</p>
+          <p>admin / admin123</p>
+        </div>
+        <div class="bg-gray-50 rounded p-2">
+          <p class="font-medium text-gray-700">Engineer</p>
+          <p>engineer / eng123</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-center text-slate-500 text-xs mt-6">
+    NQA-1 · ISO 19650 · DSEAR compliant
+  </p>
+</div>
+
+<script>
+  // If already logged in, redirect to dashboard
+  if (auth.isLoggedIn()) {
+    window.location.href = '/ui/dashboard.html';
+  }
+
+  async function doLogin(e) {
+    e.preventDefault();
+    const btn    = document.getElementById('submitBtn');
+    const errDiv = document.getElementById('errorMsg');
+    const user   = document.getElementById('username').value.trim();
+    const pass   = document.getElementById('password').value;
+
+    btn.disabled    = true;
+    btn.textContent = 'Signing in…';
+    errDiv.classList.add('hidden');
+
+    try {
+      await api.login(user, pass);
+      window.location.href = '/ui/dashboard.html';
+    } catch (err) {
+      errDiv.textContent = err.detail || 'Login failed. Check your credentials.';
+      errDiv.classList.remove('hidden');
+      btn.disabled    = false;
+      btn.textContent = 'Sign In';
+    }
+  }
+</script>
+</body>
+</html>

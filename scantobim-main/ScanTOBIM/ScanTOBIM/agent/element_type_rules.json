@@ -1,0 +1,61 @@
+{
+  "_comment": [
+    "ScanToBIM — Dynamic Element Type Classification Rules.",
+    "",
+    "Rules in this file are evaluated by classifier.py BEFORE the built-in rules.",
+    "Add new equipment types here without touching classifier.py or models.py code.",
+    "",
+    "Rule schema:",
+    "  element_type  [required] — must match an ElementType enum value in models.py",
+    "  description              — human-readable note (ignored by code)",
+    "  priority                 — lower number = evaluated first (default 50)",
+    "  shape                    — 'cylinder' | 'box' | 'any' (default 'any')",
+    "  conditions               — all listed conditions must pass for a match:",
+    "    min_diameter_mm / max_diameter_mm   — average of two minor bounding-box dims",
+    "    min_aspect_ratio / max_aspect_ratio — major_dim / diameter",
+    "    min_major_mm / max_major_mm         — longest bounding-box dimension",
+    "    min_volume_m3 / max_volume_m3       — bounding-box volume in cubic metres",
+    "    min_centroid_z_mm / max_centroid_z_mm — vertical centroid elevation",
+    "    min_minor1_mm / max_minor1_mm       — smallest bounding-box dimension (box shape)",
+    "    min_minor2_mm / max_minor2_mm       — middle bounding-box dimension (box shape)",
+    "",
+    "discipline_overrides:",
+    "  Maps element_type value → Discipline enum value ('mep', 'structural', etc.)",
+    "  Only needed for types NOT already in the built-in discipline mapping.",
+    "",
+    "safety_overrides:",
+    "  Maps element_type value → safety classification dict.",
+    "  Keys: safety_category (SC1/SC2/SC3/NS), dsear_zone (Zone0/Zone1/Zone2/None), reason."
+  ],
+
+  "rules": [
+    {
+      "element_type": "mechanical_equipment_receiver",
+      "description": "Air / gas receiver tank — upright stocky cylinder with legs, floor-mounted",
+      "priority": 45,
+      "shape": "cylinder",
+      "conditions": {
+        "min_diameter_mm":    400,
+        "max_diameter_mm":   1600,
+        "min_aspect_ratio":   1.5,
+        "max_aspect_ratio":   4.5,
+        "min_major_mm":       800,
+        "min_volume_m3":      0.15,
+        "max_volume_m3":     10.0,
+        "max_centroid_z_mm": 3000
+      }
+    }
+  ],
+
+  "discipline_overrides": {
+    "mechanical_equipment_receiver": "mep"
+  },
+
+  "safety_overrides": {
+    "mechanical_equipment_receiver": {
+      "safety_category": "SC2",
+      "dsear_zone":       "Zone1",
+      "reason":           "Pressurised air/gas receiver — requires engineer sign-off before Revit placement"
+    }
+  }
+}

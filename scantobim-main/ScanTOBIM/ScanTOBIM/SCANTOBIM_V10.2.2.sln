@@ -1,0 +1,44 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scantobim-v1.2.1", "scantobim-v1.2.1", "{08C72DE3-826C-A2C4-D404-981EFFE39647}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "revit-addin", "revit-addin", "{532D028B-7B4B-58B0-EC9D-21AC0065E1CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScanToBIMAgent", "scantobim-v1.2.1\revit-addin\ScanToBIMAgent.csproj", "{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM32 = Debug|ARM32
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|ARM32 = Release|ARM32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Debug|ARM32.ActiveCfg = Debug|Any CPU
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Debug|ARM32.Build.0 = Debug|Any CPU
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Debug|x64.ActiveCfg = Debug|x64
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Debug|x64.Build.0 = Debug|x64
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Release|ARM32.ActiveCfg = Release|ARM32
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Release|ARM32.Build.0 = Release|ARM32
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Release|x64.ActiveCfg = Release|x64
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{532D028B-7B4B-58B0-EC9D-21AC0065E1CC} = {08C72DE3-826C-A2C4-D404-981EFFE39647}
+		{16D43009-40C5-C1BA-FC41-F0EE28DDE4A6} = {532D028B-7B4B-58B0-EC9D-21AC0065E1CC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C98006F4-D9CF-4EB1-948B-53BA0FA8F71A}
+	EndGlobalSection
+EndGlobal

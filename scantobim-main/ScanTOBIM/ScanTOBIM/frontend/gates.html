@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanToBIM — Safety Gates</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/ui/js/api.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800" x-data="gatesApp()" x-init="init()">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Mobile overlay -->
+  <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+       class="fixed inset-0 bg-black/50 z-20 lg:hidden"></div>
+
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+         class="fixed inset-y-0 left-0 z-30 w-56 bg-slate-800 text-slate-100 flex flex-col flex-shrink-0 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0">
+    <div class="h-16 flex items-center px-5 border-b border-slate-700">
+      <svg class="w-6 h-6 text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+      </svg>
+      <span class="font-semibold text-sm">ScanToBIM</span>
+    </div>
+    <nav class="flex-1 py-4 px-2 space-y-0.5 text-sm">
+      <a href="/ui/dashboard.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="/ui/sessions.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Sessions
+      </a>
+      <a href="/ui/gates.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700 text-white font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Safety Gates
+      </a>
+      <a href="/ui/ncrs.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        NCRs
+      </a>
+      <a href="/ui/audit.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Audit Chain
+      </a>
+    </nav>
+    <div class="border-t border-slate-700 p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold uppercase"
+          x-text="(user?.username || 'U')[0]"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-medium truncate" x-text="user?.username || '—'"></p>
+          <p class="text-xs text-slate-400 capitalize" x-text="user?.role || ''"></p>
+        </div>
+      </div>
+      <button onclick="auth.logout()" class="w-full text-xs text-slate-400 hover:text-white text-left">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto">
+    <!-- Mobile top bar -->
+    <div class="sticky top-0 z-10 lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+      <button @click="sidebarOpen = true" class="text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <span class="font-semibold text-gray-800 text-sm">ScanToBIM</span>
+    </div>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Safety Gates</h1>
+          <p class="text-sm text-gray-500 mt-0.5">SC2 elements requiring engineer sign-off (NQA-1)</p>
+        </div>
+        <!-- Filter tabs -->
+        <div class="flex bg-white border border-gray-200 rounded-lg p-0.5 gap-0.5 text-xs">
+          <button @click="filter = 'PENDING'; load()"
+            :class="filter === 'PENDING' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'"
+            class="px-3 py-1.5 rounded font-medium transition-colors">
+            Pending <span x-show="pendingCount > 0" class="ml-1 bg-amber-400 text-white rounded-full px-1 text-xs" x-text="pendingCount"></span>
+          </button>
+          <button @click="filter = 'APPROVED'; load()"
+            :class="filter === 'APPROVED' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'"
+            class="px-3 py-1.5 rounded font-medium transition-colors">Approved</button>
+          <button @click="filter = 'REJECTED'; load()"
+            :class="filter === 'REJECTED' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'"
+            class="px-3 py-1.5 rounded font-medium transition-colors">Rejected</button>
+          <button @click="filter = ''; load()"
+            :class="filter === '' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'"
+            class="px-3 py-1.5 rounded font-medium transition-colors">All</button>
+        </div>
+      </div>
+
+      <!-- NQA-1 Info Banner -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex gap-3">
+        <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-sm text-blue-700">
+          <strong>SC2 gates</strong> require a qualified engineer to review and approve element placement before the AI agent can proceed.
+          Your approval is HMAC-signed and immutably recorded on the audit ledger per <strong>NQA-1 / ISO 19650</strong>.
+        </p>
+      </div>
+
+      <!-- Gate Cards -->
+      <div class="space-y-4">
+        <template x-if="loading">
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-8 text-center text-gray-400">Loading gates…</div>
+        </template>
+        <template x-if="!loading && gates.length === 0">
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-10 text-center">
+            <svg class="w-10 h-10 text-green-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-gray-500 font-medium">No gates found</p>
+            <p class="text-sm text-gray-400 mt-1">All SC2 elements have been reviewed.</p>
+          </div>
+        </template>
+        <template x-for="g in gates" :key="g.gate_id">
+          <div class="bg-white rounded-xl border shadow-sm overflow-hidden"
+            :class="g.decision === 'APPROVED' ? 'border-green-200' : g.decision === 'REJECTED' ? 'border-red-200' : 'border-amber-200'">
+
+            <!-- Gate Header -->
+            <div class="px-5 py-4 flex items-start gap-4 border-b border-gray-100">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-semibold text-gray-800 capitalize" x-text="(g.element_type || '—').replace('_',' ')"></span>
+                  <span x-html="safetyCategoryBadge(g.safety_category || 'SC2')"></span>
+                  <span x-show="g.decision === 'APPROVED'" class="bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded">✓ Approved</span>
+                  <span x-show="g.decision === 'REJECTED'" class="bg-red-100 text-red-700 text-xs font-medium px-2 py-0.5 rounded">✗ Rejected</span>
+                  <span x-show="!g.decision" class="bg-amber-100 text-amber-700 text-xs font-medium px-2 py-0.5 rounded">⏳ Pending</span>
+                </div>
+                <div class="flex gap-4 text-xs text-gray-500">
+                  <span>Gate: <code class="font-mono text-gray-700" x-text="shortId(g.gate_id)"></code></span>
+                  <span x-show="g.zone_id">Zone: <span x-text="g.zone_id"></span></span>
+                  <span x-show="g.session_id">Session: <span x-text="shortId(g.session_id || '')"></span></span>
+                  <span>Raised: <span x-text="fmtDate(g.created_at)"></span></span>
+                </div>
+              </div>
+
+              <!-- Approve / Reject buttons (only for pending) -->
+              <div x-show="!g.decision" class="flex gap-2 flex-shrink-0">
+                <button @click="openDecisionModal(g, false)"
+                  class="text-xs bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 px-3 py-1.5 rounded-lg font-medium transition-colors">
+                  Reject
+                </button>
+                <button @click="openDecisionModal(g, true)"
+                  class="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors">
+                  Approve
+                </button>
+              </div>
+
+              <!-- Decision record (approved/rejected) -->
+              <div x-show="g.decision" class="text-right flex-shrink-0">
+                <p class="text-xs text-gray-500" x-text="fmtDate(g.decided_at)"></p>
+                <p class="text-xs text-gray-500" x-text="g.approver_upn || g.decided_by || ''"></p>
+              </div>
+            </div>
+
+            <!-- Gate Details -->
+            <div class="px-5 py-3 bg-gray-50 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div>
+                <p class="text-gray-400 uppercase tracking-wide font-medium mb-0.5">Discipline</p>
+                <p class="text-gray-700 capitalize" x-text="g.discipline || '—'"></p>
+              </div>
+              <div>
+                <p class="text-gray-400 uppercase tracking-wide font-medium mb-0.5">Confidence</p>
+                <p class="text-gray-700" x-text="g.confidence != null ? `${Math.round(g.confidence * 100)}%` : '—'"></p>
+              </div>
+              <div>
+                <p class="text-gray-400 uppercase tracking-wide font-medium mb-0.5">Segment ID</p>
+                <p class="text-gray-700 font-mono truncate" x-text="shortId(g.segment_id || g.element_id || '—')"></p>
+              </div>
+              <div x-show="g.comments">
+                <p class="text-gray-400 uppercase tracking-wide font-medium mb-0.5">Comments</p>
+                <p class="text-gray-700" x-text="g.comments"></p>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ── Decision Modal ───────────────────────────────────────────────────────── -->
+<div x-show="decisionModal.open" x-cloak
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+    <h2 class="text-lg font-semibold mb-1"
+      :class="decisionModal.approve ? 'text-green-700' : 'text-red-700'"
+      x-text="decisionModal.approve ? 'Approve SC2 Element' : 'Reject SC2 Element'">
+    </h2>
+    <p class="text-sm text-gray-500 mb-4">
+      Gate <code class="font-mono text-gray-700" x-text="shortId(decisionModal.gate?.gate_id || '')"></code>
+      — <span class="capitalize" x-text="(decisionModal.gate?.element_type || '').replace('_',' ')"></span>
+    </p>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Your UPN (email) *</label>
+        <input x-model="decisionModal.upn" type="email" placeholder="engineer@company.com"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Comments</label>
+        <textarea x-model="decisionModal.comments" rows="3" placeholder="Optional review notes…"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+      </div>
+      <div x-show="!decisionModal.approve" class="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700">
+        ⚠ Rejection will block this element. An NCR may be raised automatically if confidence was below threshold.
+      </div>
+      <div x-show="decisionModal.error" class="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700"
+        x-text="decisionModal.error"></div>
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <button @click="decisionModal.open = false"
+        class="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">
+        Cancel
+      </button>
+      <button @click="submitDecision()"
+        :disabled="!decisionModal.upn.trim() || decisionModal.submitting"
+        :class="decisionModal.approve
+          ? 'bg-green-600 hover:bg-green-700 disabled:bg-green-300'
+          : 'bg-red-600 hover:bg-red-700 disabled:bg-red-300'"
+        class="flex-1 text-white text-sm font-medium py-2 rounded-lg transition-colors">
+        <span x-text="decisionModal.submitting ? 'Submitting…' : (decisionModal.approve ? 'Approve' : 'Reject')"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="//unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script>
+  function gatesApp() {
+    return {
+      sidebarOpen:  false,
+      user:         auth.user(),
+      loading:      true,
+      gates:        [],
+      pendingCount: 0,
+      filter:       'PENDING',
+      decisionModal: {
+        open: false, gate: null, approve: true,
+        upn: auth.user()?.username || '', comments: '', submitting: false, error: '',
+      },
+
+      async init() {
+        if (!auth.require()) return;
+        const params     = new URLSearchParams(location.search);
+        const urlSession = params.get('session');
+        const urlGateId  = params.get('gate_id');
+        const urlAction  = params.get('action');   // 'approve' | 'reject'  (from Teams deep-link)
+
+        // Always load all pending gates first
+        await this.load();
+
+        // Filter to session if provided
+        if (urlSession) this.gates = this.gates.filter(g => g.session_id === urlSession);
+
+        // Auto-open decision modal when arriving from Teams Adaptive Card button
+        if (urlGateId && urlAction) {
+          // Fetch the specific gate if not already in list (may be filtered out)
+          let gate = this.gates.find(g => g.gate_id === urlGateId);
+          if (!gate) {
+            try { gate = await api.getGate(urlGateId); } catch { /* ignore */ }
+          }
+          if (gate && !gate.decision) {
+            this.openDecisionModal(gate, urlAction === 'approve');
+            toast(
+              urlAction === 'approve'
+                ? '✓ Pre-filled for approval — confirm below'
+                : '⚠ Pre-filled for rejection — add comments below',
+              urlAction === 'approve' ? 'info' : 'warn',
+            );
+          } else if (gate?.decision) {
+            toast(`Gate ${urlGateId.slice(0, 8)} was already ${gate.decision.toLowerCase()}.`, 'info');
+          }
+        }
+      },
+
+      async load() {
+        this.loading = true;
+        try {
+          const data = await api.listGates(this.filter);
+          this.gates = Array.isArray(data) ? data : (data?.gates || []);
+          // Always count pending
+          const pending = await api.listGates('PENDING');
+          this.pendingCount = Array.isArray(pending) ? pending.length : (pending?.gates?.length || 0);
+        } catch (e) {
+          this.gates = [];
+          console.warn('gates load failed', e);
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      openDecisionModal(gate, approve) {
+        this.decisionModal = {
+          open: true, gate, approve,
+          upn: auth.user()?.username || '',
+          comments: '', submitting: false, error: '',
+        };
+      },
+
+      async submitDecision() {
+        const m = this.decisionModal;
+        if (!m.upn.trim()) return;
+        m.submitting = true;
+        m.error = '';
+        try {
+          await api.decideGate(m.gate.gate_id, m.approve, m.upn.trim(), m.comments);
+          m.open = false;
+          toast(m.approve ? '✓ Gate approved — pipeline unblocked' : 'Gate rejected', m.approve ? 'success' : 'warn');
+          await this.load();
+        } catch (e) {
+          m.error = e.detail || 'Decision failed. Please try again.';
+          m.submitting = false;
+        }
+      },
+
+      fmtDate, shortId, safetyCategoryBadge,
+    };
+  }
+</script>
+</body>
+</html>

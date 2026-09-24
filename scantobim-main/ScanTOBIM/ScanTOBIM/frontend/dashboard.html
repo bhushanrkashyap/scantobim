@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanToBIM — Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/ui/js/api.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800" x-data="dashApp()" x-init="init()">
+
+<!-- ── Layout ────────────────────────────────────────────────────────────── -->
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Mobile overlay -->
+  <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+       class="fixed inset-0 bg-black/50 z-20 lg:hidden"></div>
+
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+         class="fixed inset-y-0 left-0 z-30 w-56 bg-slate-800 text-slate-100 flex flex-col flex-shrink-0 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0">
+    <!-- Brand -->
+    <div class="h-16 flex items-center px-5 border-b border-slate-700">
+      <svg class="w-6 h-6 text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+      </svg>
+      <span class="font-semibold text-sm">ScanToBIM</span>
+    </div>
+    <!-- Nav -->
+    <nav class="flex-1 py-4 px-2 space-y-0.5 text-sm">
+      <a href="/ui/dashboard.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700 text-white font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="/ui/sessions.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Sessions
+      </a>
+      <a href="/ui/gates.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Safety Gates
+        <span x-show="stats.pendingGates > 0" x-text="stats.pendingGates"
+          class="ml-auto bg-amber-500 text-white text-xs rounded-full px-1.5 py-0.5 font-bold"></span>
+      </a>
+      <a href="/ui/ncrs.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        NCRs
+      </a>
+      <a href="/ui/audit.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Audit Chain
+      </a>
+    </nav>
+    <!-- User -->
+    <div class="border-t border-slate-700 p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold uppercase"
+          x-text="(user?.username || 'U')[0]"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-medium truncate" x-text="user?.username || '—'"></p>
+          <p class="text-xs text-slate-400 capitalize" x-text="user?.role || ''"></p>
+        </div>
+      </div>
+      <button onclick="auth.logout()" class="w-full text-xs text-slate-400 hover:text-white text-left">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto">
+    <!-- Mobile top bar -->
+    <div class="sticky top-0 z-10 lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+      <button @click="sidebarOpen = true" class="text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <span class="font-semibold text-gray-800 text-sm">ScanToBIM</span>
+    </div>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p class="text-sm text-gray-500 mt-0.5">Overview of pipeline activity</p>
+        </div>
+        <button onclick="window.location.href='/ui/sessions.html'"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+          + New Session
+        </button>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Total Sessions</p>
+          <p class="text-3xl font-bold text-gray-900" x-text="stats.totalSessions"></p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Elements Created</p>
+          <p class="text-3xl font-bold text-green-600" x-text="stats.totalElements"></p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 cursor-pointer hover:border-amber-300"
+          onclick="window.location.href='/ui/gates.html'">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Pending SC2 Gates</p>
+          <p class="text-3xl font-bold" :class="stats.pendingGates > 0 ? 'text-amber-500' : 'text-gray-900'"
+            x-text="stats.pendingGates"></p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 cursor-pointer hover:border-red-200"
+          onclick="window.location.href='/ui/ncrs.html'">
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Open NCRs</p>
+          <p class="text-3xl font-bold" :class="stats.openNcrs > 0 ? 'text-red-500' : 'text-gray-900'"
+            x-text="stats.openNcrs"></p>
+        </div>
+      </div>
+
+      <!-- Two-column row -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+        <!-- Recent Sessions (wide) -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+            <h2 class="font-semibold text-gray-800 text-sm">Recent Sessions</h2>
+            <a href="/ui/sessions.html" class="text-xs text-indigo-600 hover:underline">View all →</a>
+          </div>
+          <div class="divide-y divide-gray-50">
+            <template x-if="loading">
+              <div class="px-5 py-8 text-center text-gray-400 text-sm">Loading…</div>
+            </template>
+            <template x-if="!loading && recentSessions.length === 0">
+              <div class="px-5 py-8 text-center text-gray-400 text-sm">No sessions yet — create one to get started.</div>
+            </template>
+            <template x-for="s in recentSessions" :key="s.session_id">
+              <div class="px-5 py-3 flex items-center gap-4 hover:bg-gray-50 cursor-pointer"
+                :onclick="`window.location.href='/ui/session.html?id=${s.session_id}'`">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800 truncate" x-text="s.site_name || s.session_id"></p>
+                  <p class="text-xs text-gray-400" x-text="fmtDate(s.created_at)"></p>
+                </div>
+                <div class="text-right">
+                  <span x-html="cdeStateBadge(s.cde_state || 'WIP')"></span>
+                  <p class="text-xs text-gray-400 mt-0.5" x-text="`${s.total_elements_created || 0} elements`"></p>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- System Status (narrow) -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+          <div class="px-5 py-4 border-b border-gray-100">
+            <h2 class="font-semibold text-gray-800 text-sm">System Status</h2>
+          </div>
+          <div class="px-5 py-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">Agent API</span>
+              <span class="flex items-center gap-1.5 text-xs font-medium"
+                :class="sysStatus.api ? 'text-green-600' : 'text-red-500'">
+                <span class="w-2 h-2 rounded-full" :class="sysStatus.api ? 'bg-green-500' : 'bg-red-400'"></span>
+                <span x-text="sysStatus.api ? 'Online' : 'Offline'"></span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">Revit Bridge</span>
+              <span class="flex items-center gap-1.5 text-xs font-medium"
+                :class="sysStatus.bridge ? 'text-green-600' : 'text-gray-400'">
+                <span class="w-2 h-2 rounded-full" :class="sysStatus.bridge ? 'bg-green-500' : 'bg-gray-300'"></span>
+                <span x-text="sysStatus.bridge ? 'Connected' : 'Not running'"></span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">Queue Depth</span>
+              <span class="text-xs font-medium text-gray-700" x-text="sysStatus.queueDepth"></span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">Elements (Bridge)</span>
+              <span class="text-xs font-medium text-gray-700" x-text="sysStatus.elementsCreated"></span>
+            </div>
+            <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+              <span class="text-sm text-gray-600">API Version</span>
+              <span class="text-xs font-medium text-gray-700" x-text="sysStatus.version || '—'"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pending Gates Banner -->
+      <div x-show="stats.pendingGates > 0"
+        class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-amber-800">
+              <span x-text="stats.pendingGates"></span> SC2 gate<span x-show="stats.pendingGates !== 1">s</span>
+              require engineer approval
+            </p>
+            <p class="text-xs text-amber-600">Elements are paused until approved</p>
+          </div>
+        </div>
+        <a href="/ui/gates.html"
+          class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+          Review Gates
+        </a>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="//unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script>
+  function dashApp() {
+    return {
+      sidebarOpen:    false,
+      user:           auth.user(),
+      loading:        true,
+      recentSessions: [],
+      stats: { totalSessions: 0, totalElements: 0, pendingGates: 0, openNcrs: 0 },
+      sysStatus: { api: false, bridge: false, queueDepth: 0, elementsCreated: 0, version: '' },
+
+      async init() {
+        if (!auth.require()) return;
+        await Promise.all([this.loadSessions(), this.loadGates(), this.loadSystem()]);
+      },
+
+      async loadSessions() {
+        try {
+          const data = await api.listSessions();
+          const sessions = data?.sessions || [];
+          this.recentSessions = sessions.slice(0, 6);
+          this.stats.totalSessions = sessions.length;
+          this.stats.totalElements = sessions.reduce((s, x) => s + (x.total_elements_created || 0), 0);
+          // Aggregate open NCRs from sessions
+          this.stats.openNcrs = sessions.reduce((s, x) => s + (x.open_ncrs || 0), 0);
+        } catch (e) {
+          console.warn('sessions load failed', e);
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      async loadGates() {
+        try {
+          const data = await api.listGates('PENDING');
+          this.stats.pendingGates = Array.isArray(data) ? data.length : (data?.gates?.length || 0);
+        } catch { this.stats.pendingGates = 0; }
+      },
+
+      async loadSystem() {
+        const [h, b] = await Promise.all([api.health(), api.bridgeHealth()]);
+        this.sysStatus.api           = h?.status === 'ok';
+        this.sysStatus.version       = h?.version || '';
+        this.sysStatus.bridge        = b?.connected || false;
+        this.sysStatus.queueDepth    = b?.queue_depth ?? '—';
+        this.sysStatus.elementsCreated = b?.elements_created ?? '—';
+      },
+
+      fmtDate, cdeStateBadge,
+    };
+  }
+</script>
+</body>
+</html>

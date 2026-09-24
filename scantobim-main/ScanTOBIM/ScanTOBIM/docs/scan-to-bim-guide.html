@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan-to-BIM PoV &mdash; Requirements, Setup, Deploy &amp; Demo Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06080e;
+  --surface: #0c0f18;
+  --surface2: #10141f;
+  --border: #182030;
+  --border2: #263050;
+  --text: #b0c4e0;
+  --muted: #4a5e78;
+  --white: #e0eaff;
+  --accent: #00c896;
+  --orange: #ff6b35;
+  --blue: #4a90e2;
+  --purple: #a855f7;
+  --red: #e84040;
+  --cyan: #00d4ff;
+  --yellow: #f5a623;
+  --green: #40c060;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  padding: 48px 32px 100px;
+  line-height: 1.7;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  color: var(--white); letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+h1 .sub {
+  font-size: 15px; font-weight: 400;
+  color: var(--muted); display: block; margin-top: 4px;
+}
+.meta {
+  color: var(--muted); font-size: 11px; margin-bottom: 40px;
+  border-bottom: 1px solid var(--border); padding-bottom: 16px;
+}
+.meta span { color: var(--accent); }
+
+/* TABLE OF CONTENTS */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--cyan);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 44px;
+}
+.toc-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 14px;
+}
+.toc ol {
+  list-style: none; counter-reset: toc;
+  columns: 2; column-gap: 32px;
+}
+.toc li {
+  counter-increment: toc;
+  margin-bottom: 6px; font-size: 11.5px;
+}
+.toc li::before {
+  content: counter(toc, decimal-leading-zero) ". ";
+  color: var(--cyan); font-weight: 700;
+}
+.toc a {
+  color: var(--text); text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s;
+}
+.toc a:hover { border-color: var(--cyan); }
+
+/* SECTION */
+.section {
+  margin-bottom: 48px;
+}
+.section-hdr {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 800;
+  color: var(--white);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-num {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; color: var(--muted);
+  opacity: 0.6;
+}
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+}
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 12.5px;
+  color: var(--white); margin-bottom: 8px;
+}
+.card p { margin-bottom: 6px; }
+
+/* TABLES */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 11.5px;
+}
+th {
+  text-align: left;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border2);
+  background: var(--surface2);
+}
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:hover td { background: var(--surface2); }
+
+/* CODE BLOCKS */
+.code-block {
+  background: #020408;
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--cyan);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin: 10px 0 16px;
+  overflow-x: auto;
+  font-size: 11.5px; line-height: 1.8;
+  color: #a0c8e0;
+  white-space: pre-wrap; word-break: break-word;
+}
+.code-block .comment { color: #4a6070; }
+.code-block .cmd { color: var(--accent); }
+.code-block .output { color: var(--muted); }
+.code-block .highlight { color: var(--orange); font-weight: 700; }
+
+/* INLINE CODE */
+code {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 11px;
+  color: var(--cyan);
+}
+
+/* TAGS */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.tag-req { background: #1a0808; border: 1px solid #381010; color: var(--red); }
+.tag-opt { background: #0a1a10; border: 1px solid #1a3020; color: var(--green); }
+.tag-sc1 { background: #1a0808; border: 1px solid #381010; color: var(--red); }
+.tag-sc2 { background: #1a1200; border: 1px solid #2a1e04; color: var(--yellow); }
+.tag-sc3 { background: #0a1018; border: 1px solid #1a2838; color: var(--blue); }
+.tag-ns { background: #081408; border: 1px solid #102010; color: var(--green); }
+
+/* STEP BLOCKS */
+.step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-bottom: 6px;
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: var(--accent);
+  text-align: center;
+  padding-top: 2px;
+}
+.step-body {}
+.step-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 12.5px;
+  color: var(--white); margin-bottom: 6px;
+}
+
+/* ALERT BOXES */
+.alert {
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 11.5px;
+}
+.alert-warn {
+  background: #1a1200;
+  border: 1px solid #2a1e04;
+  border-left: 3px solid var(--yellow);
+  color: var(--yellow);
+}
+.alert-danger {
+  background: #1a0606;
+  border: 1px solid #381010;
+  border-left: 3px solid var(--red);
+  color: #c06060;
+}
+.alert-info {
+  background: #001a20;
+  border: 1px solid #00283a;
+  border-left: 3px solid var(--cyan);
+  color: var(--cyan);
+}
+.alert-success {
+  background: #081408;
+  border: 1px solid #102010;
+  border-left: 3px solid var(--green);
+  color: var(--green);
+}
+.alert strong { display: block; margin-bottom: 4px; }
+
+/* FLOW DIAGRAM */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.flow-node {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 10.5px; font-weight: 600;
+  text-align: center;
+  min-width: 100px;
+}
+.flow-arrow {
+  color: var(--muted);
+  font-size: 16px;
+  padding: 0 6px;
+}
+
+/* ENDPOINT TABLE */
+.method {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.method-get { background: #0a1a10; color: var(--green); }
+.method-post { background: #0a1018; color: var(--blue); }
+
+/* FOOTER */
+.footer {
+  margin-top: 60px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  color: var(--muted); font-size: 10px;
+}
+
+/* STATS BAR */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px; margin-bottom: 40px;
+}
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.stat-n {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px; font-weight: 800;
+  line-height: 1; margin-bottom: 4px;
+}
+.stat-l {
+  color: var(--muted); font-size: 9px;
+  letter-spacing: 0.8px; text-transform: uppercase;
+}
+
+/* SAFETY MATRIX */
+.safety-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 16px 0;
+}
+.safety-card {
+  border-radius: 4px;
+  padding: 12px 14px;
+  text-align: center;
+}
+.safety-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 800;
+  margin-bottom: 4px;
+}
+.safety-card p { font-size: 10px; opacity: 0.8; }
+.sc1-card { background: #1a0808; border: 1px solid #381010; color: var(--red); }
+.sc2-card { background: #1a1200; border: 1px solid #2a1e04; color: var(--yellow); }
+.sc3-card { background: #0a1018; border: 1px solid #1a2838; color: var(--blue); }
+.ns-card { background: #081408; border: 1px solid #102010; color: var(--green); }
+
+@media (max-width: 768px) {
+  .stats { grid-template-columns: repeat(3, 1fr); }
+  .toc ol { columns: 1; }
+  .safety-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<h1>
+  Scan-to-BIM &mdash; Proof of Value
+  <span class="sub">Enterprise Agentic Scan-to-BIM for Critical Infrastructure</span>
+</h1>
+<p class="meta">
+  Requirements &middot; Setup &middot; Deploy &middot; Test &middot; Demo Guide &nbsp;|&nbsp;
+  <span>Python 3.11 + FastAPI + Open3D</span> &nbsp;|&nbsp;
+  Last updated: 30 Mar 2026
+</p>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-n" style="color:var(--accent)">7</div>
+    <div class="stat-l">Core Modules</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n" style="color:var(--blue)">9</div>
+    <div class="stat-l">API Endpoints</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n" style="color:var(--yellow)">15</div>
+    <div class="stat-l">Data Models</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n" style="color:var(--orange)">4</div>
+    <div class="stat-l">Safety Levels</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n" style="color:var(--purple)">6</div>
+    <div class="stat-l">Demo Steps</div>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li><a href="#overview">System Overview</a></li>
+    <li><a href="#architecture">Architecture &amp; Data Flow</a></li>
+    <li><a href="#safety">Safety Classification Matrix</a></li>
+    <li><a href="#requirements">Requirements &amp; Dependencies</a></li>
+    <li><a href="#env">Environment Variables</a></li>
+    <li><a href="#setup">Setup &amp; Installation</a></li>
+    <li><a href="#deploy">Deployment Steps</a></li>
+    <li><a href="#api">API Reference</a></li>
+    <li><a href="#models">Data Models Reference</a></li>
+    <li><a href="#testing">Testing Guide</a></li>
+    <li><a href="#demo">Demo Walkthrough</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════ 01. OVERVIEW -->
+<div class="section" id="overview">
+  <div class="section-hdr"><span class="section-num">01</span> System Overview</div>
+
+  <div class="card">
+    <div class="card-title">What is Scan-to-BIM?</div>
+    <p>An AI-driven agent pipeline that converts raw point cloud scan data (E57/LAZ) into safety-classified BIM elements in Autodesk Revit. Designed for nuclear and critical infrastructure facilities where safety compliance (NQA-1, DSEAR, ISO 19650) is non-negotiable.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What does the PoV prove?</div>
+    <table>
+      <tr><th style="width:30%">Capability</th><th>Evidence</th></tr>
+      <tr><td>AI reads point clouds</td><td>Open3D RANSAC plane detection + DBSCAN clustering extracts walls, floors, columns, pipes from scan data</td></tr>
+      <tr><td>Safety classification works</td><td>Rule-based engine classifies SC1/SC2/SC3/NS. SC1 hard-blocked. SC2 requires human approval.</td></tr>
+      <tr><td>Audit trail is tamper-proof</td><td>Every action recorded in HMAC-SHA256 chained ledger. Chain integrity verifiable on demand.</td></tr>
+      <tr><td>Faster than manual</td><td>25+ elements classified and dispatched in under 1 second vs. hours of manual work</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 02. ARCHITECTURE -->
+<div class="section" id="architecture">
+  <div class="section-hdr"><span class="section-num">02</span> Architecture &amp; Data Flow</div>
+
+  <div class="flow">
+    <div class="flow-node" style="border-color:var(--orange);color:var(--orange)">E57 / LAZ<br>Point Cloud</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node" style="border-color:var(--yellow);color:var(--yellow)">Open3D<br>Segmentation</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node" style="border-color:var(--blue);color:var(--blue)">Safety<br>Classifier</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node" style="border-color:var(--red);color:var(--red)">Safety<br>Gate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node" style="border-color:var(--accent);color:var(--accent)">Revit<br>Dispatch</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node" style="border-color:var(--purple);color:var(--purple)">Audit<br>Ledger</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">File Map</div>
+    <table>
+      <tr><th>File</th><th>Purpose</th><th>Lines</th></tr>
+      <tr><td><code>agent/models.py</code></td><td>All Pydantic v2 data models &mdash; segments, instructions, safety, audit events, sessions</td><td>~210</td></tr>
+      <tr><td><code>agent/tools/scan_tools.py</code></td><td>Point cloud loading (E57/LAZ/PLY), Open3D segmentation, synthetic data generator</td><td>~270</td></tr>
+      <tr><td><code>agent/classifier.py</code></td><td>Rule-based safety classifier + optional GPT-4o path</td><td>~180</td></tr>
+      <tr><td><code>agent/safety_gate.py</code></td><td>SC1 hard block enforcement, SC2 approval workflow, gate management</td><td>~130</td></tr>
+      <tr><td><code>agent/audit.py</code></td><td>HMAC-chained append-only audit ledger (SQLite), chain verification</td><td>~160</td></tr>
+      <tr><td><code>agent/orchestrator.py</code></td><td>Pipeline coordinator: segment &rarr; classify &rarr; gate &rarr; dispatch &rarr; audit</td><td>~200</td></tr>
+      <tr><td><code>agent/main.py</code></td><td>FastAPI application with 9 REST endpoints</td><td>~140</td></tr>
+      <tr><td><code>demo.py</code></td><td>Standalone demo runner &mdash; runs full pipeline in-process</td><td>~140</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 03. SAFETY MATRIX -->
+<div class="section" id="safety">
+  <div class="section-hdr"><span class="section-num">03</span> Safety Classification Matrix</div>
+
+  <div class="safety-grid">
+    <div class="safety-card sc1-card">
+      <h4>SC1</h4>
+      <p><strong>Safety-Critical</strong></p>
+      <p>Containment, radiation shielding, reactor structure</p>
+      <p style="margin-top:8px;font-weight:700">HARD BLOCK<br>Never auto-create</p>
+    </div>
+    <div class="safety-card sc2-card">
+      <h4>SC2</h4>
+      <p><strong>Safety-Related</strong></p>
+      <p>Load-bearing near safety zones, fire barriers, DSEAR</p>
+      <p style="margin-top:8px;font-weight:700">APPROVAL REQUIRED<br>Human sign-off</p>
+    </div>
+    <div class="safety-card sc3-card">
+      <h4>SC3</h4>
+      <p><strong>Safety-Relevant</strong></p>
+      <p>Structural near safety systems, MEP in classified areas</p>
+      <p style="margin-top:8px;font-weight:700">FLAGGED<br>Auto-proceed</p>
+    </div>
+    <div class="safety-card ns-card">
+      <h4>NS</h4>
+      <p><strong>Non-Safety</strong></p>
+      <p>Standard elements, no safety implications</p>
+      <p style="margin-top:8px;font-weight:700">AUTO-PROCEED<br>No restrictions</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>Non-Negotiable Constraint</strong>
+    SC1 elements must NEVER be auto-created by the agent. The system raises <code>SafetyCategoryViolationError</code> and logs an <code>ELEMENT_BLOCKED</code> audit event. There is no override, no bypass, no exception.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 04. REQUIREMENTS -->
+<div class="section" id="requirements">
+  <div class="section-hdr"><span class="section-num">04</span> Requirements &amp; Dependencies</div>
+
+  <div class="card">
+    <div class="card-title">System Requirements</div>
+    <table>
+      <tr><th>Component</th><th>Requirement</th><th>Status</th></tr>
+      <tr><td>Python</td><td>&ge; 3.11</td><td><span class="tag tag-req">Required</span></td></tr>
+      <tr><td>pip</td><td>&ge; 22.0</td><td><span class="tag tag-req">Required</span></td></tr>
+      <tr><td>OS</td><td>Ubuntu 22.04+ or Windows 10/11 (PowerShell 5.1+)</td><td><span class="tag tag-req">Required</span></td></tr>
+      <tr><td>RAM</td><td>&ge; 8 GB (16 GB for real scan files)</td><td><span class="tag tag-req">Required</span></td></tr>
+      <tr><td>Disk</td><td>&ge; 2 GB free (for venv + Open3D)</td><td><span class="tag tag-req">Required</span></td></tr>
+      <tr><td>OpenAI API Key</td><td>For GPT-4o classification mode</td><td><span class="tag tag-opt">Optional</span></td></tr>
+      <tr><td>Revit 2025 + SDK</td><td>For real Revit element creation (Stage 2)</td><td><span class="tag tag-opt">Optional</span></td></tr>
+      <tr><td>Docker</td><td>For containerised deployment</td><td><span class="tag tag-opt">Optional</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Python Package Dependencies</div>
+    <table>
+      <tr><th>Package</th><th>Version</th><th>Purpose</th></tr>
+      <tr><td><code>fastapi</code></td><td>&ge; 0.115.0</td><td>REST API framework</td></tr>
+      <tr><td><code>uvicorn[standard]</code></td><td>&ge; 0.30.0</td><td>ASGI server</td></tr>
+      <tr><td><code>pydantic</code></td><td>&ge; 2.9.0</td><td>Data validation &amp; models</td></tr>
+      <tr><td><code>open3d</code></td><td>&ge; 0.18.0</td><td>Point cloud processing, RANSAC, DBSCAN</td></tr>
+      <tr><td><code>numpy</code></td><td>&ge; 1.26.0</td><td>Numerical computing</td></tr>
+      <tr><td><code>scipy</code></td><td>&ge; 1.13.0</td><td>Scientific computing</td></tr>
+      <tr><td><code>laspy[lazrs]</code></td><td>&ge; 2.5.0</td><td>LAS/LAZ point cloud format reader</td></tr>
+      <tr><td><code>python-dotenv</code></td><td>&ge; 1.0.0</td><td>Environment variable management</td></tr>
+      <tr><td><code>structlog</code></td><td>&ge; 24.4.0</td><td>Structured JSON logging</td></tr>
+      <tr><td><code>httpx</code></td><td>&ge; 0.27.0</td><td>HTTP client for Revit bridge</td></tr>
+      <tr><td><code>aiosqlite</code></td><td>&ge; 0.20.0</td><td>Async SQLite driver</td></tr>
+    </table>
+
+    <p style="margin-top:12px;color:var(--muted);font-size:11px;">
+      <strong>Optional:</strong> <code>openai &ge; 1.50.0</code> (GPT-4o classification) &middot;
+      <code>pytest &ge; 8.0</code> + <code>pytest-asyncio</code> + <code>pytest-cov</code> + <code>ruff</code> (dev/testing)
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 05. ENV VARS -->
+<div class="section" id="env">
+  <div class="section-hdr"><span class="section-num">05</span> Environment Variables</div>
+
+  <table>
+    <tr><th>Variable</th><th>Default</th><th>Description</th><th>Required</th></tr>
+    <tr>
+      <td><code>OPENAI_API_KEY</code></td>
+      <td><em>empty</em></td>
+      <td>OpenAI API key for GPT-4o classification. If unset, falls back to rule-based classifier.</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+    <tr>
+      <td><code>OPENAI_MODEL</code></td>
+      <td><code>gpt-4o</code></td>
+      <td>Model name for AI classification</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+    <tr>
+      <td><code>AGENT_HOST</code></td>
+      <td><code>0.0.0.0</code></td>
+      <td>FastAPI bind address</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+    <tr>
+      <td><code>AGENT_PORT</code></td>
+      <td><code>8765</code></td>
+      <td>FastAPI listen port</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+    <tr>
+      <td><code>SCAN_AGENT_API_KEY</code></td>
+      <td><code>changeme</code></td>
+      <td>API authentication key</td>
+      <td><span class="tag tag-req">Required</span></td>
+    </tr>
+    <tr>
+      <td><code>DATABASE_URL</code></td>
+      <td><code>sqlite:///./scantobim.db</code></td>
+      <td>SQLite database path for audit ledger</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+    <tr>
+      <td><code>AUDIT_HMAC_SECRET</code></td>
+      <td><em>pov-default</em></td>
+      <td>HMAC-SHA256 secret for audit chain integrity. <strong>Must change for production.</strong></td>
+      <td><span class="tag tag-req">Required</span></td>
+    </tr>
+    <tr>
+      <td><code>REVIT_BRIDGE_URL</code></td>
+      <td><code>http://localhost:8766</code></td>
+      <td>Revit add-in bridge endpoint. Falls back to mock if unreachable.</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+    <tr>
+      <td><code>SCAN_FILES_DIR</code></td>
+      <td><code>./scans</code></td>
+      <td>Directory for E57/LAZ scan files</td>
+      <td><span class="tag tag-opt">Optional</span></td>
+    </tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════ 06. SETUP -->
+<div class="section" id="setup">
+  <div class="section-hdr"><span class="section-num">06</span> Setup &amp; Installation</div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Clone or navigate to the project</div>
+      <div class="code-block"><span class="cmd">cd</span> /path/to/ScanToBIM</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Create a Python virtual environment</div>
+      <div class="code-block"><span class="cmd">python3.11 -m venv</span> .venv
+<span class="cmd">source</span> .venv/bin/activate   <span class="comment"># Ubuntu / Linux</span>
+<span class="cmd">.\.venv\Scripts\Activate.ps1</span>  <span class="comment"># Windows PowerShell</span>
+<span class="comment"># .venv\Scripts\activate     # Windows</span></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Install dependencies</div>
+      <div class="code-block"><span class="comment"># Core dependencies (always needed)</span>
+<span class="cmd">pip install</span> pydantic fastapi uvicorn structlog python-dotenv httpx numpy scipy aiosqlite
+
+<span class="comment"># Point cloud processing (needed for real scan files)</span>
+<span class="cmd">pip install</span> open3d laspy[lazrs]
+
+<span class="comment"># Optional: GPT-4o classification</span>
+<span class="cmd">pip install</span> openai
+
+<span class="comment"># Optional: Development &amp; testing</span>
+<span class="cmd">pip install</span> pytest pytest-asyncio pytest-cov ruff</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Configure environment</div>
+      <div class="code-block"><span class="cmd">cp</span> .env.example .env
+<span class="comment"># Edit .env and set AUDIT_HMAC_SECRET to a random value</span>
+<span class="comment"># Optionally set OPENAI_API_KEY if you want GPT-4o classification</span></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">Verify installation</div>
+      <div class="code-block"><span class="cmd">python</span> -c "from agent.models import SafetyCategory; print('Models OK')"
+<span class="cmd">python</span> -c "from agent.audit import AuditLedger; print('Audit OK')"
+<span class="cmd">python</span> -c "from agent.orchestrator import ScanToBIMOrchestrator; print('Orchestrator OK')"
+
+<span class="output">Models OK
+Audit OK
+Orchestrator OK</span></div>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>Open3D Note</strong>
+    Open3D (~200 MB) is only needed for processing real scan files. The demo works with synthetic data and doesn't require Open3D. If you skip Open3D, the synthetic demo still runs perfectly.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 07. DEPLOY -->
+<div class="section" id="deploy">
+  <div class="section-hdr"><span class="section-num">07</span> Deployment Steps</div>
+
+  <div class="card">
+    <div class="card-title">Option A &mdash; Local Development (Recommended for PoV)</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Start the API server</div>
+      <div class="code-block"><span class="cmd">source</span> .venv/bin/activate
+<span class="cmd">uvicorn</span> agent.main:app --host 0.0.0.0 --port 8765 --reload
+
+<span class="output">INFO:     Uvicorn running on http://0.0.0.0:8765</span></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Verify health endpoint</div>
+      <div class="code-block"><span class="cmd">curl</span> http://localhost:8765/health
+
+<span class="output">{"status":"ok","service":"scan-to-bim-agent","version":"0.1.0"}</span></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Open API docs</div>
+      <div class="code-block"><span class="comment"># Swagger UI</span>
+<span class="cmd">open</span> http://localhost:8765/docs
+
+<span class="comment"># ReDoc</span>
+<span class="cmd">open</span> http://localhost:8765/redoc</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">Option B &mdash; Docker Deployment</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Create Dockerfile (if not present)</div>
+      <div class="code-block"><span class="comment"># agent/Dockerfile</span>
+FROM python:3.11-slim
+WORKDIR /app
+COPY agent/ ./agent/
+COPY .env.example .env
+RUN pip install --no-cache-dir pydantic fastapi uvicorn structlog \
+    python-dotenv httpx numpy scipy aiosqlite
+EXPOSE 8765
+CMD ["uvicorn", "agent.main:app", "--host", "0.0.0.0", "--port", "8765"]</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Build and run</div>
+      <div class="code-block"><span class="cmd">docker build</span> -t scan-to-bim-agent -f agent/Dockerfile .
+<span class="cmd">docker run</span> -p 8765:8765 --env-file .env scan-to-bim-agent</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">Option C &mdash; Standalone Demo (No Server Required)</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Run the demo script directly</div>
+      <div class="code-block"><span class="cmd">source</span> .venv/bin/activate
+<span class="cmd">python</span> demo.py
+
+<span class="comment"># Runs full pipeline in-process. No API server needed.</span>
+<span class="comment"># Creates demo_audit.db in the current directory.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 08. API REFERENCE -->
+<div class="section" id="api">
+  <div class="section-hdr"><span class="section-num">08</span> API Reference</div>
+
+  <table>
+    <tr><th style="width:60px">Method</th><th style="width:280px">Endpoint</th><th>Description</th></tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/health</code></td>
+      <td>Health check. Returns service status and version.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-post">POST</span></td>
+      <td><code>/sessions</code></td>
+      <td>Create session &amp; run full pipeline: segmentation &rarr; classification &rarr; execution with safety gates.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/sessions/{session_id}</code></td>
+      <td>Get session summary with audit stats and chain integrity verification.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/sessions/{session_id}/audit</code></td>
+      <td>Get full audit trail &mdash; all events for a session in chronological order.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/sessions/{session_id}/chain</code></td>
+      <td>Verify HMAC chain integrity. Returns <code>{valid, broken_links, event_count}</code>.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/safety-gates</code></td>
+      <td>List pending safety gates. Filter by <code>?session_id=</code>.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/safety-gates/{gate_id}</code></td>
+      <td>Get details of a specific safety gate.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-post">POST</span></td>
+      <td><code>/safety-gates/{gate_id}/decision</code></td>
+      <td>Approve or reject an SC2 safety gate. Body: <code>{approved, approver_upn, comments}</code>.</td>
+    </tr>
+    <tr>
+      <td><span class="method method-get">GET</span></td>
+      <td><code>/elements/{element_id}/provenance</code></td>
+      <td>Get full provenance chain for a created element &mdash; from scan to BIM.</td>
+    </tr>
+  </table>
+
+  <div class="card">
+    <div class="card-title">Create Session &mdash; Request Body</div>
+    <div class="code-block">{
+  "site_name": "Demo Nuclear Facility",     <span class="comment">// required</span>
+  "zone_id": "zone-001",                     <span class="comment">// default: "zone-001"</span>
+  "use_synthetic": true,                     <span class="comment">// default: true (no scan file needed)</span>
+  "scan_file": "/path/to/scan.e57"          <span class="comment">// required if use_synthetic is false</span>
+}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Create Session &mdash; Response</div>
+    <div class="code-block">{
+  "session_id": "bc415163-7c70-4e9e-a12f-809ac2bef3de",
+  "segments_found": 27,
+  "instructions_prepared": 27,
+  "execution": {
+    "created": 25,                          <span class="comment">// NS + SC3 auto-created</span>
+    "blocked": 1,                           <span class="comment">// SC1 hard-blocked</span>
+    "pending_approval": 1,                  <span class="comment">// SC2 awaiting gate decision</span>
+    "errors": 0,
+    "pending_gates": [
+      {
+        "gate_id": "bb9b4f7a-...",
+        "segment_id": "21facbc7-...",
+        "element_type": "column",
+        "safety_category": "SC2"
+      }
+    ],
+    "blocked_details": [
+      {
+        "segment_id": "6857accc-...",
+        "element_type": "wall",
+        "reason": "SC1 element ... CANNOT be auto-created."
+      }
+    ]
+  }
+}</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 09. DATA MODELS -->
+<div class="section" id="models">
+  <div class="section-hdr"><span class="section-num">09</span> Data Models Reference</div>
+
+  <div class="card">
+    <div class="card-title">Enumerations</div>
+    <table>
+      <tr><th>Enum</th><th>Values</th></tr>
+      <tr><td><code>SafetyCategory</code></td><td><span class="tag tag-sc1">SC1</span> <span class="tag tag-sc2">SC2</span> <span class="tag tag-sc3">SC3</span> <span class="tag tag-ns">NS</span></td></tr>
+      <tr><td><code>DSEARZone</code></td><td>Zone0, Zone1, Zone2, None</td></tr>
+      <tr><td><code>ElementType</code></td><td>wall, floor, column, pipe, beam</td></tr>
+      <tr><td><code>Discipline</code></td><td>structural, mep, fire_protection, civil, infrastructure</td></tr>
+      <tr><td><code>SegmentShape</code></td><td>plane_vertical, plane_horizontal, cylinder, unknown</td></tr>
+      <tr><td><code>AuditEventType</code></td><td>segment_classified, safety_gate_raised, safety_gate_approved, safety_gate_rejected, element_created, element_blocked, clash_detected, ncr_raised, session_started, session_completed</td></tr>
+      <tr><td><code>SessionState</code></td><td>pending, running, paused, completed, failed</td></tr>
+      <tr><td><code>SafetyGateStatus</code></td><td>pending, approved, rejected</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Core Models</div>
+    <table>
+      <tr><th>Model</th><th>Key Fields</th><th>Purpose</th></tr>
+      <tr><td><code>GeometrySegment</code></td><td>segment_id, zone_id, shape, centroid, bounding_box, confidence</td><td>Raw segment from point cloud</td></tr>
+      <tr><td><code>SafetyClassification</code></td><td>segment_id, safety_category, dsear_zone, reason, classified_by</td><td>Classification result</td></tr>
+      <tr><td><code>ElementInstruction</code></td><td>instruction_id, element_type, discipline, safety_category, approval_signature</td><td>Instruction to create BIM element</td></tr>
+      <tr><td><code>SafetyGateRequest</code></td><td>gate_id, segment_id, safety_category, status</td><td>Pending approval request</td></tr>
+      <tr><td><code>SafetyGateDecision</code></td><td>gate_id, approved, approver_upn</td><td>Gate approval/rejection</td></tr>
+      <tr><td><code>AuditEvent</code></td><td>event_id, session_id, event_type, actor, detail, event_hash, previous_hash</td><td>Immutable HMAC-chained audit record</td></tr>
+      <tr><td><code>SiteSession</code></td><td>session_id, site_name, state, total_segments, total_elements_created</td><td>Session tracking</td></tr>
+      <tr><td><code>ClashReport</code></td><td>clash_id, element_a_id, element_b_id, clash_type, clearance_mm</td><td>Spatial clash detection</td></tr>
+      <tr><td><code>ValidationResult</code></td><td>element_id, deviation_mm, passed, tolerance_mm</td><td>Quality validation</td></tr>
+      <tr><td><code>ActionResult</code></td><td>success, element_id, instruction_id, duration_ms</td><td>Revit dispatch result</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 10. TESTING -->
+<div class="section" id="testing">
+  <div class="section-hdr"><span class="section-num">10</span> Testing Guide</div>
+
+  <div class="card">
+    <div class="card-title">Test 1 &mdash; Health Check</div>
+    <div class="code-block"><span class="comment"># Start the server in one terminal</span>
+<span class="cmd">uvicorn</span> agent.main:app --port 8765
+
+<span class="comment"># In another terminal:</span>
+<span class="cmd">curl</span> -s http://localhost:8765/health | python -m json.tool
+
+<span class="output">Expected: {"status": "ok", "service": "scan-to-bim-agent", "version": "0.1.0"}</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Test 2 &mdash; Create Session with Synthetic Data</div>
+    <div class="code-block"><span class="cmd">curl</span> -s -X POST http://localhost:8765/sessions \
+  -H "Content-Type: application/json" \
+  -d '{"site_name": "Test Facility", "use_synthetic": true}' | python -m json.tool
+
+<span class="output">Expected: segments_found=25, created=25, blocked=0, pending_approval=0</span>
+<span class="comment"># (Pure synthetic data has no SC1/SC2 segments by default)</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Test 3 &mdash; Verify Audit Chain Integrity</div>
+    <div class="code-block"><span class="comment"># Use session_id from Test 2</span>
+<span class="cmd">curl</span> -s http://localhost:8765/sessions/{session_id}/chain | python -m json.tool
+
+<span class="output">Expected: {"valid": true, "broken_links": [], "event_count": 52}</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Test 4 &mdash; Full Demo with SC1/SC2 Safety Scenarios</div>
+    <div class="code-block"><span class="cmd">python</span> demo.py
+
+<span class="output">Expected output includes:</span>
+<span class="output">  - 27 segments found (25 synthetic + 1 SC1 + 1 SC2)</span>
+<span class="output">  - SC1: 1 element, SC2: 1 element, SC3: 5 elements, NS: 20 elements</span>
+<span class="output">  - Elements created: 25 | Blocked: 1 | Pending: 1</span>
+<span class="output">  - SC2 gate approved by engineer</span>
+<span class="output">  - Chain integrity: PASS</span>
+<span class="output">  - Total audit events: 57</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Test 5 &mdash; Safety Gate Workflow via API</div>
+    <div class="code-block"><span class="comment"># Step A: Create session (demo.py adds SC1/SC2 in-process only)</span>
+<span class="comment"># For API testing, use the synthetic data first:</span>
+<span class="cmd">curl</span> -s -X POST http://localhost:8765/sessions \
+  -H "Content-Type: application/json" \
+  -d '{"site_name": "Gate Test"}' | python -m json.tool
+
+<span class="comment"># Step B: Check pending gates</span>
+<span class="cmd">curl</span> -s http://localhost:8765/safety-gates | python -m json.tool
+
+<span class="comment"># Step C: Approve a gate (use gate_id from Step B)</span>
+<span class="cmd">curl</span> -s -X POST http://localhost:8765/safety-gates/{gate_id}/decision \
+  -H "Content-Type: application/json" \
+  -d '{"approved": true, "approver_upn": "lead.engineer@company.com"}' | python -m json.tool
+
+<span class="output">Expected: {"gate_id": "...", "approved": true, "element_created": true, "element_id": "..."}</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Test 6 &mdash; Element Provenance</div>
+    <div class="code-block"><span class="comment"># Use an element_id from the session response</span>
+<span class="cmd">curl</span> -s http://localhost:8765/elements/revit-d847dea4/provenance | python -m json.tool
+
+<span class="output">Expected: Full chain of audit events for this element:</span>
+<span class="output">  segment_classified &rarr; element_created (with timestamps, actors, details)</span></div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>All Tests Passing Criteria</strong>
+    1. Health check returns 200 &middot;
+    2. Sessions create with correct segment counts &middot;
+    3. SC1 elements are NEVER created (blocked count > 0) &middot;
+    4. SC2 gates raise and resolve correctly &middot;
+    5. Chain integrity returns valid=true with zero broken links &middot;
+    6. Element provenance traces back to original scan segment
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 11. DEMO WALKTHROUGH -->
+<div class="section" id="demo">
+  <div class="section-hdr"><span class="section-num">11</span> Demo Walkthrough</div>
+
+  <div class="alert alert-info">
+    <strong>5-Minute Demo Script</strong>
+    Run <code>python demo.py</code> for the narrated version. Below is what each step shows and why it matters.
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Create Session</div>
+      <p>A new session is created for "Demo Nuclear Facility &mdash; Unit 4". This generates a unique session ID and starts the audit trail. The session tracks all segments, elements, clashes, and NCRs.</p>
+      <div class="code-block"><span class="output">Session ID: bc415163-7c70-4e9e-a12f-809ac2bef3de
+Site: Demo Nuclear Facility &mdash; Unit 4</span></div>
+      <p style="color:var(--accent)">Shows: Session management, unique ID generation, audit trail initialisation.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Point Cloud Segmentation</div>
+      <p>AI processes the scan data and extracts geometry segments. In the PoV this uses synthetic data; in production it would load E57/LAZ files and run RANSAC plane detection + DBSCAN clustering via Open3D.</p>
+      <div class="code-block"><span class="output">Segments found: 27
+  plane_vertical: 20    (walls + columns)
+  plane_horizontal: 5   (floors)
+  cylinder: 2           (pipes)</span></div>
+      <p style="color:var(--accent)">Shows: The AI extracts meaningful building elements from raw scan data &mdash; walls, floors, columns, pipes.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Safety Classification</div>
+      <p>Each segment is classified by element type, discipline, and safety category. The classifier detects one potential containment wall (SC1), one low-confidence structural column (SC2), and flags pipes and large walls (SC3).</p>
+      <div class="code-block"><span class="highlight">SC1: 1 element</span>   &mdash; Containment wall. WILL BE BLOCKED.
+<span class="highlight">SC2: 1 element</span>   &mdash; Structural column. WILL REQUIRE APPROVAL.
+SC3: 5 elements  &mdash; Flagged but auto-proceed.
+NS:  20 elements &mdash; Standard. Auto-proceed.</div>
+      <p style="color:var(--accent)">Shows: AI safety classification with four severity levels per NQA-1 standards.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Execute with Safety Gates</div>
+      <p>The agent attempts to create all 27 elements in Revit. The safety gate system intervenes:</p>
+      <div class="code-block"><span class="output">Elements created:     25   </span><span class="comment">&larr; NS + SC3 auto-created</span>
+<span class="output" style="color:var(--red)">Elements blocked:     1    </span><span class="comment">&larr; SC1 HARD BLOCKED (wall)</span>
+<span class="output" style="color:var(--yellow)">Pending approval:     1    </span><span class="comment">&larr; SC2 gate raised (column)</span>
+<span class="output">Errors:               0</span></div>
+      <p style="color:var(--accent)">Shows: Safety gates in action. SC1 physically cannot be created. SC2 pauses for approval. NS/SC3 proceed.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">SC2 Safety Gate Approval</div>
+      <p>A senior engineer reviews the SC2 gate and approves it. The element is then created with the approval signature attached. In production, this would be a Teams Adaptive Card.</p>
+      <div class="code-block"><span class="output">Gate bb9b4f7a... &mdash; column segment 21facbc7...</span>
+<span class="output" style="color:var(--green)">&rarr; APPROVED by senior.engineer@example.com</span>
+<span class="output" style="color:var(--green)">&rarr; Element created: revit-1a96f5fe</span></div>
+      <p style="color:var(--accent)">Shows: Human-in-the-loop approval for safety-related elements. Gate ID, approver, and element ID all recorded.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <div class="step-title">Audit Chain Verification</div>
+      <p>The tamper-proof audit trail is verified. Every event is linked to the previous via HMAC-SHA256. Any tampering would break the chain.</p>
+      <div class="code-block"><span class="output">Total audit events:   57</span>
+<span class="output" style="color:var(--green)">Chain integrity:      PASS</span>
+
+<span class="output">Audit events by type:</span>
+<span class="output">  element_blocked:       1     </span><span class="comment">&larr; SC1 block recorded</span>
+<span class="output">  element_created:      26     </span><span class="comment">&larr; 25 auto + 1 after SC2 approval</span>
+<span class="output">  safety_gate_approved:  1</span>
+<span class="output">  safety_gate_raised:    1</span>
+<span class="output">  segment_classified:   27</span>
+<span class="output">  session_started:       1</span></div>
+      <p style="color:var(--accent)">Shows: Complete, verifiable audit trail. Every action traceable. Chain integrity proves no tampering.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px; border-color:var(--accent);">
+    <div class="card-title" style="color:var(--accent);font-size:14px;">Demo Talking Points</div>
+    <table>
+      <tr><th style="width:30%">Audience Question</th><th>PoV Answer</th></tr>
+      <tr><td>"How fast is it?"</td><td>27 segments classified and 26 elements dispatched in &lt; 1 second. Manual process takes hours.</td></tr>
+      <tr><td>"Is it safe?"</td><td>SC1 elements physically cannot be created. SC2 requires named engineer sign-off. All decisions audited with HMAC chain.</td></tr>
+      <tr><td>"Can we trust the audit?"</td><td>HMAC-SHA256 chain &mdash; tamper any single event and the chain breaks. Verifiable on demand.</td></tr>
+      <tr><td>"What about real scans?"</td><td>Open3D pipeline supports E57/LAZ/PLY. Swap <code>use_synthetic: false</code> and point to scan file.</td></tr>
+      <tr><td>"What about Revit?"</td><td>Bridge is ready &mdash; mock falls through to real Revit add-in when connected on port 8766.</td></tr>
+      <tr><td>"Compliance standards?"</td><td>NQA-1 (safety categories), DSEAR (zone classification), ISO 19650 (CDE states &mdash; next phase).</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 12. TROUBLESHOOTING -->
+<div class="section" id="troubleshooting">
+  <div class="section-hdr"><span class="section-num">12</span> Troubleshooting</div>
+
+  <table>
+    <tr><th style="width:35%">Issue</th><th>Solution</th></tr>
+    <tr>
+      <td><code>ModuleNotFoundError: agent</code></td>
+      <td>Run from the <code>ScanToBIM/</code> directory, not <code>agent/</code>. Python needs the parent directory in the path.</td>
+    </tr>
+    <tr>
+      <td><code>open3d</code> installation fails</td>
+      <td>Use <code>pip install open3d-cpu</code> on headless servers. Or skip Open3D entirely &mdash; the demo uses synthetic data.</td>
+    </tr>
+    <tr>
+      <td>Port 8765 already in use</td>
+      <td><code>lsof -i :8765</code> to find the process. Kill it or use <code>--port 8766</code> instead.</td>
+    </tr>
+    <tr>
+      <td>Audit chain shows <code>valid: false</code></td>
+      <td>Database may be corrupted. Delete <code>scantobim.db</code> and restart. Chain integrity is per-session.</td>
+    </tr>
+    <tr>
+      <td>GPT-4o classification not working</td>
+      <td>Check <code>OPENAI_API_KEY</code> is set in <code>.env</code>. System automatically falls back to rule-based if unavailable.</td>
+    </tr>
+    <tr>
+      <td><code>demo.py</code> shows 0 blocked / 0 pending</td>
+      <td>The injected SC1/SC2 segments need the updated <code>demo.py</code>. Make sure the SC1 wall (10000x4000mm, 8000pts) is present.</td>
+    </tr>
+    <tr>
+      <td>Revit bridge connection refused</td>
+      <td>Expected in PoV &mdash; system mocks Revit responses automatically. Real bridge connects in Stage 2.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Scan-to-BIM &middot; Proof of Value</span>
+  <span>Generated 30 Mar 2026</span>
+</div>
+
+</body>
+</html>

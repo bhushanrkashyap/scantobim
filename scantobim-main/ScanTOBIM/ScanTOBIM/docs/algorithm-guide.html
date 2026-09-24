@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan-to-BIM — Algorithm Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#06080e; --surface:#0c0f18; --surface2:#10141f;
+  --border:#182030; --border2:#263050;
+  --text:#b0c4e0; --muted:#4a5e78; --white:#e0eaff;
+  --accent:#00c896; --orange:#ff6b35; --blue:#4a90e2;
+  --purple:#a855f7; --red:#e84040; --cyan:#00d4ff;
+  --yellow:#f5a623; --green:#40c060; --teal:#00b4d8;
+  --pink:#ec4899;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.7;padding-bottom:80px;}
+
+.hero{background:linear-gradient(135deg,#06080e,#080f1e,#06080e);border-bottom:1px solid var(--border2);padding:56px 40px 40px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 900px 400px at 40% 50%,rgba(168,85,247,0.06),transparent 70%);pointer-events:none;}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:3px;color:var(--purple);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:'';width:30px;height:1px;background:var(--purple);}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:800;color:var(--white);line-height:1.1;margin-bottom:12px;}
+.hero h1 span{color:var(--purple);}
+.hero-sub{font-size:13px;color:var(--muted);max-width:700px;margin-bottom:22px;}
+.pills{display:flex;gap:10px;flex-wrap:wrap;}
+.pill{font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px;border:1px solid;}
+.p-built{border-color:rgba(0,200,150,.4);color:var(--accent);}
+.p-new{border-color:rgba(232,64,64,.4);color:var(--red);}
+.p-ml{border-color:rgba(168,85,247,.4);color:var(--purple);}
+.p-geo{border-color:rgba(74,144,226,.4);color:var(--blue);}
+.p-2d{border-color:rgba(0,212,255,.4);color:var(--cyan);}
+
+.container{max-width:1120px;margin:0 auto;padding:0 32px;}
+.section-header{padding:44px 0 18px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.section-header h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--white);display:flex;align-items:center;gap:12px;}
+.section-header p{font-size:12px;color:var(--muted);margin-top:5px;}
+.sn{font-size:10px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:4px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);color:var(--purple);}
+
+/* TOC */
+.toc{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:22px 26px;margin:28px 0;display:grid;grid-template-columns:1fr 1fr;gap:4px 36px;}
+.toc-title{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--purple);text-transform:uppercase;margin-bottom:12px;grid-column:1/-1;}
+.toc a{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;padding:3px 0;transition:color .2s;}
+.toc a:hover{color:var(--white);text-decoration:none;}
+.tn{color:var(--purple);font-weight:700;min-width:22px;}
+
+/* algo card */
+.algo-section{margin-bottom:40px;}
+.algo-section-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:16px;padding:10px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;display:flex;align-items:center;gap:10px;}
+.algo-cards{display:grid;gap:16px;}
+.algo-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.algo-head{padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;}
+.algo-num{font-size:11px;font-weight:700;color:var(--purple);background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:4px;padding:2px 8px;white-space:nowrap;margin-top:2px;}
+.algo-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);}
+.algo-abbr{font-size:11px;color:var(--muted);}
+.algo-status{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.status{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+.s-built{background:rgba(0,200,150,.15);color:var(--accent);}
+.s-new{background:rgba(232,64,64,.15);color:var(--red);}
+.s-upgrade{background:rgba(245,166,35,.15);color:var(--yellow);}
+.s-optional{background:rgba(168,85,247,.15);color:var(--purple);}
+.complexity{font-size:9px;color:var(--muted);text-align:right;}
+.algo-body{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.algo-body.wide{grid-template-columns:1fr;}
+.algo-col-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.algo-desc{font-size:12px;color:var(--text);line-height:1.6;}
+.detects-list{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.det{font-size:10px;font-weight:600;padding:2px 9px;border-radius:4px;border:1px solid;}
+.det-str{border-color:rgba(255,107,53,.3);color:var(--orange);}
+.det-mep{border-color:rgba(74,144,226,.3);color:var(--blue);}
+.det-arc{border-color:rgba(168,85,247,.3);color:var(--purple);}
+.det-civ{border-color:rgba(0,212,255,.3);color:var(--cyan);}
+.det-all{border-color:rgba(0,200,150,.3);color:var(--accent);}
+.params-grid{display:grid;gap:5px;}
+.param-row{display:grid;grid-template-columns:140px 1fr;gap:8px;font-size:11px;}
+.param-name{color:var(--yellow);font-weight:600;}
+.param-val{color:var(--muted);}
+.lib-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.lib{font-size:10px;font-weight:600;padding:2px 10px;border-radius:4px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);color:var(--cyan);}
+
+/* code */
+.code{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:14px 16px;font-size:11px;line-height:1.8;overflow-x:auto;margin:10px 0;}
+.kw{color:var(--purple);} .fn{color:var(--yellow);} .cm{color:var(--muted);font-style:italic;} .st{color:var(--accent);} .num{color:var(--orange);}
+
+/* pipeline */
+.pipeline{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:24px;margin:20px 0;}
+.pipe-stage{margin-bottom:20px;}
+.pipe-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.pipe-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.pb{padding:9px 14px;border-radius:6px;border:1px solid;font-size:11px;font-weight:600;line-height:1.3;text-align:center;min-width:120px;}
+.pa{font-size:16px;color:var(--muted);padding:0 4px;flex-shrink:0;}
+.pb-r{background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);color:var(--orange);}
+.pb-b{background:rgba(74,144,226,.07);border-color:rgba(74,144,226,.3);color:var(--blue);}
+.pb-g{background:rgba(0,200,150,.07);border-color:rgba(0,200,150,.3);color:var(--accent);}
+.pb-p{background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.3);color:var(--purple);}
+.pb-c{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.3);color:var(--cyan);}
+.pb-y{background:rgba(245,166,35,.07);border-color:rgba(245,166,35,.3);color:var(--yellow);}
+.pb-red{background:rgba(232,64,64,.07);border-color:rgba(232,64,64,.3);color:var(--red);}
+.pb-pink{background:rgba(236,72,153,.07);border-color:rgba(236,72,153,.3);color:var(--pink);}
+
+/* comparison table */
+.cmp-table{width:100%;border-collapse:collapse;margin:16px 0;}
+.cmp-table th{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);}
+.cmp-table td{font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;}
+.cmp-table tr:hover td{background:rgba(255,255,255,.012);}
+.cmp-table .cn{color:var(--white);font-weight:600;}
+.good{color:var(--accent);}
+.bad{color:var(--red);}
+.mid{color:var(--yellow);}
+
+/* decision tree */
+.dtree{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:24px;margin:20px 0;font-size:12px;}
+.dt-node{padding:8px 14px;border-radius:6px;border:1px solid;display:inline-block;font-size:11px;font-weight:600;}
+.dt-row{display:flex;align-items:flex-start;gap:0;margin-bottom:12px;flex-wrap:wrap;}
+.dt-connector{display:flex;flex-direction:column;align-items:center;padding:0 6px;color:var(--muted);font-size:11px;}
+.dt-branch{display:flex;flex-direction:column;gap:6px;}
+
+/* summary matrix */
+.matrix{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin:20px 0;}
+.mx-head{background:var(--surface2);border:1px solid var(--border2);padding:8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:center;}
+.mx-cell{background:var(--surface);border:1px solid var(--border);padding:8px 10px;font-size:11px;display:flex;flex-direction:column;gap:3px;}
+.mx-cell .mx-algo{color:var(--white);font-weight:600;font-size:11px;}
+.mx-cell .mx-det{font-size:9px;color:var(--muted);}
+
+.footer{text-align:center;padding:40px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:11px;margin-top:60px;}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">Scan-to-BIM — Algorithm Reference</div>
+    <h1>Every <span>Algorithm</span> Needed<br>for Full Component Detection</h1>
+    <p class="hero-sub">
+      Complete reference: 18 algorithms across 5 categories — geometry fitting, clustering,
+      2D analysis, topology, and ML. Maps each algorithm to the components it detects,
+      parameters to tune, Python library, and complexity.
+    </p>
+    <div class="pills">
+      <span class="pill p-built">2 Already Built</span>
+      <span class="pill p-new">10 New Needed</span>
+      <span class="pill p-ml">3 ML / Learning</span>
+      <span class="pill p-geo">5 Geometry Fitting</span>
+      <span class="pill p-2d">3 2D / Raster</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="container">
+  <nav class="toc">
+    <div class="toc-title">Algorithm Categories</div>
+    <a href="#preprocess"><span class="tn">A</span> Pre-processing (3 algos)</a>
+    <a href="#geometry"><span class="tn">B</span> Geometry Fitting (5 algos)</a>
+    <a href="#clustering"><span class="tn">C</span> Clustering (3 algos)</a>
+    <a href="#2d"><span class="tn">D</span> 2D Raster Analysis (3 algos)</a>
+    <a href="#topology"><span class="tn">E</span> Topology &amp; Spatial (2 algos)</a>
+    <a href="#ml"><span class="tn">F</span> Machine Learning (3 algos)</a>
+    <a href="#pipeline"><span class="tn">G</span> Full Pipeline Order</a>
+    <a href="#decision"><span class="tn">H</span> Algorithm Decision Guide</a>
+    <a href="#comparison"><span class="tn">I</span> Algorithm Comparison Table</a>
+    <a href="#mapping"><span class="tn">J</span> Component → Algorithm Map</a>
+  </nav>
+</div>
+
+<!-- ══ A: PREPROCESSING ══ -->
+<div class="container" id="preprocess">
+  <div class="section-header">
+    <h2><span class="sn">A</span> Pre-Processing Algorithms</h2>
+    <p>Clean and prepare the raw point cloud before any detection — always run first</p>
+  </div>
+
+  <div class="algo-cards">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">A1</div>
+        <div><div class="algo-name">Voxel Grid Downsampling</div><div class="algo-abbr">Already implemented in scan_tools.py</div></div>
+        <div class="algo-status"><span class="status s-built">Built</span><div class="complexity">O(n) — very fast</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Divides 3D space into uniform cubic voxels of side <em>voxel_size</em>. Replaces all points
+            within each voxel with their centroid. Reduces point count by 10–100× while preserving shape.
+            10mm voxel is good for structural; 5mm needed for MEP fittings and valves.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">voxel_size</span><span class="param-val">0.01m (10mm) default — use 0.005m for valves/fittings</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">open3d</span><span class="lib">pcd.voxel_down_sample()</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects (enables)</div>
+          <ul class="detects-list">
+            <li><span class="det det-all">All components</span></li>
+          </ul>
+          <div class="code">
+<span class="cm"># Current — 10mm pass</span><br>
+pcd = pcd.<span class="fn">voxel_down_sample</span>(voxel_size=<span class="num">0.01</span>)<br><br>
+<span class="cm"># ADD — fine 5mm pass for MEP detail</span><br>
+pcd_fine = residual.<span class="fn">voxel_down_sample</span>(voxel_size=<span class="num">0.005</span>)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">A2</div>
+        <div><div class="algo-name">Statistical Outlier Removal (SOR)</div><div class="algo-abbr">Remove noise points before detection</div></div>
+        <div class="algo-status"><span class="status s-new">Missing</span><div class="complexity">O(n log n)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            For each point, computes the mean distance to its k nearest neighbours.
+            Points whose mean distance is beyond <em>std_ratio</em> standard deviations from the global mean
+            are removed as outliers. Eliminates scan noise, scanner multipath, and vegetation points
+            that would confuse RANSAC and DBSCAN.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">nb_neighbors</span><span class="param-val">20 — number of neighbours to consider</span></div>
+            <div class="param-row"><span class="param-name">std_ratio</span><span class="param-val">2.0 — points beyond 2σ are removed</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">open3d</span><span class="lib">remove_statistical_outlier()</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Why needed</div>
+          <div class="algo-desc" style="margin-bottom:10px;">
+            Without SOR, RANSAC fits planes to noise clouds. DBSCAN creates false clusters from scattered
+            points. A 2m scan range returns &lt;1% noise, but 50m range returns 5–15% noise — enough to
+            break detection.
+          </div>
+          <div class="code">
+<span class="cm"># Add at start of pipeline</span><br>
+pcd, ind = pcd.<span class="fn">remove_statistical_outlier</span>(<br>
+&nbsp;&nbsp;nb_neighbors=<span class="num">20</span>,<br>
+&nbsp;&nbsp;std_ratio=<span class="num">2.0</span><br>
+)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">A3</div>
+        <div><div class="algo-name">Surface Normal Estimation</div><div class="algo-abbr">Required by RANSAC, Region Growing, and shape classification</div></div>
+        <div class="algo-status"><span class="status s-new">Missing</span><div class="complexity">O(n log n)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            For each point, fits a plane to its k nearest neighbours using PCA. The smallest eigenvector
+            is the surface normal. Normals are oriented consistently using a viewpoint (scanner position).
+            Used to: classify plane orientation (vertical/horizontal/sloped), distinguish flat surfaces
+            from curved, enable Region Growing segmentation.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">radius</span><span class="param-val">0.05m — search radius for normal estimation</span></div>
+            <div class="param-row"><span class="param-name">max_nn</span><span class="param-val">30 — max neighbours for PCA</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">open3d</span><span class="lib">estimate_normals()</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects (enables)</div>
+          <ul class="detects-list">
+            <li><span class="det det-str">Wall orientation</span></li>
+            <li><span class="det det-str">Slope angle</span></li>
+            <li><span class="det det-mep">Pipe vs beam</span></li>
+            <li><span class="det det-arc">Stair vs ramp</span></li>
+          </ul>
+          <div class="code">
+<span class="cm"># Required before RANSAC + Region Growing</span><br>
+pcd.<span class="fn">estimate_normals</span>(<br>
+&nbsp;&nbsp;o3d.geometry.<span class="fn">KDTreeSearchParamHybrid</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;radius=<span class="num">0.05</span>, max_nn=<span class="num">30</span><br>
+&nbsp;&nbsp;)<br>
+)<br>
+pcd.<span class="fn">orient_normals_towards_camera_location</span>(camera_pos)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ B: GEOMETRY FITTING ══ -->
+<div class="container" id="geometry">
+  <div class="section-header">
+    <h2><span class="sn">B</span> Geometry Fitting Algorithms</h2>
+    <p>Fit mathematical shapes (planes, cylinders, spheres, boxes) to point sets — the core of detection</p>
+  </div>
+
+  <div class="algo-cards">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">B1</div>
+        <div><div class="algo-name">RANSAC — Iterative Plane Detection</div><div class="algo-abbr">Random Sample Consensus — already built</div></div>
+        <div class="algo-status"><span class="status s-upgrade">Needs Upgrade</span><div class="complexity">O(n × iterations)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Repeatedly: (1) randomly picks 3 points, (2) fits a plane, (3) counts inliers within
+            <em>distance_threshold</em>. Best plane wins. Inliers are removed, process repeats on residual
+            (iterative RANSAC). Normal vector angle determines orientation:
+            <br><br>
+            <strong style="color:var(--white)">|normal.z| &gt; 0.93</strong> → horizontal (floor/ceiling/roof)<br>
+            <strong style="color:var(--white)">|normal.z| &lt; 0.30</strong> → vertical (wall/column)<br>
+            <strong style="color:var(--white)">0.30 &lt; |normal.z| &lt; 0.93</strong> → sloped (stair/ramp/roof slope)
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Key Upgrade Needed</div>
+          <div class="algo-desc">Add z-centroid context after plane extraction: floor vs ceiling separation using storey height. Add slope angle extraction for stairs/ramps.</div>
+          <div class="lib-row"><span class="lib">open3d</span><span class="lib">segment_plane()</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-str">Wall</span></li>
+            <li><span class="det det-str">Floor</span></li>
+            <li><span class="det det-arc">Ceiling</span></li>
+            <li><span class="det det-arc">Stair flight</span></li>
+            <li><span class="det det-arc">Ramp</span></li>
+            <li><span class="det det-str">Roof slab</span></li>
+            <li><span class="det det-civ">Retaining wall</span></li>
+          </ul>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">distance_threshold</span><span class="param-val">0.02m (20mm) — inlier tolerance</span></div>
+            <div class="param-row"><span class="param-name">ransac_n</span><span class="param-val">3 — minimum points to fit plane</span></div>
+            <div class="param-row"><span class="param-name">num_iterations</span><span class="param-val">1000</span></div>
+            <div class="param-row"><span class="param-name">min_inliers</span><span class="param-val">200 — reject small planes</span></div>
+            <div class="param-row"><span class="param-name">max_planes</span><span class="param-val">30 — stop after N planes found</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">B2</div>
+        <div><div class="algo-name">RANSAC Cylinder Fitting</div><div class="algo-abbr">Fit cylinder model (axis + radius) to point set</div></div>
+        <div class="algo-status"><span class="status s-upgrade">Needs Upgrade</span><div class="complexity">O(n × iterations)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Current: DBSCAN cluster → heuristic aspect ratio → call it a cylinder. Limitation: gives
+            no axis direction or exact radius — just bounding box.<br><br>
+            <strong style="color:var(--white)">Upgrade:</strong> After DBSCAN cluster found, run RANSAC cylinder fitting on cluster points.
+            Needs surface normals. Fits axis (direction + point on axis) + radius.
+            Axis direction → pipe/beam orientation. Radius × 2 = outer diameter.
+            Pipe (axis horizontal, radius &lt;200mm) vs Beam (axis horizontal, cross-section rectangular) →
+            distinguish by fitting both cylinder and OBB, compare residuals.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">normal_distance_weight</span><span class="param-val">0.1 — balance point vs normal distance</span></div>
+            <div class="param-row"><span class="param-name">max_iterations</span><span class="param-val">1000</span></div>
+            <div class="param-row"><span class="param-name">distance_threshold</span><span class="param-val">0.01m</span></div>
+            <div class="param-row"><span class="param-name">radius_min / radius_max</span><span class="param-val">0.01m – 0.5m</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">pyransac3d</span><span class="lib">open3d (pcl wrapper)</span><span class="lib">numpy manual</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-mep">Pipe (+ diameter)</span></li>
+            <li><span class="det det-mep">Round duct</span></li>
+            <li><span class="det det-str">CHS column</span></li>
+            <li><span class="det det-mep">Tank (large radius)</span></li>
+            <li><span class="det det-mep">Vessel</span></li>
+          </ul>
+          <div class="code">
+<span class="cm"># pyransac3d cylinder fitting</span><br>
+<span class="kw">from</span> pyransac3d <span class="kw">import</span> Cylinder<br>
+cyl = <span class="fn">Cylinder</span>()<br>
+axis, center, radius, inliers = cyl.<span class="fn">fit</span>(<br>
+&nbsp;&nbsp;pts, thresh=<span class="num">0.01</span>, maxIteration=<span class="num">1000</span><br>
+)<br>
+diameter_mm = radius * <span class="num">2</span> * <span class="num">1000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">B3</div>
+        <div><div class="algo-name">PCA — Principal Component Analysis</div><div class="algo-abbr">Extract primary axes, orientation, section profile from point clusters</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n) — very fast</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Computes the covariance matrix of a point cluster, then finds its eigenvectors.
+            The 3 eigenvectors = the 3 principal axes; eigenvalues = variance along each axis.<br><br>
+            <strong style="color:var(--white)">Uses in Scan-to-BIM:</strong><br>
+            • Eigenvalue ratio → shape: λ₁≫λ₂≈λ₃ = linear (beam/pipe); λ₁≈λ₂≫λ₃ = planar; λ₁≈λ₂≈λ₃ = spherical<br>
+            • Largest eigenvector = span direction of beam or pipe run<br>
+            • Smallest eigenvector = normal of a flat element<br>
+            • Middle eigenvalue ratio → distinguish rectangular from circular cross-section
+          </div>
+          <div class="lib-row"><span class="lib">numpy.linalg.eigh()</span><span class="lib">sklearn PCA</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-str">Beam span direction</span></li>
+            <li><span class="det det-str">Column orientation</span></li>
+            <li><span class="det det-mep">Pipe run direction</span></li>
+            <li><span class="det det-mep">Duct axis</span></li>
+            <li><span class="det det-all">Shape type (linear/planar/spherical)</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">def</span> <span class="fn">pca_shape</span>(pts):<br>
+&nbsp;&nbsp;cov = np.<span class="fn">cov</span>(pts.T)<br>
+&nbsp;&nbsp;eigenvalues, eigenvectors = np.linalg.<span class="fn">eigh</span>(cov)<br>
+&nbsp;&nbsp;idx = np.<span class="fn">argsort</span>(eigenvalues)[::-<span class="num">1</span>]<br>
+&nbsp;&nbsp;λ = eigenvalues[idx]<br>
+&nbsp;&nbsp;linearity = (λ[<span class="num">0</span>]-λ[<span class="num">1</span>]) / λ[<span class="num">0</span>]<br>
+&nbsp;&nbsp;planarity = (λ[<span class="num">1</span>]-λ[<span class="num">2</span>]) / λ[<span class="num">0</span>]<br>
+&nbsp;&nbsp;<span class="kw">return</span> linearity, planarity, eigenvectors[:,idx]
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">B4</div>
+        <div><div class="algo-name">Oriented Bounding Box (OBB)</div><div class="algo-abbr">Minimum volume box aligned to object axes — better than AABB</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n log n)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Unlike Axis-Aligned Bounding Box (AABB), an OBB is rotated to fit the object tightly.
+            Computed from PCA: rotate points to PCA frame → compute AABB in that frame → rotate back.
+            Result: length, width, height along object's own axes, plus orientation quaternion.<br><br>
+            <strong style="color:var(--white)">Critical for beams and ducts:</strong> a diagonal beam's AABB is huge and misleading.
+            Its OBB correctly gives span length × section width × section height.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Shape from OBB dimensions</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">L ≫ W ≈ H</span><span class="param-val">→ Beam, pipe, column, cable tray</span></div>
+            <div class="param-row"><span class="param-name">L ≈ W ≫ H</span><span class="param-val">→ Floor, ceiling, flat duct, panel</span></div>
+            <div class="param-row"><span class="param-name">L ≈ W ≈ H</span><span class="param-val">→ Equipment, tank, pump, column capital</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">open3d</span><span class="lib">get_minimal_oriented_bounding_box()</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-str">Beam (L≫W≈H, z&gt;2m)</span></li>
+            <li><span class="det det-mep">Rectangular duct</span></li>
+            <li><span class="det det-mep">Cable tray (L≫flat)</span></li>
+            <li><span class="det det-mep">Equipment (cube-ish)</span></li>
+            <li><span class="det det-str">Column section profile</span></li>
+          </ul>
+          <div class="code">
+<span class="cm"># Get OBB from cluster</span><br>
+cluster_pcd = pcd.<span class="fn">select_by_index</span>(indices)<br>
+obb = cluster_pcd.<span class="fn">get_minimal_oriented_bounding_box</span>()<br>
+L, W, H = <span class="fn">sorted</span>(obb.extent)[::-<span class="num">1</span>]<br><br>
+<span class="kw">if</span> L > <span class="num">3</span> * W <span class="kw">and</span> z_centroid > <span class="num">2.0</span>:<br>
+&nbsp;&nbsp;shape = <span class="st">"BEAM"</span>  <span class="cm"># long + elevated</span><br>
+<span class="kw">elif</span> L > <span class="num">3</span> * W <span class="kw">and</span> z_centroid > <span class="num">1.5</span>:<br>
+&nbsp;&nbsp;shape = <span class="st">"DUCT"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">B5</div>
+        <div><div class="algo-name">RANSAC Sphere Fitting</div><div class="algo-abbr">Detect valves, sprinkler heads, manhole covers</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n × iterations)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Fits a sphere (centre + radius) to a point cluster. Picks 4 random points,
+            solves the sphere equation, counts inliers. Used for: ball valves (spherical body),
+            sprinkler heads (dome shape), flanges on pipes.<br><br>
+            Run on <strong style="color:var(--white)">fine 5mm voxel residual points</strong> near detected pipe segments.
+            A sphere cluster within 200mm of a pipe centreline = valve.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">thresh</span><span class="param-val">0.005m (5mm) — tight for small fittings</span></div>
+            <div class="param-row"><span class="param-name">maxIteration</span><span class="param-val">500</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">pyransac3d Sphere</span><span class="lib">numpy manual</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-mep">Ball valve</span></li>
+            <li><span class="det det-mep">Sprinkler head</span></li>
+            <li><span class="det det-mep">Pipe flange</span></li>
+            <li><span class="det det-mep">Tank cap / dome</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">from</span> pyransac3d <span class="kw">import</span> Sphere<br>
+sphere = <span class="fn">Sphere</span>()<br>
+<span class="cm"># Run near each pipe segment</span><br>
+<span class="kw">for</span> pipe <span class="kw">in</span> detected_pipes:<br>
+&nbsp;&nbsp;nearby = <span class="fn">get_points_near</span>(residual, pipe, r=<span class="num">0.2</span>)<br>
+&nbsp;&nbsp;center, radius, inliers = sphere.<span class="fn">fit</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nearby, thresh=<span class="num">0.005</span><br>
+&nbsp;&nbsp;)<br>
+&nbsp;&nbsp;<span class="kw">if</span> len(inliers) > <span class="num">30</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;elements.<span class="fn">add</span>(<span class="st">"VALVE"</span>)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ C: CLUSTERING ══ -->
+<div class="container" id="clustering">
+  <div class="section-header">
+    <h2><span class="sn">C</span> Clustering Algorithms</h2>
+    <p>Group residual points into object candidates after plane extraction</p>
+  </div>
+
+  <div class="algo-cards">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">C1</div>
+        <div><div class="algo-name">DBSCAN — Density-Based Clustering</div><div class="algo-abbr">Already built — needs parameter tuning for MEP</div></div>
+        <div class="algo-status"><span class="status s-upgrade">Needs Upgrade</span><div class="complexity">O(n log n) with KD-tree</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Groups points where: a point is a core point if it has ≥ <em>min_points</em> neighbours within
+            radius <em>eps</em>. Core points form clusters; border points join nearest cluster; remaining = noise.<br><br>
+            <strong style="color:var(--white)">Two passes needed:</strong><br>
+            Pass 1: eps=50mm, min_pts=100 → large MEP objects (equipment, tanks, large ducts)<br>
+            Pass 2: eps=20mm, min_pts=30 → medium MEP (pipes, beams, small ducts)<br>
+            Pass 3: eps=10mm, min_pts=15 → fine detail (valves, fittings) on 5mm voxel cloud
+          </div>
+          <div class="lib-row"><span class="lib">open3d</span><span class="lib">cluster_dbscan()</span><span class="lib">sklearn DBSCAN</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-str">Beam</span></li>
+            <li><span class="det det-mep">All MEP objects</span></li>
+            <li><span class="det det-mep">Equipment</span></li>
+            <li><span class="det det-mep">Tank / Vessel</span></li>
+            <li><span class="det det-mep">Valve</span></li>
+          </ul>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters per pass</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">Pass 1 (large)</span><span class="param-val">eps=0.05m, min_pts=100</span></div>
+            <div class="param-row"><span class="param-name">Pass 2 (medium)</span><span class="param-val">eps=0.02m, min_pts=30</span></div>
+            <div class="param-row"><span class="param-name">Pass 3 (fine)</span><span class="param-val">eps=0.01m, min_pts=15 on 5mm cloud</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">C2</div>
+        <div><div class="algo-name">Region Growing Segmentation</div><div class="algo-abbr">Grow segments from seed points by normal + curvature similarity</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n log n)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Starts from a seed point (lowest curvature = most planar). Grows by adding neighbours
+            whose normal angle differs by &lt; <em>angle_threshold</em> and curvature &lt; <em>curvature_threshold</em>.
+            Stops when no more neighbours qualify.<br><br>
+            <strong style="color:var(--white)">Advantage over RANSAC:</strong> finds non-planar curved surfaces
+            (HVAC duct bends, tank domes, stair soffits) that RANSAC misses.
+            Also segments walls with multiple patches as one region.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">min_cluster_size</span><span class="param-val">100 points</span></div>
+            <div class="param-row"><span class="param-name">max_cluster_size</span><span class="param-val">1,000,000 points</span></div>
+            <div class="param-row"><span class="param-name">smoothness_threshold</span><span class="param-val">3.0° normal angle</span></div>
+            <div class="param-row"><span class="param-name">curvature_threshold</span><span class="param-val">1.0</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">open3d (manual)</span><span class="lib">pclpy</span><span class="lib">pcl-python</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-arc">Curved stair soffit</span></li>
+            <li><span class="det det-mep">Duct bends</span></li>
+            <li><span class="det det-mep">Tank dome</span></li>
+            <li><span class="det det-str">Complex wall patches</span></li>
+            <li><span class="det det-str">Non-planar slabs</span></li>
+          </ul>
+          <div class="code">
+<span class="cm"># Manual region growing in numpy</span><br>
+<span class="kw">def</span> <span class="fn">region_grow</span>(pts, normals, angle_thresh=<span class="num">5.0</span>):<br>
+&nbsp;&nbsp;visited = np.<span class="fn">zeros</span>(len(pts), dtype=bool)<br>
+&nbsp;&nbsp;regions = []<br>
+&nbsp;&nbsp;<span class="kw">for</span> seed <span class="kw">in</span> <span class="fn">find_seeds</span>(pts, normals):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;region = <span class="fn">grow_from</span>(seed, pts, normals,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;angle_thresh, visited)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;regions.<span class="fn">append</span>(region)<br>
+&nbsp;&nbsp;<span class="kw">return</span> regions
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">C3</div>
+        <div><div class="algo-name">Euclidean Cluster Extraction</div><div class="algo-abbr">Simple distance-based clustering — fast for isolated objects</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n log n)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Groups points that are within a fixed distance of each other (like DBSCAN without the
+            min_points requirement). Uses KD-tree for fast nearest-neighbour queries.
+            Faster than DBSCAN, works better for isolated objects (pumps, panels, equipment) that
+            have a clear gap to surrounding structure. Less good for touching surfaces.
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">cluster_tolerance</span><span class="param-val">0.02m — gap between clusters</span></div>
+            <div class="param-row"><span class="param-name">min_cluster_size</span><span class="param-val">50 points</span></div>
+            <div class="param-row"><span class="param-name">max_cluster_size</span><span class="param-val">50,000 points</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">scipy.spatial.cKDTree</span><span class="lib">sklearn</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-mep">Pump</span></li>
+            <li><span class="det det-mep">Electrical panel</span></li>
+            <li><span class="det det-mep">HVAC unit</span></li>
+            <li><span class="det det-arc">Railing post</span></li>
+            <li><span class="det det-mep">Isolated fittings</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">from</span> scipy.spatial <span class="kw">import</span> cKDTree<br><br>
+<span class="kw">def</span> <span class="fn">euclidean_clusters</span>(pts, tol=<span class="num">0.02</span>, min_sz=<span class="num">50</span>):<br>
+&nbsp;&nbsp;tree = <span class="fn">cKDTree</span>(pts)<br>
+&nbsp;&nbsp;visited = <span class="fn">set</span>()<br>
+&nbsp;&nbsp;clusters = []<br>
+&nbsp;&nbsp;<span class="kw">for</span> i, pt <span class="kw">in</span> <span class="fn">enumerate</span>(pts):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> i <span class="kw">in</span> visited: <span class="kw">continue</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;members = tree.<span class="fn">query_ball_point</span>(pt, tol)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clusters.<span class="fn">append</span>(members)<br>
+&nbsp;&nbsp;<span class="kw">return</span> [c <span class="kw">for</span> c <span class="kw">in</span> clusters <span class="kw">if</span> len(c)>=min_sz]
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ D: 2D RASTER ══ -->
+<div class="container" id="2d">
+  <div class="section-header">
+    <h2><span class="sn">D</span> 2D Raster Analysis Algorithms</h2>
+    <p>Project 3D plane points to 2D grid — find voids (doors/windows/openings) and patterns (stairs)</p>
+  </div>
+
+  <div class="algo-cards">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">D1</div>
+        <div><div class="algo-name">2D Grid Rasterization + Void Detection</div><div class="algo-abbr">Find door/window openings in wall planes</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n) + O(grid²)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            After RANSAC extracts a wall plane:<br>
+            1. Project inlier points onto the plane's 2D coordinate frame (u, v axes)<br>
+            2. Rasterise to a 20mm grid — mark cells with points as "solid"<br>
+            3. Find rectangular regions of empty cells surrounded by solid cells = opening<br>
+            4. Classify by void bottom z: sill_z &lt; 0.2m = Door; sill_z &gt; 0.5m = Window<br>
+            5. Extract width, height, sill height from void bounding box
+          </div>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">grid_resolution</span><span class="param-val">0.02m (20mm) — balance detail vs speed</span></div>
+            <div class="param-row"><span class="param-name">min_void_area</span><span class="param-val">0.4m² — minimum opening size</span></div>
+            <div class="param-row"><span class="param-name">door_sill_max</span><span class="param-val">0.2m — door sill below this</span></div>
+            <div class="param-row"><span class="param-name">window_sill_min</span><span class="param-val">0.5m — window sill above this</span></div>
+          </div>
+          <div class="lib-row"><span class="lib">numpy (raster)</span><span class="lib">scipy.ndimage</span><span class="lib">OpenCV connectedComponents</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-arc">Door</span></li>
+            <li><span class="det det-arc">Window</span></li>
+            <li><span class="det det-arc">Curtain wall void</span></li>
+            <li><span class="det det-str">Wall penetration</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">import</span> numpy <span class="kw">as</span> np<br>
+<span class="kw">from</span> scipy.ndimage <span class="kw">import</span> label, binary_closing<br><br>
+<span class="cm"># Project to 2D</span><br>
+u = pts @ u_axis;  v = pts @ v_axis<br>
+grid = np.<span class="fn">zeros</span>((u_bins, v_bins), dtype=bool)<br>
+grid[u_idx, v_idx] = <span class="kw">True</span><br><br>
+<span class="cm"># Close small gaps, find voids</span><br>
+closed = <span class="fn">binary_closing</span>(grid, iterations=<span class="num">3</span>)<br>
+voids = ~closed &amp; <span class="fn">interior_mask</span>(closed)<br>
+void_labels, n = <span class="fn">label</span>(voids)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">D2</div>
+        <div><div class="algo-name">Morphological Operations (Closing / Opening)</div><div class="algo-abbr">Clean up raster grids — fill scan gaps, separate touching voids</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(grid² × kernel)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            <strong style="color:var(--white)">Dilation</strong>: expands solid regions by a kernel — fills scan gaps and thin cracks<br>
+            <strong style="color:var(--white)">Erosion</strong>: shrinks solid regions — removes thin noise<br>
+            <strong style="color:var(--white)">Closing</strong> (dilate then erode): fills small holes in walls without changing overall shape<br>
+            <strong style="color:var(--white)">Opening</strong> (erode then dilate): removes thin noise protrusions<br><br>
+            Used in both wall void detection (D1) and slab opening detection.
+            Scan data has gaps at window frames, door frames, wall junctions — closing fills these before void detection.
+          </div>
+          <div class="lib-row"><span class="lib">scipy.ndimage</span><span class="lib">OpenCV morphology</span><span class="lib">skimage.morphology</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Used for</div>
+          <ul class="detects-list">
+            <li><span class="det det-arc">Door/Window void cleanup</span></li>
+            <li><span class="det det-str">Slab opening detection</span></li>
+            <li><span class="det det-arc">Stair step cleanup</span></li>
+          </ul>
+          <div class="algo-col-title" style="margin-top:10px;">Parameters</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">closing iterations</span><span class="param-val">3–5 grid cells (~60–100mm) for wall gaps</span></div>
+            <div class="param-row"><span class="param-name">kernel shape</span><span class="param-val">square(3) for walls; disk(3) for slabs</span></div>
+          </div>
+          <div class="code">
+<span class="kw">from</span> scipy.ndimage <span class="kw">import</span> binary_closing, binary_opening<br>
+<span class="kw">from</span> skimage.morphology <span class="kw">import</span> square<br><br>
+<span class="cm"># Fill scan gaps in wall grid</span><br>
+clean = <span class="fn">binary_closing</span>(grid, structure=<span class="fn">square</span>(<span class="num">3</span>))<br><br>
+<span class="cm"># Remove noise from slab grid</span><br>
+clean = <span class="fn">binary_opening</span>(slab_grid, structure=<span class="fn">square</span>(<span class="num">2</span>))
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">D3</div>
+        <div><div class="algo-name">Z-Profile Analysis for Stairs</div><div class="algo-abbr">Detect regular step pattern in z-direction from sloped plane points</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n log n)</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            After RANSAC finds a sloped plane (0.3 &lt; |normal.z| &lt; 0.93):<br>
+            1. Extract z-values of all inlier points<br>
+            2. Build z-histogram with bin width = 10mm<br>
+            3. Find peaks in histogram — peaks = tread surfaces<br>
+            4. If peaks are regularly spaced (riser height tolerance ±15mm) = Stair<br>
+            5. If no peaks (smooth z distribution) = Ramp<br><br>
+            Riser height = mean peak spacing. Tread depth = width of each peak.
+          </div>
+          <div class="lib-row"><span class="lib">numpy (histogram)</span><span class="lib">scipy.signal.find_peaks</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects</div>
+          <ul class="detects-list">
+            <li><span class="det det-arc">Stair (peak pattern)</span></li>
+            <li><span class="det det-arc">Ramp (no peaks)</span></li>
+            <li><span class="det det-str">Roof slope</span></li>
+            <li><span class="det det-str">Sloped slab</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> find_peaks<br><br>
+<span class="cm"># Z-histogram of sloped plane inliers</span><br>
+z_vals = pts[inliers, <span class="num">2</span>]<br>
+hist, bins = np.<span class="fn">histogram</span>(z_vals, bins=<span class="num">200</span>)<br>
+peaks, props = <span class="fn">find_peaks</span>(hist, distance=<span class="num">15</span>, height=<span class="num">50</span>)<br><br>
+spacings = np.<span class="fn">diff</span>(bins[peaks])<br>
+regular = np.<span class="fn">std</span>(spacings) < <span class="num">0.015</span>  <span class="cm"># ±15mm</span><br>
+shape = <span class="st">"STAIR"</span> <span class="kw">if</span> regular <span class="kw">else</span> <span class="st">"RAMP"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ E: TOPOLOGY ══ -->
+<div class="container" id="topology">
+  <div class="section-header">
+    <h2><span class="sn">E</span> Topology &amp; Spatial Indexing Algorithms</h2>
+    <p>Find relationships between detected elements — host assignment, pipe runs, clash detection</p>
+  </div>
+
+  <div class="algo-cards">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">E1</div>
+        <div><div class="algo-name">R-Tree Spatial Index</div><div class="algo-abbr">Fast bounding-box proximity queries for relationship building</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(log n) per query</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Indexes bounding boxes in a tree structure. Query: "which elements intersect or are near
+            this bounding box" runs in O(log n) vs O(n) brute force.<br><br>
+            <strong style="color:var(--white)">3 critical uses:</strong><br>
+            1. <strong>Host assignment</strong>: find which wall a detected door/window centroid is inside<br>
+            2. <strong>Clash detection</strong>: find all element pairs whose AABBs overlap<br>
+            3. <strong>Pipe topology</strong>: find valves/fittings within 200mm of each pipe segment
+          </div>
+          <div class="lib-row"><span class="lib">rtree</span><span class="lib">scipy KDTree (for points)</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Enables</div>
+          <ul class="detects-list">
+            <li><span class="det det-arc">Door → host wall</span></li>
+            <li><span class="det det-arc">Window → host wall</span></li>
+            <li><span class="det det-mep">Valve → host pipe</span></li>
+            <li><span class="det det-all">Clash detection</span></li>
+            <li><span class="det det-mep">Pipe system tracing</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">from</span> rtree <span class="kw">import</span> index<br><br>
+idx = index.<span class="fn">Index</span>()<br>
+<span class="kw">for</span> i, elem <span class="kw">in</span> <span class="fn">enumerate</span>(walls):<br>
+&nbsp;&nbsp;bb = elem.bounding_box<br>
+&nbsp;&nbsp;idx.<span class="fn">insert</span>(i, (bb.min_x, bb.min_y,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bb.min_z, bb.max_x, bb.max_y, bb.max_z))<br><br>
+<span class="cm"># Find host wall for each door</span><br>
+<span class="kw">for</span> door <span class="kw">in</span> doors:<br>
+&nbsp;&nbsp;candidates = <span class="fn">list</span>(idx.<span class="fn">intersection</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;door.bounding_box.<span class="fn">as_tuple</span>()))<br>
+&nbsp;&nbsp;door.host_wall_id = walls[candidates[<span class="num">0</span>]].id
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">E2</div>
+        <div><div class="algo-name">Graph-Based Connectivity (Pipe Run Tracing)</div><div class="algo-abbr">Build pipe/duct system topology from detected segments</div></div>
+        <div class="algo-status"><span class="status s-new">New</span><div class="complexity">O(n + e) — n=segments, e=connections</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Builds a graph where nodes = detected pipe/duct segments and edges = connections
+            (endpoints within 100mm of each other).<br><br>
+            Connected components = pipe systems. Each component is assigned a system type
+            based on its connected equipment (near AHU = HVAC; near plant room = domestic water).<br><br>
+            Traversal from equipment node identifies supply vs return vs drain paths.
+          </div>
+          <div class="lib-row"><span class="lib">networkx</span><span class="lib">scipy.sparse.csgraph</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Enables</div>
+          <ul class="detects-list">
+            <li><span class="det det-mep">Pipe system type</span></li>
+            <li><span class="det det-mep">Duct supply/return</span></li>
+            <li><span class="det det-mep">Pipe run direction</span></li>
+            <li><span class="det det-mep">Valve on system</span></li>
+          </ul>
+          <div class="code">
+<span class="kw">import</span> networkx <span class="kw">as</span> nx<br><br>
+G = nx.<span class="fn">Graph</span>()<br>
+<span class="kw">for</span> pipe <span class="kw">in</span> pipes:<br>
+&nbsp;&nbsp;G.<span class="fn">add_node</span>(pipe.id, z=pipe.centroid.z)<br><br>
+<span class="kw">for</span> a, b <span class="kw">in</span> <span class="fn">find_connections</span>(pipes, tol=<span class="num">0.1</span>):<br>
+&nbsp;&nbsp;G.<span class="fn">add_edge</span>(a.id, b.id)<br><br>
+<span class="kw">for</span> component <span class="kw">in</span> nx.<span class="fn">connected_components</span>(G):<br>
+&nbsp;&nbsp;system_type = <span class="fn">infer_system</span>(component, equipment)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ F: ML ══ -->
+<div class="container" id="ml">
+  <div class="section-header">
+    <h2><span class="sn">F</span> Machine Learning Algorithms</h2>
+    <p>Improve classification accuracy beyond pure geometry — especially for ambiguous cases</p>
+  </div>
+
+  <div class="algo-cards">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">F1</div>
+        <div><div class="algo-name">Random Forest / XGBoost — Feature-Based Classifier</div><div class="algo-abbr">Classify element type from geometric features — no GPU needed</div></div>
+        <div class="algo-status"><span class="status s-optional">Mid-Term</span><div class="complexity">O(n log n) training, O(1) inference</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Extract a feature vector from each detected cluster:
+            [linearity, planarity, sphericity, L/W/H, aspect_ratio, z_centroid,
+            point_density, z_extent, normal_z, proximity_to_wall, proximity_to_floor]<br><br>
+            Train a classifier on labelled examples (geometry + known element type).
+            Replace the rule-based heuristics in classifier.py.<br><br>
+            <strong style="color:var(--white)">Training data:</strong> classifier disagreements logged in audit + engineer corrections
+          </div>
+          <div class="lib-row"><span class="lib">scikit-learn RandomForest</span><span class="lib">xgboost</span><span class="lib">lightgbm</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Classifies</div>
+          <ul class="detects-list">
+            <li><span class="det det-all">All 23 element types</span></li>
+          </ul>
+          <div class="algo-col-title" style="margin-top:10px;">Feature vector (13 features)</div>
+          <div class="params-grid">
+            <div class="param-row"><span class="param-name">linearity</span><span class="param-val">(λ₁-λ₂)/λ₁ from PCA</span></div>
+            <div class="param-row"><span class="param-name">planarity</span><span class="param-val">(λ₂-λ₃)/λ₁ from PCA</span></div>
+            <div class="param-row"><span class="param-name">sphericity</span><span class="param-val">λ₃/λ₁ from PCA</span></div>
+            <div class="param-row"><span class="param-name">aspect_LW</span><span class="param-val">OBB L/W ratio</span></div>
+            <div class="param-row"><span class="param-name">z_normalised</span><span class="param-val">centroid_z / storey_height</span></div>
+            <div class="param-row"><span class="param-name">density</span><span class="param-val">points / volume</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">F2</div>
+        <div><div class="algo-name">PointNet++ — Deep Learning Point Cloud Classification</div><div class="algo-abbr">State-of-art: classify point clusters directly, no feature engineering</div></div>
+        <div class="algo-status"><span class="status s-optional">Enterprise / Future</span><div class="complexity">GPU required for training</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">How it works</div>
+          <div class="algo-desc">
+            Neural network that takes raw 3D points as input. Uses hierarchical point set abstraction:
+            sample → group → extract local features → aggregate globally.
+            Handles variable point counts and is invariant to point order.<br><br>
+            <strong style="color:var(--white)">For Scan-to-BIM:</strong> train on ShapeNet (general), fine-tune on
+            labelled BIM point cloud datasets (S3DIS, ScanNet, site-specific data).
+            Replace both geometry detection and classification in one model.
+          </div>
+          <div class="lib-row"><span class="lib">pytorch</span><span class="lib">torch-points3d</span><span class="lib">MinkowskiEngine</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">Detects &amp; Classifies</div>
+          <ul class="detects-list">
+            <li><span class="det det-all">All 23 element types</span></li>
+            <li><span class="det det-all">Instance segmentation</span></li>
+          </ul>
+          <div class="algo-col-title" style="margin-top:10px;">When to use</div>
+          <div class="algo-desc" style="margin-top:4px;">
+            Use when you have &gt;10,000 labelled scan examples per element type.
+            Until then, geometry rules (B1–B5) + XGBoost (F1) outperform a poorly-trained neural network.
+            PointNet++ is overkill for PoV; plan for production.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-num">F3</div>
+        <div><div class="algo-name">GPT-4o Vision / LLM Reasoning</div><div class="algo-abbr">Already wired — use for ambiguous cases, material type, label OCR</div></div>
+        <div class="algo-status"><span class="status s-upgrade">Extend Use</span><div class="complexity">API call per element</div></div>
+      </div>
+      <div class="algo-body">
+        <div>
+          <div class="algo-col-title">Current use</div>
+          <div class="algo-desc">
+            Already in classifier.py: sends element geometry JSON to GPT-4o → returns safety_category, dsear_zone, reason.<br><br>
+            <strong style="color:var(--white)">New uses to add:</strong><br>
+            • Send rendered top-down / side view of cluster → ask GPT-4o Vision to identify element type<br>
+            • For ambiguous beam vs duct cases → structured reasoning prompt<br>
+            • OCR of text on scan (valve labels, pipe tags) if scanner captures colour/intensity
+          </div>
+          <div class="lib-row"><span class="lib">openai</span><span class="lib">azure-openai</span></div>
+        </div>
+        <div>
+          <div class="algo-col-title">New prompt areas</div>
+          <ul class="detects-list">
+            <li><span class="det det-mep">Beam vs duct disambiguation</span></li>
+            <li><span class="det det-mep">Equipment type (AHU vs chiller)</span></li>
+            <li><span class="det det-all">Ambiguous safety classification</span></li>
+            <li><span class="det det-mep">Label OCR (pipe tags)</span></li>
+          </ul>
+          <div class="code">
+<span class="cm"># New: Vision call for ambiguous cluster</span><br>
+img = <span class="fn">render_cluster_top_view</span>(pts)<br>
+response = client.chat.completions.<span class="fn">create</span>(<br>
+&nbsp;&nbsp;model=<span class="st">"gpt-4o"</span>,<br>
+&nbsp;&nbsp;messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"content"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="st">"type"</span>:<span class="st">"image_url"</span>, <span class="st">"image_url"</span>: img},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="st">"type"</span>:<span class="st">"text"</span>, <span class="st">"text"</span>:<span class="st">"What BIM element is this?"</span>}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;]}]<br>
+)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ G: PIPELINE ORDER ══ -->
+<div class="container" id="pipeline">
+  <div class="section-header">
+    <h2><span class="sn">G</span> Full Pipeline — Algorithm Execution Order</h2>
+    <p>Algorithms must run in this exact sequence — earlier stages remove points that later stages would misclassify</p>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 1 — Pre-process (always first)</div>
+      <div class="pipe-flow">
+        <div class="pb pb-b">A2 SOR<br><small>Remove noise</small></div><div class="pa">→</div>
+        <div class="pb pb-b">A1 Voxel 10mm<br><small>Downsample</small></div><div class="pa">→</div>
+        <div class="pb pb-b">A3 Normals<br><small>Estimate surface normals</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 2 — Plane Detection + Orientation</div>
+      <div class="pipe-flow">
+        <div class="pb pb-r">B1 RANSAC iterative<br><small>Extract all planes</small></div><div class="pa">→</div>
+        <div class="pb pb-r">Normal z-angle<br><small>Vertical / Horizontal / Sloped</small></div><div class="pa">→</div>
+        <div class="pb pb-r">z-centroid height<br><small>Floor / Ceiling / Wall / Kerb</small></div><div class="pa">→</div>
+        <div class="pb pb-y">D3 Z-profile<br><small>Stair vs Ramp</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 3 — Opening Detection (per wall plane)</div>
+      <div class="pipe-flow">
+        <div class="pb pb-p">D1 2D Rasterize<br><small>Project to plane</small></div><div class="pa">→</div>
+        <div class="pb pb-p">D2 Morphological<br><small>Close scan gaps</small></div><div class="pa">→</div>
+        <div class="pb pb-p">Connected components<br><small>Find void regions</small></div><div class="pa">→</div>
+        <div class="pb pb-p">Sill z classify<br><small>Door / Window</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 4 — Large Residual Clustering (10mm voxel)</div>
+      <div class="pipe-flow">
+        <div class="pb pb-g">C1 DBSCAN Pass 1<br><small>eps=50mm, large objects</small></div><div class="pa">→</div>
+        <div class="pb pb-g">B4 OBB per cluster<br><small>L, W, H dimensions</small></div><div class="pa">→</div>
+        <div class="pb pb-g">B3 PCA shape<br><small>linear / planar / spherical</small></div><div class="pa">→</div>
+        <div class="pb pb-g">z + aspect classify<br><small>Beam / Duct / Equipment / Tank</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 5 — Medium Object Clustering</div>
+      <div class="pipe-flow">
+        <div class="pb pb-g">C1 DBSCAN Pass 2<br><small>eps=20mm, min_pts=30</small></div><div class="pa">→</div>
+        <div class="pb pb-b">B2 Cylinder RANSAC<br><small>Pipe diameter + axis</small></div><div class="pa">→</div>
+        <div class="pb pb-b">B4 OBB<br><small>Rectangular vs cylindrical</small></div><div class="pa">→</div>
+        <div class="pb pb-b">C2 Region Growing<br><small>Curved surfaces</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 6 — Fine Detail (5mm voxel pass on residual)</div>
+      <div class="pipe-flow">
+        <div class="pb pb-pink">A1 Voxel 5mm<br><small>Fine resample residual</small></div><div class="pa">→</div>
+        <div class="pb pb-pink">C1 DBSCAN Pass 3<br><small>eps=10mm, min_pts=15</small></div><div class="pa">→</div>
+        <div class="pb pb-pink">B5 Sphere RANSAC<br><small>Valves, sprinklers</small></div><div class="pa">→</div>
+        <div class="pb pb-pink">C3 Euclidean<br><small>Isolated fittings</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 7 — Topology + Relationships</div>
+      <div class="pipe-flow">
+        <div class="pb pb-c">E1 R-Tree index<br><small>Spatial index all elements</small></div><div class="pa">→</div>
+        <div class="pb pb-c">Host assignment<br><small>Door→Wall, Valve→Pipe</small></div><div class="pa">→</div>
+        <div class="pb pb-c">E2 Graph connect<br><small>Pipe / duct systems</small></div><div class="pa">→</div>
+        <div class="pb pb-c">Clash pre-check<br><small>AABB intersections</small></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-label">Stage 8 — Classify + Safety Gate + Audit + Revit</div>
+      <div class="pipe-flow">
+        <div class="pb pb-y">F1 XGBoost<br><small>Confirm element type</small></div><div class="pa">→</div>
+        <div class="pb pb-y">F3 GPT-4o<br><small>Ambiguous cases</small></div><div class="pa">→</div>
+        <div class="pb pb-red">Safety Gate<br><small>SC1/SC2/SC3/NS</small></div><div class="pa">→</div>
+        <div class="pb pb-g">Audit + Revit<br><small>HMAC log + create</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ H: DECISION GUIDE ══ -->
+<div class="container" id="decision">
+  <div class="section-header">
+    <h2><span class="sn">H</span> Algorithm Decision Guide</h2>
+    <p>Choose the right algorithm for each detection problem</p>
+  </div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr>
+        <th>Detection Problem</th>
+        <th>First Choice</th>
+        <th>Why</th>
+        <th>Fallback</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Flat surfaces (wall, floor)</td><td class="cn">RANSAC plane (B1)</td><td class="good">Designed for this — robust to outliers</td><td>Region Growing (C2)</td></tr>
+      <tr><td>Floor vs Ceiling</td><td class="cn">z-centroid rule after B1</td><td class="good">O(1), zero cost after plane found</td><td>Storey height config</td></tr>
+      <tr><td>Sloped surfaces</td><td class="cn">Normal z-angle (B1 upgrade)</td><td class="good">Already computed in RANSAC</td><td>Hough transform</td></tr>
+      <tr><td>Stair vs Ramp</td><td class="cn">Z-profile histogram (D3)</td><td class="good">Step peaks clearly distinct from smooth ramp</td><td>Manual review</td></tr>
+      <tr><td>Pipe (circular)</td><td class="cn">DBSCAN + RANSAC cylinder (B2)</td><td class="good">Exact diameter, axis direction</td><td>OBB aspect ratio</td></tr>
+      <tr><td>Beam (rectangular)</td><td class="cn">DBSCAN + OBB (B4) + PCA (B3)</td><td class="good">OBB gives true cross-section; PCA gives axis</td><td>Manual aspect ratio</td></tr>
+      <tr><td>Rectangular duct</td><td class="cn">DBSCAN + OBB (B4)</td><td class="good">6-face box detected by OBB aspect ratios</td><td>Convex hull face count</td></tr>
+      <tr><td>Door / Window</td><td class="cn">2D raster void (D1) + morphology (D2)</td><td class="good">Only method that handles scan gaps at frames</td><td>No good fallback</td></tr>
+      <tr><td>HVAC Equipment</td><td class="cn">DBSCAN large cluster (C1) + OBB</td><td class="good">Equipment volume >> pipe/duct</td><td>Euclidean cluster (C3)</td></tr>
+      <tr><td>Valve / Fitting</td><td class="cn">Sphere RANSAC (B5) near pipe</td><td class="good">Ball valve is literally a sphere</td><td>5mm DBSCAN + OBB</td></tr>
+      <tr><td>Tank (large)</td><td class="cn">Large cylinder RANSAC (B2)</td><td class="good">Tank = large cylinder with flat caps</td><td>DBSCAN + volume threshold</td></tr>
+      <tr><td>Slab opening</td><td class="cn">2D raster void on floor plane (D1)</td><td class="good">Same method as wall void — reuse code</td><td>Morphological hole fill</td></tr>
+      <tr><td>Pipe system type</td><td class="cn">Graph connectivity (E2)</td><td class="good">System = connected component from equipment</td><td>Zone-based rule</td></tr>
+      <tr><td>Ambiguous element type</td><td class="cn">XGBoost (F1)</td><td class="good">Trained on labelled disagreements from audit</td><td>GPT-4o (F3)</td></tr>
+      <tr><td>Railing / thin tube</td><td class="cn">Fine DBSCAN (C1 pass 3)</td><td class="mid">Needs 5mm voxel and very low min_pts</td><td>Manual — hard case</td></tr>
+      <tr><td>Cable tray (open U)</td><td class="cn">Region Growing (C2)</td><td class="mid">Not a closed cylinder — region grow the U-surface</td><td>OBB aspect + low density</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ I: COMPARISON ══ -->
+<div class="container" id="comparison">
+  <div class="section-header">
+    <h2><span class="sn">I</span> Algorithm Comparison</h2>
+    <p>Key properties to understand before implementation</p>
+  </div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr>
+        <th>Algorithm</th>
+        <th>Handles Noise</th>
+        <th>Speed</th>
+        <th>Parameters to Tune</th>
+        <th>Needs Normals</th>
+        <th>GPU</th>
+        <th>Python Library</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="cn">Voxel downsample (A1)</td><td class="good">Yes</td><td class="good">Very fast</td><td>1 (voxel_size)</td><td class="good">No</td><td class="good">No</td><td>open3d</td></tr>
+      <tr><td class="cn">SOR (A2)</td><td class="good">Designed for it</td><td class="good">Fast</td><td>2 (k, σ)</td><td class="good">No</td><td class="good">No</td><td>open3d</td></tr>
+      <tr><td class="cn">Normal Estimation (A3)</td><td class="mid">Moderate</td><td class="good">Fast</td><td>2 (radius, max_nn)</td><td>—</td><td class="good">No</td><td>open3d</td></tr>
+      <tr><td class="cn">RANSAC plane (B1)</td><td class="good">Very robust</td><td class="good">Fast</td><td>3 (dist, n, iter)</td><td class="good">No</td><td class="good">No</td><td>open3d</td></tr>
+      <tr><td class="cn">RANSAC cylinder (B2)</td><td class="mid">Moderate</td><td class="mid">Medium</td><td>4 (dist, r_min/max, iter)</td><td class="bad">Yes</td><td class="good">No</td><td>pyransac3d</td></tr>
+      <tr><td class="cn">PCA (B3)</td><td class="mid">Moderate</td><td class="good">Very fast</td><td>0</td><td class="good">No</td><td class="good">No</td><td>numpy</td></tr>
+      <tr><td class="cn">OBB (B4)</td><td class="mid">Moderate</td><td class="good">Fast</td><td>0</td><td class="good">No</td><td class="good">No</td><td>open3d</td></tr>
+      <tr><td class="cn">RANSAC sphere (B5)</td><td class="mid">Moderate</td><td class="mid">Medium</td><td>2 (thresh, iter)</td><td class="good">No</td><td class="good">No</td><td>pyransac3d</td></tr>
+      <tr><td class="cn">DBSCAN (C1)</td><td class="good">Good</td><td class="mid">Medium</td><td>2 (eps, min_pts)</td><td class="good">No</td><td class="good">No</td><td>open3d / sklearn</td></tr>
+      <tr><td class="cn">Region Growing (C2)</td><td class="mid">Moderate</td><td class="mid">Medium</td><td>4 (angle, curvature, size)</td><td class="bad">Yes</td><td class="good">No</td><td>manual / pclpy</td></tr>
+      <tr><td class="cn">Euclidean cluster (C3)</td><td class="bad">Poor</td><td class="good">Fast</td><td>2 (tol, min_size)</td><td class="good">No</td><td class="good">No</td><td>scipy</td></tr>
+      <tr><td class="cn">2D raster void (D1)</td><td class="mid">Moderate</td><td class="good">Fast</td><td>2 (resolution, min_area)</td><td class="good">No</td><td class="good">No</td><td>numpy + scipy</td></tr>Data prep
+      <tr><td class="cn">Morphological (D2)</td><td class="good">Good</td><td class="good">Fast</td><td>2 (kernel, iterations)</td><td class="good">No</td><td class="good">No</td><td>scipy.ndimage</td></tr>
+      <tr><td class="cn">Z-profile histogram (D3)</td><td class="mid">Moderate</td><td class="good">Very fast</td><td>2 (bin_width, peak_dist)</td><td class="good">No</td><td class="good">No</td><td>numpy + scipy.signal</td></tr>
+      <tr><td class="cn">R-Tree index (E1)</td><td>n/a</td><td class="good">Very fast queries</td><td>0</td><td class="good">No</td><td class="good">No</td><td>rtree</td></tr>
+      <tr><td class="cn">Graph connectivity (E2)</td><td>n/a</td><td class="good">Fast</td><td>1 (connection_tol)</td><td class="good">No</td><td class="good">No</td><td>networkx</td></tr>
+      <tr><td class="cn">XGBoost (F1)</td><td class="good">Very robust</td><td class="good">Fast inference</td><td>~10 (hyperparams)</td><td class="good">No</td><td class="good">No</td><td>xgboost</td></tr>
+      <tr><td class="cn">PointNet++ (F2)</td><td class="good">Excellent</td><td class="bad">Slow (GPU)</td><td>Many</td><td class="good">No</td><td class="bad">Yes</td><td>torch-points3d</td></tr>
+      <tr><td class="cn">GPT-4o (F3)</td><td class="good">Excellent</td><td class="bad">API latency</td><td>Prompt text</td><td class="good">No</td><td class="good">No</td><td>openai</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ J: COMPONENT MAP ══ -->
+<div class="container" id="mapping">
+  <div class="section-header">
+    <h2><span class="sn">J</span> Component → Algorithm Map</h2>
+    <p>Which algorithms are needed for each of the 23 component types</p>
+  </div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr><th>Component</th><th>Pre-process</th><th>Detect</th><th>Shape/Classify</th><th>Topology</th><th>Validate</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="cn">Wall</td><td>A1, A2, A3</td><td>B1 RANSAC plane</td><td>Normal z &lt; 0.3</td><td>E1 R-Tree</td><td>—</td></tr>
+      <tr><td class="cn">Floor</td><td>A1, A2, A3</td><td>B1 RANSAC plane</td><td>Normal z &gt; 0.93 + z low</td><td>D1 void→slab opening</td><td>—</td></tr>
+      <tr><td class="cn">Ceiling</td><td>A1, A2, A3</td><td>B1 RANSAC plane</td><td>Normal z &gt; 0.93 + z high</td><td>—</td><td>—</td></tr>
+      <tr><td class="cn">Column</td><td>A1, A2, A3</td><td>C1 DBSCAN small cluster</td><td>B4 OBB: W≈H &lt; 800mm, tall</td><td>E1 proximity to floor</td><td>B2 cylinder fit → CHS vs RHS</td></tr>
+      <tr><td class="cn">Beam</td><td>A1, A2, A3</td><td>C1 DBSCAN</td><td>B4 OBB: L≫W≈H + z&gt;2m</td><td>E2 connect to columns</td><td>B3 PCA span direction</td></tr>
+      <tr><td class="cn">Stair</td><td>A1, A2, A3</td><td>B1 RANSAC sloped</td><td>D3 Z-profile peaks regular</td><td>E1 link to floor levels</td><td>—</td></tr>
+      <tr><td class="cn">Ramp</td><td>A1, A2, A3</td><td>B1 RANSAC sloped</td><td>D3 Z-profile smooth</td><td>—</td><td>slope angle from normal</td></tr>
+      <tr><td class="cn">Door</td><td>A1, A2, A3</td><td>D1 Wall void (sill z &lt; 0.2m)</td><td>D2 Morphological close</td><td>E1 host wall</td><td>void area &gt; 0.4m²</td></tr>
+      <tr><td class="cn">Window</td><td>A1, A2, A3</td><td>D1 Wall void (sill z &gt; 0.5m)</td><td>D2 Morphological close</td><td>E1 host wall</td><td>void area + aspect</td></tr>
+      <tr><td class="cn">Railing</td><td>A1 5mm, A2</td><td>C1 fine DBSCAN</td><td>PCA: very linear, thin</td><td>E1 near stair/floor edge</td><td>—</td></tr>
+      <tr><td class="cn">Pipe</td><td>A1, A2, A3</td><td>C1 DBSCAN medium</td><td>B2 cylinder fit → round</td><td>E2 pipe run graph</td><td>diameter → DN nominal</td></tr>
+      <tr><td class="cn">HVAC Duct (rect)</td><td>A1, A2</td><td>C1 DBSCAN large</td><td>B4 OBB: 6-face box, L/W ~1–2</td><td>E2 duct system graph</td><td>z near ceiling</td></tr>
+      <tr><td class="cn">HVAC Duct (round)</td><td>A1, A2, A3</td><td>C1 DBSCAN large</td><td>B2 cylinder, z near ceiling</td><td>E2 duct system graph</td><td>diameter &gt; 150mm</td></tr>
+      <tr><td class="cn">HVAC Equipment</td><td>A1, A2</td><td>C1 DBSCAN large</td><td>B4 OBB cube, volume &gt; 0.5m³</td><td>E1 near duct/pipe</td><td>F1 XGBoost subtype</td></tr>
+      <tr><td class="cn">Tank / Vessel</td><td>A1, A2, A3</td><td>C1 DBSCAN large</td><td>B2 large cylinder or B4 tall box</td><td>E1 pipe connections</td><td>volume &gt; 0.1m³</td></tr>
+      <tr><td class="cn">Valve</td><td>A1 5mm, A2</td><td>B5 Sphere near pipe</td><td>sphere radius 25–200mm</td><td>E1 host pipe</td><td>proximity &lt; 200mm from pipe</td></tr>
+      <tr><td class="cn">Pump</td><td>A1, A2</td><td>C3 Euclidean cluster</td><td>B4 OBB compact + floor touch</td><td>E1 near pipe inlets</td><td>F1 XGBoost</td></tr>
+      <tr><td class="cn">Cable Tray</td><td>A1, A2, A3</td><td>C2 Region Growing</td><td>U-profile: low point density top</td><td>E2 tray system</td><td>—</td></tr>
+      <tr><td class="cn">Conduit</td><td>A1 5mm, A2, A3</td><td>C1 fine DBSCAN</td><td>B2 cylinder, small diameter &lt;50mm</td><td>E1 near panel</td><td>—</td></tr>
+      <tr><td class="cn">Sprinkler</td><td>A1 5mm, A2</td><td>C1 fine DBSCAN</td><td>B5 sphere near ceiling</td><td>E1 near ceiling + pipe</td><td>z within 300mm of ceiling</td></tr>
+      <tr><td class="cn">Electrical Panel</td><td>A1, A2</td><td>Wall protrusion: cluster &lt;200mm from wall</td><td>B4 OBB flat box</td><td>E1 host wall</td><td>—</td></tr>
+      <tr><td class="cn">Slab Opening</td><td>A1, A2</td><td>D1 Floor void (2D raster)</td><td>D2 Morphological close</td><td>E1 link to MEP through it</td><td>void area &gt; 0.25m²</td></tr>
+      <tr><td class="cn">Kerb / Retaining Wall</td><td>A1, A2, A3</td><td>B1 RANSAC plane</td><td>Vertical + z_extent &lt; 0.5m</td><td>E1 near ground level</td><td>—</td></tr>
+      <tr><td class="cn">Drainage</td><td>A1, A2</td><td>C1 DBSCAN below grade</td><td>U-profile shape + z below floor</td><td>E1 near ground</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px;margin:20px 0;display:grid;grid-template-columns:repeat(6,1fr);gap:12px;text-align:center;">
+    <div><div style="font-size:22px;font-weight:800;color:var(--accent);font-family:'Syne',sans-serif">3</div><div style="font-size:10px;color:var(--muted)">Pre-process<br>algorithms</div></div>
+    <div><div style="font-size:22px;font-weight:800;color:var(--orange);font-family:'Syne',sans-serif">5</div><div style="font-size:10px;color:var(--muted)">Geometry fitting<br>algorithms</div></div>
+    <div><div style="font-size:22px;font-weight:800;color:var(--green);font-family:'Syne',sans-serif">3</div><div style="font-size:10px;color:var(--muted)">Clustering<br>algorithms</div></div>
+    <div><div style="font-size:22px;font-weight:800;color:var(--purple);font-family:'Syne',sans-serif">3</div><div style="font-size:10px;color:var(--muted)">2D raster<br>algorithms</div></div>
+    <div><div style="font-size:22px;font-weight:800;color:var(--cyan);font-family:'Syne',sans-serif">2</div><div style="font-size:10px;color:var(--muted)">Topology<br>algorithms</div></div>
+    <div><div style="font-size:22px;font-weight:800;color:var(--yellow);font-family:'Syne',sans-serif">3</div><div style="font-size:10px;color:var(--muted)">ML / AI<br>algorithms</div></div>
+  </div>
+  <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:4px;">
+    Total: <strong style="color:var(--white)">18 algorithms</strong> — 2 already built, 10 new geometry/clustering/2D, 3 topology, 3 ML
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p style="color:var(--white);font-weight:700;margin-bottom:8px">Scan-to-BIM — Full Algorithm Reference Guide</p>
+    <p>18 algorithms · 5 categories · 23 component types · Open3D · pyransac3d · scipy · networkx · XGBoost · GPT-4o</p>
+  </div>
+</div>
+
+</body>
+</html>

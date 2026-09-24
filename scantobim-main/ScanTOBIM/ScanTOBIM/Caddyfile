@@ -1,0 +1,72 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Caddyfile — ScanToBIM Reverse Proxy
+#
+# Automatic HTTPS via Let's Encrypt when DOMAIN is a real hostname.
+# For local dev, replace {$DOMAIN} with "localhost" — Caddy issues self-signed.
+#
+# Set env var:  DOMAIN=scantobim.yourdomain.com
+# ─────────────────────────────────────────────────────────────────────────────
+
+{$DOMAIN:localhost} {
+
+    # ── TLS: automatic via Let's Encrypt (omit for localhost) ──────────────
+    # Caddy handles certificate provisioning and renewal automatically.
+
+    # ── Logging ───────────────────────────────────────────────────────────
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+
+    # ── Security headers ──────────────────────────────────────────────────
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options    "nosniff"
+        X-Frame-Options           "DENY"
+        X-XSS-Protection          "1; mode=block"
+        Referrer-Policy           "strict-origin-when-cross-origin"
+        -Server
+    }
+
+    # ── Rate limiting (basic) ─────────────────────────────────────────────
+    # Heavy scan uploads exempt; auth endpoints throttled more aggressively
+    @auth_routes path /auth/*
+    handle @auth_routes {
+        reverse_proxy api:8765 {
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # ── API proxy ─────────────────────────────────────────────────────────
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy api:8765 {
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Real-IP {remote_host}
+            # SSE long-polling: disable buffering
+            flush_interval -1
+        }
+    }
+
+    # ── Health / ready (unauthenticated) ──────────────────────────────────
+    handle /health {
+        reverse_proxy api:8765
+    }
+
+    handle /ready {
+        reverse_proxy api:8765
+    }
+
+    # ── Docs (interactive HTML) ───────────────────────────────────────────
+    handle /docs/* {
+        root * /srv/docs
+        file_server
+    }
+
+    # ── Everything else → 404 ─────────────────────────────────────────────
+    handle {
+        respond "Not found" 404
+    }
+}

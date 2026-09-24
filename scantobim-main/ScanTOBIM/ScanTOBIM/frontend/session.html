@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanToBIM — Session Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/ui/js/api.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800" x-data="sessionApp()" x-init="init()">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Mobile overlay -->
+  <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+       class="fixed inset-0 bg-black/50 z-20 lg:hidden"></div>
+
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+         class="fixed inset-y-0 left-0 z-30 w-56 bg-slate-800 text-slate-100 flex flex-col flex-shrink-0 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0">
+    <div class="h-16 flex items-center px-5 border-b border-slate-700">
+      <svg class="w-6 h-6 text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+      </svg>
+      <span class="font-semibold text-sm">ScanToBIM</span>
+    </div>
+    <nav class="flex-1 py-4 px-2 space-y-0.5 text-sm">
+      <a href="/ui/dashboard.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="/ui/sessions.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700 text-white font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Sessions
+      </a>
+      <a href="/ui/gates.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Safety Gates
+      </a>
+      <a href="/ui/ncrs.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        NCRs
+      </a>
+      <a href="/ui/audit.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Audit Chain
+      </a>
+    </nav>
+    <div class="border-t border-slate-700 p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold uppercase"
+          x-text="(user?.username || 'U')[0]"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-medium truncate" x-text="user?.username || '—'"></p>
+          <p class="text-xs text-slate-400 capitalize" x-text="user?.role || ''"></p>
+        </div>
+      </div>
+      <button onclick="auth.logout()" class="w-full text-xs text-slate-400 hover:text-white text-left">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto">
+    <!-- Mobile top bar -->
+    <div class="sticky top-0 z-10 lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+      <button @click="sidebarOpen = true" class="text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <span class="font-semibold text-gray-800 text-sm">ScanToBIM</span>
+    </div>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+
+      <!-- Breadcrumb -->
+      <nav class="text-xs text-gray-400 mb-4">
+        <a href="/ui/sessions.html" class="hover:text-indigo-600">Sessions</a>
+        <span class="mx-1">›</span>
+        <span class="text-gray-600 font-medium" x-text="session?.site_name || shortId(sessionId)"></span>
+      </nav>
+
+      <!-- Session Header -->
+      <div class="flex flex-wrap items-start gap-4 mb-6">
+        <div class="flex-1 min-w-0">
+          <h1 class="text-2xl font-bold text-gray-900 truncate" x-text="session?.site_name || '—'"></h1>
+          <p class="text-sm text-gray-500 mt-0.5 font-mono" x-text="sessionId"></p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span x-html="cdeStateBadge(cdeState)"></span>
+
+          <!-- CDE Transition -->
+          <template x-if="cdeState === 'WIP'">
+            <button @click="transitionCde('SHARED')"
+              class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium">
+              → Share
+            </button>
+          </template>
+          <template x-if="cdeState === 'SHARED'">
+            <button @click="transitionCde('PUBLISHED')"
+              class="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg font-medium">
+              → Publish
+            </button>
+          </template>
+
+          <!-- IFC Download -->
+          <button @click="downloadIfc()"
+            class="flex items-center gap-1.5 text-xs bg-white border border-gray-300 hover:border-indigo-400 text-gray-700 px-3 py-1.5 rounded-lg font-medium transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            IFC
+          </button>
+
+          <!-- DRP -->
+          <a :href="`/sessions/${sessionId}/drp`" target="_blank"
+            class="text-xs bg-white border border-gray-300 hover:border-indigo-400 text-gray-700 px-3 py-1.5 rounded-lg font-medium">
+            DRP
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <p class="text-xs text-gray-500 mb-1">Elements Created</p>
+          <p class="text-2xl font-bold text-gray-900" x-text="session?.total_elements_created ?? '—'"></p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <p class="text-xs text-gray-500 mb-1">Clashes</p>
+          <p class="text-2xl font-bold" :class="(session?.clash_count||0) > 0 ? 'text-red-600' : 'text-gray-900'"
+            x-text="session?.clash_count ?? '—'"></p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <p class="text-xs text-gray-500 mb-1">Pending Gates</p>
+          <p class="text-2xl font-bold" :class="pendingGates.length > 0 ? 'text-amber-500' : 'text-gray-900'"
+            x-text="pendingGates.length"></p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+          <p class="text-xs text-gray-500 mb-1">Open NCRs</p>
+          <p class="text-2xl font-bold" :class="openNcrs > 0 ? 'text-red-500' : 'text-gray-900'"
+            x-text="openNcrs"></p>
+        </div>
+      </div>
+
+      <!-- Plugin Scan Metadata (shown when session was ingested via Revit plugin) -->
+      <div x-show="scanSource === 'revit_plugin' && scanMetadata"
+        class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-violet-700 font-semibold text-sm">⬡ Plugin Ingest</span>
+          <span class="text-xs text-violet-500">Processed locally by Revit sidecar — no upload</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+          <div>
+            <p class="text-violet-500 mb-0.5">Source File</p>
+            <p class="font-medium text-violet-800 truncate"
+              x-text="scanMetadata?.input_file || '—'"></p>
+          </div>
+          <div>
+            <p class="text-violet-500 mb-0.5">File Size</p>
+            <p class="font-medium text-violet-800"
+              x-text="scanMetadata?.file_size_bytes ? (scanMetadata.file_size_bytes / 1e9).toFixed(2) + ' GB' : '—'"></p>
+          </div>
+          <div>
+            <p class="text-violet-500 mb-0.5">Points (raw)</p>
+            <p class="font-medium text-violet-800"
+              x-text="scanMetadata?.point_count_raw ? Number(scanMetadata.point_count_raw).toLocaleString() : '—'"></p>
+          </div>
+          <div>
+            <p class="text-violet-500 mb-0.5">Processing Time</p>
+            <p class="font-medium text-violet-800"
+              x-text="scanMetadata?.processing_time_s ? scanMetadata.processing_time_s.toFixed(1) + ' s' : '—'"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quality Deliverables panel (P2.5) -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm mb-6">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h2 class="font-semibold text-gray-800 text-sm">Quality Deliverables</h2>
+            <p class="text-xs text-gray-400">USIBD LOA · Deviation · Registration QA · Handover bundle</p>
+          </div>
+          <button @click="downloadHandover()" :disabled="handoverBusy"
+            class="text-xs bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300
+                   text-white px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span x-text="handoverBusy ? 'Packaging…' : 'Download Handover .zip'"></span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+
+          <!-- LOA summary card -->
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">USIBD LOA v3.1</p>
+              <button @click="loadLoaReport()" class="text-xs text-indigo-600 hover:text-indigo-800">
+                <span x-text="loaReport ? 'Refresh' : 'Load'"></span>
+              </button>
+            </div>
+            <template x-if="!loaReport">
+              <p class="text-sm text-gray-400 mt-3">Click Load to fetch per-element accuracy tiers.</p>
+            </template>
+            <template x-if="loaReport">
+              <div>
+                <div class="flex items-baseline gap-2 mb-3">
+                  <span class="text-2xl font-bold"
+                    :class="loaTierClass(loaReport.worst_tier)"
+                    x-text="loaReport.worst_tier"></span>
+                  <span class="text-xs text-gray-500">worst tier</span>
+                </div>
+                <div class="space-y-1.5">
+                  <template x-for="[tier, count] in Object.entries(loaReport.tier_distribution).filter(([,c]) => c > 0)"
+                    :key="tier">
+                    <div class="flex items-center gap-2 text-xs">
+                      <span class="inline-block w-2.5 h-2.5 rounded-full"
+                        :style="`background:${loaTierColour(tier)}`"></span>
+                      <span class="font-mono text-gray-700" x-text="tier"></span>
+                      <span class="text-gray-400" x-text="`· ${count} elements`"></span>
+                    </div>
+                  </template>
+                </div>
+                <p class="text-xs text-gray-400 mt-3" x-text="`${loaReport.total_segments} total · scanner σ ${loaReport.scanner_accuracy_mm} mm`"></p>
+              </div>
+            </template>
+          </div>
+
+          <!-- Registration QA card -->
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Registration QA</p>
+              <button @click="loadRegistrationReport()" class="text-xs text-indigo-600 hover:text-indigo-800">
+                <span x-text="regReport ? 'Refresh' : 'Load'"></span>
+              </button>
+            </div>
+            <template x-if="!regReport && !regReportError">
+              <p class="text-sm text-gray-400 mt-3">Click Load to view RICS / PAS 128 tier.</p>
+            </template>
+            <template x-if="regReportError">
+              <p class="text-sm text-gray-400 mt-3" x-text="regReportError"></p>
+            </template>
+            <template x-if="regReport">
+              <div>
+                <div class="flex items-baseline gap-2 mb-3">
+                  <span class="text-2xl font-bold"
+                    :class="rqaCatClass(regReport.overall_category)"
+                    x-text="`Cat ${regReport.overall_category}`"></span>
+                  <span class="text-xs"
+                    :class="regReport.overall_pass_fail === 'pass' ? 'text-emerald-600' : 'text-red-500'"
+                    x-text="regReport.overall_pass_fail.toUpperCase()"></span>
+                </div>
+                <p class="text-xs text-gray-500 mb-1">
+                  <span class="font-mono" x-text="`${regReport.global_rmse_mm.toFixed(2)} mm`"></span>
+                  global RMSE · <span x-text="regReport.station_count"></span> stations
+                </p>
+                <p class="text-xs text-gray-400 mb-3" x-text="`${Number(regReport.merged_point_count).toLocaleString()} merged points`"></p>
+                <button @click="openRegistrationHtml()"
+                  class="text-xs text-indigo-600 hover:text-indigo-800 underline">
+                  Open printable report →
+                </button>
+              </div>
+            </template>
+          </div>
+
+          <!-- Deviation / heatmap card -->
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Deviation heatmap</p>
+              <button @click="loadHeatmap()" class="text-xs text-indigo-600 hover:text-indigo-800">
+                <span x-text="heatmapSvg ? 'Refresh' : 'Load'"></span>
+              </button>
+            </div>
+            <template x-if="!heatmapSvg && !heatmapError">
+              <p class="text-sm text-gray-400 mt-3">Click Load to render plan heatmap.</p>
+            </template>
+            <template x-if="heatmapError">
+              <p class="text-sm text-gray-400 mt-3" x-text="heatmapError"></p>
+            </template>
+            <template x-if="heatmapSvg">
+              <div>
+                <div class="flex items-center gap-3 mb-2 text-xs">
+                  <label class="flex items-center gap-1">
+                    <span class="text-gray-500">View</span>
+                    <select x-model="heatmapView" @change="loadHeatmap()"
+                      class="border border-gray-200 rounded px-1.5 py-0.5 text-xs bg-white">
+                      <option value="plan">Plan</option>
+                      <option value="elevation">Elevation</option>
+                    </select>
+                  </label>
+                  <label class="flex items-center gap-1">
+                    <span class="text-gray-500">Colour</span>
+                    <select x-model="heatmapColourBy" @change="loadHeatmap()"
+                      class="border border-gray-200 rounded px-1.5 py-0.5 text-xs bg-white">
+                      <option value="deviation">Deviation (mm)</option>
+                      <option value="loa">LOA tier</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="rounded border border-gray-200 overflow-hidden bg-gray-900" x-html="heatmapSvg"></div>
+              </div>
+            </template>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NQA-1 Three-Party Signatures (P2.4++) -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm mb-6">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h2 class="font-semibold text-gray-800 text-sm">NQA-1 V&amp;V Signatures</h2>
+            <p class="text-xs text-gray-400">Preparer → Verifier → Approver · HMAC-chained</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span x-show="nqa1Status?.fully_signed"
+                  class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-medium">
+              ✓ Fully signed
+            </span>
+            <span x-show="nqa1Status && !nqa1Status.chain_valid"
+                  class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium">
+              ⚠ Chain broken
+            </span>
+            <button @click="loadNqa1Signatures()"
+              class="text-xs text-indigo-600 hover:text-indigo-800">
+              <span x-text="nqa1Status ? 'Refresh' : 'Load'"></span>
+            </button>
+          </div>
+        </div>
+
+        <template x-if="nqa1Status">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <template x-for="role in ['preparer', 'verifier', 'approver']" :key="role">
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-2">
+                  <p class="text-xs font-semibold uppercase tracking-wider text-gray-500"
+                    x-text="role"></p>
+                  <span x-show="nqa1Status.by_role[role].signed"
+                    class="text-xs text-emerald-600">✓ signed</span>
+                  <span x-show="!nqa1Status.by_role[role].signed"
+                    class="text-xs text-gray-400">unsigned</span>
+                </div>
+                <template x-if="nqa1Status.by_role[role].signed">
+                  <div class="text-xs">
+                    <p class="font-medium text-gray-800"
+                      x-text="nqa1Status.by_role[role].signer_name"></p>
+                    <p class="font-mono text-gray-500 text-[10px] break-all"
+                      x-text="nqa1Status.by_role[role].signer_upn"></p>
+                    <p class="text-gray-400 text-[10px] mt-1"
+                      x-text="(nqa1Status.by_role[role].timestamp_utc || '').slice(0, 19) + 'Z'"></p>
+                  </div>
+                </template>
+                <template x-if="!nqa1Status.by_role[role].signed">
+                  <div>
+                    <button @click="signNqa1(role)"
+                      :disabled="nqa1Status.next_required !== role"
+                      :class="nqa1Status.next_required === role
+                        ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'"
+                      class="text-xs px-3 py-1.5 rounded-lg font-medium">
+                      <span x-text="`Sign as ${role}`"></span>
+                    </button>
+                    <p x-show="nqa1Status.next_required !== role"
+                      class="text-[10px] text-gray-400 mt-2">
+                      Waiting on earlier role
+                    </p>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!-- SSE Progress Bar (shown while pipeline is running) -->
+      <div x-show="progressVisible" class="bg-white rounded-xl border border-indigo-200 shadow-sm p-4 mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-sm font-medium text-indigo-800" x-text="progressMsg"></p>
+          <p class="text-xs text-indigo-500" x-text="`${progressPct}%`"></p>
+        </div>
+        <div class="w-full bg-indigo-100 rounded-full h-2">
+          <div class="bg-indigo-600 rounded-full h-2 transition-all"
+            :style="`width: ${progressPct}%`"></div>
+        </div>
+        <p class="text-xs text-gray-400 mt-1.5" x-text="progressStep"></p>
+      </div>
+
+      <!-- SC2 Pending Gates Banner -->
+      <div x-show="pendingGates.length > 0"
+        class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-amber-800">
+              <span x-text="pendingGates.length"></span> SC2 element(s) awaiting engineer approval
+            </p>
+            <p class="text-xs text-amber-600">Pipeline paused until approved</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button @click="notifyTeams()" x-show="teamsConfigured"
+            class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg font-medium">
+            Notify Teams
+          </button>
+          <a :href="`/ui/gates.html?session=${sessionId}`"
+            class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-medium">
+            Review Gates
+          </a>
+        </div>
+      </div>
+
+      <!-- Elements Table -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-semibold text-gray-800 text-sm">Elements</h2>
+          <span class="text-xs text-gray-400" x-text="`${elements.length} total`"></span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th class="text-left px-5 py-2.5 text-xs text-gray-500 font-semibold uppercase">Type</th>
+                <th class="text-left px-4 py-2.5 text-xs text-gray-500 font-semibold uppercase">Category</th>
+                <th class="text-left px-4 py-2.5 text-xs text-gray-500 font-semibold uppercase">Zone</th>
+                <th class="text-left px-4 py-2.5 text-xs text-gray-500 font-semibold uppercase">Discipline</th>
+                <th class="text-left px-4 py-2.5 text-xs text-gray-500 font-semibold uppercase">Confidence</th>
+                <th class="text-left px-4 py-2.5 text-xs text-gray-500 font-semibold uppercase">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <template x-if="elements.length === 0">
+                <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-sm">No elements yet.</td></tr>
+              </template>
+              <template x-for="el in elements" :key="el.instruction_id || el.segment_id">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-5 py-2.5 font-medium text-gray-800 capitalize" x-text="(el.element_type || '—').replace('_', ' ')"></td>
+                  <td class="px-4 py-2.5"><span x-html="safetyCategoryBadge(el.safety_category)"></span></td>
+                  <td class="px-4 py-2.5 text-gray-500 text-xs" x-text="el.zone_id || '—'"></td>
+                  <td class="px-4 py-2.5 text-gray-500 text-xs capitalize" x-text="el.discipline || '—'"></td>
+                  <td class="px-4 py-2.5">
+                    <div class="flex items-center gap-2">
+                      <div class="w-16 bg-gray-200 rounded-full h-1.5">
+                        <div class="bg-indigo-500 h-1.5 rounded-full"
+                          :style="`width: ${Math.round((el.confidence || 0) * 100)}%`"></div>
+                      </div>
+                      <span class="text-xs text-gray-500" x-text="`${Math.round((el.confidence || 0) * 100)}%`"></span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-2.5">
+                    <span class="text-xs px-2 py-0.5 rounded font-medium"
+                      :class="el.approved ? 'bg-green-100 text-green-700' : el.pending_approval ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'"
+                      x-text="el.approved ? 'Approved' : el.pending_approval ? 'Pending' : 'Auto'">
+                    </span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Revit Bridge Results -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-semibold text-gray-800 text-sm">Revit Bridge Results</h2>
+          <button @click="loadRevitResults()" class="text-xs text-indigo-600 hover:underline">Refresh</button>
+        </div>
+        <div class="px-5 py-4">
+          <template x-if="!revitResults">
+            <p class="text-sm text-gray-400">No Revit results yet.</p>
+          </template>
+          <template x-if="revitResults">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center">
+                <p class="text-2xl font-bold text-gray-900" x-text="revitResults.total"></p>
+                <p class="text-xs text-gray-500">Total</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-green-600" x-text="revitResults.succeeded"></p>
+                <p class="text-xs text-gray-500">Succeeded</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-red-500" x-text="revitResults.failed"></p>
+                <p class="text-xs text-gray-500">Failed</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="//unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script>
+  function sessionApp() {
+    return {
+      sidebarOpen:     false,
+      user:            auth.user(),
+      sessionId:       new URLSearchParams(location.search).get('id') || '',
+      session:         null,
+      cdeState:        'WIP',
+      elements:        [],
+      pendingGates:    [],
+      openNcrs:        0,
+      revitResults:    null,
+      teamsConfigured: false,
+      scanSource:      null,
+      scanMetadata:    null,
+
+      // Quality deliverables (P2.5)
+      loaReport:       null,
+      regReport:       null,
+      regReportError:  null,
+      heatmapSvg:      null,
+      heatmapError:    null,
+      heatmapView:     'plan',
+      heatmapColourBy: 'deviation',
+      handoverBusy:    false,
+
+      // NQA-1 signatures (P2.4++)
+      nqa1Status:      null,
+
+      // SSE progress
+      progressVisible: false,
+      progressMsg:     'Processing…',
+      progressStep:    '',
+      progressPct:     0,
+      _sse:            null,
+
+      async init() {
+        if (!auth.require()) return;
+        if (!this.sessionId) { window.location.href = '/ui/sessions.html'; return; }
+        await Promise.all([this.loadSession(), this.loadRevitResults()]);
+        this.connectSse();
+      },
+
+      async loadSession() {
+        try {
+          const data = await api.getSession(this.sessionId);
+          this.session      = data?.session || data;
+          this.elements     = data?.instructions || data?.elements || [];
+          this.scanSource   = data?.scan_source || this.session?.scan_source || null;
+          this.scanMetadata = data?.scan_metadata || this.session?.scan_metadata || null;
+          // Pending gates from session summary
+          const gates   = await api.listGates('PENDING');
+          const allGates = Array.isArray(gates) ? gates : (gates?.gates || []);
+          this.pendingGates = allGates.filter(g => g.session_id === this.sessionId);
+
+          const cde = await api.getCde(this.sessionId);
+          this.cdeState = cde?.current_state || 'WIP';
+
+          const ncrs = await api.listNcrs(this.sessionId);
+          const ncrList = ncrs?.ncrs || ncrs || [];
+          this.openNcrs = ncrList.filter(n => !n.resolved_at).length;
+        } catch (e) {
+          console.warn('session load error', e);
+        }
+      },
+
+      async loadRevitResults() {
+        try {
+          this.revitResults = await api.getRevitResults(this.sessionId);
+        } catch { this.revitResults = null; }
+      },
+
+      async downloadIfc() {
+        try {
+          const resp = await api.exportIfc(this.sessionId);
+          const blob = await resp.blob();
+          downloadBlob(blob, `session-${shortId(this.sessionId)}.ifc`);
+          toast('IFC downloaded', 'success');
+        } catch (e) {
+          toast(e.detail || 'IFC export failed', 'error');
+        }
+      },
+
+      async transitionCde(target) {
+        try {
+          await api.transitionCde(this.sessionId, target);
+          const cde = await api.getCde(this.sessionId);
+          this.cdeState = cde?.current_state || target;
+          toast(`CDE state → ${target}`, 'success');
+        } catch (e) {
+          toast(e.detail || 'CDE transition failed', 'error');
+        }
+      },
+
+      async notifyTeams() {
+        try {
+          await api.notifyTeams(this.sessionId);
+          toast('Teams notification sent', 'success');
+        } catch (e) {
+          toast(e.detail || 'Teams notification failed', 'error');
+        }
+      },
+
+      // ── Quality deliverables (P2.5) ─────────────────────────────────────
+      async loadLoaReport() {
+        try {
+          this.loaReport = await api.getLoaReport(this.sessionId);
+        } catch (e) {
+          toast(e.detail || 'LOA report unavailable — run segmentation first', 'error');
+        }
+      },
+
+      async loadRegistrationReport() {
+        this.regReportError = null;
+        try {
+          this.regReport = await api.getRegistrationReport(this.sessionId, 'json');
+        } catch (e) {
+          this.regReport = null;
+          this.regReportError = e.status === 404
+            ? 'No registration result — run register-scans first.'
+            : (e.detail || 'Registration report failed.');
+        }
+      },
+
+      async openRegistrationHtml() {
+        try {
+          const resp = await api.getRegistrationReport(this.sessionId, 'html');
+          const html = await resp.text();
+          const blob = new Blob([html], { type: 'text/html' });
+          window.open(URL.createObjectURL(blob), '_blank');
+        } catch (e) {
+          toast(e.detail || 'Could not open printable report', 'error');
+        }
+      },
+
+      async loadHeatmap() {
+        this.heatmapError = null;
+        try {
+          const resp = await api.getDeviationHeatmap(this.sessionId, {
+            view:     this.heatmapView,
+            colourBy: this.heatmapColourBy,
+            format:   'svg',
+          });
+          this.heatmapSvg = await resp.text();
+        } catch (e) {
+          this.heatmapSvg = null;
+          this.heatmapError = e.status === 404
+            ? 'No deviation report — POST /deviation-report with an IFC first.'
+            : (e.detail || 'Heatmap failed.');
+        }
+      },
+
+      async downloadHandover() {
+        if (this.handoverBusy) return;
+        this.handoverBusy = true;
+        try {
+          const resp = await api.getHandoverBundle(this.sessionId);
+          const blob = await resp.blob();
+          downloadBlob(blob, `scantobim-handover-${shortId(this.sessionId)}.zip`);
+          // Read included/skipped from custom header for user feedback
+          const sections = resp.headers.get('x-scantobim-sections') || '';
+          const okCount  = (sections.match(/=ok/g)  || []).length;
+          const skipCount = (sections.match(/=skip/g) || []).length;
+          toast(`Handover bundle downloaded · ${okCount} section(s) included, ${skipCount} skipped`, 'success');
+        } catch (e) {
+          toast(e.detail || 'Handover bundle failed', 'error');
+        } finally {
+          this.handoverBusy = false;
+        }
+      },
+
+      async loadNqa1Signatures() {
+        try {
+          this.nqa1Status = await api.getNqa1Signatures(this.sessionId);
+        } catch (e) {
+          toast(e.detail || 'Could not load signatures', 'error');
+        }
+      },
+
+      async signNqa1(role) {
+        const name = prompt(`Full name of ${role}:`);
+        if (!name) return;
+        const upn = prompt(`UPN (email) of ${role}:`);
+        if (!upn || !upn.includes('@')) {
+          toast('UPN must be in email form (user@org)', 'error');
+          return;
+        }
+        const comments = prompt(`Optional comments for ${role}:`, '') || '';
+        try {
+          await api.signNqa1(this.sessionId, role, upn, name, comments);
+          toast(`${role} signed`, 'success');
+          await this.loadNqa1Signatures();
+        } catch (e) {
+          toast(e.detail || `Sign as ${role} failed`, 'error');
+        }
+      },
+
+      loaTierClass(tier) {
+        return ({
+          LOA50: 'text-emerald-700', LOA40: 'text-emerald-600',
+          LOA30: 'text-amber-500',   LOA20: 'text-orange-500',
+          LOA10: 'text-red-500',
+        })[tier] || 'text-gray-500';
+      },
+
+      loaTierColour(tier) {
+        return ({
+          LOA50: '#1b7a3e', LOA40: '#31a353',
+          LOA30: '#f5b400', LOA20: '#f28b24',
+          LOA10: '#e14d3d',
+        })[tier] || '#9ca3af';
+      },
+
+      rqaCatClass(cat) {
+        return ({
+          A: 'text-emerald-600', B: 'text-emerald-500',
+          C: 'text-amber-500',   FAIL: 'text-red-500',
+        })[cat] || 'text-gray-500';
+      },
+
+      connectSse() {
+        if (this._sse) this._sse.close();
+        const es = api.progressStream(this.sessionId);
+        this._sse = es;
+        es.onmessage = (evt) => {
+          try {
+            const d = JSON.parse(evt.data);
+            if (d.event === 'PING') return;
+            this.progressVisible = true;
+            this.progressMsg  = d.event || 'Processing';
+            this.progressStep = JSON.stringify(d.data || {}).slice(0, 80);
+            this.progressPct  = Math.min(99, this.progressPct + 10);
+            if (d.event === 'PIPELINE_COMPLETE' || d.event === 'REVIT_CALLBACK') {
+              this.progressPct = 100;
+              setTimeout(() => { this.progressVisible = false; this.loadSession(); }, 1500);
+            }
+          } catch { /* ignore */ }
+        };
+        es.onerror = () => {
+          if (this.progressPct >= 100 || !this.progressVisible) es.close();
+        };
+      },
+
+      fmtDate, shortId, cdeStateBadge, safetyCategoryBadge, downloadBlob,
+    };
+  }
+</script>
+</body>
+</html>

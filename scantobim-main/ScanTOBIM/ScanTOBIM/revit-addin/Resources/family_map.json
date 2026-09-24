@@ -1,0 +1,508 @@
+{
+  "_comment": [
+    "ScanToBIM Family Map — Resources copy (deployed with addin DLL).",
+    "This file is loaded by FamilyResolver at startup.",
+    "",
+    "To customise for a project: copy this file to the Revit project folder,",
+    "replace family/type names with those loaded in the project template,",
+    "then set FAMILY_MAP_PATH env var or pass the path to AgentBridgeService.",
+    "",
+    "Resolution priority per element instruction:",
+    "  1. revit_family_hint on the instruction  (operator hard-override)",
+    "  2. This config — match by element_type key, evaluate type_rules top-to-bottom",
+    "  3. Category first-match fallback — any loaded family of the correct category",
+    "  4. Audit event records which path was taken (hint | config | fallback | none)",
+    "",
+    "type_rules: evaluated in order, first match wins.",
+    "  max_diameter_mm  — matches pipe/vessel if diameter_mm < this value",
+    "  max_height_mm    — matches tall elements if height_mm < this value",
+    "  max_major_mm     — matches elongated elements if major_mm < this value",
+    "  (no condition)   — catch-all, always matches"
+  ],
+
+  "_schema_version": "2.0",
+
+  "pipe": {
+    "category": "OST_PipeCurves",
+    "family":   "M_Round Duct",
+    "default_type": "250mm",
+    "type_rules": [
+      { "type": "50mm",   "max_diameter_mm": 57   },
+      { "type": "100mm",  "max_diameter_mm": 108  },
+      { "type": "150mm",  "max_diameter_mm": 160  },
+      { "type": "200mm",  "max_diameter_mm": 215  },
+      { "type": "250mm",  "max_diameter_mm": 270  },
+      { "type": "300mm",  "max_diameter_mm": 315  },
+      { "type": "400mm",  "max_diameter_mm": 420  },
+      { "type": "500mm",  "max_diameter_mm": 530  },
+      { "type": "600mm",  "max_diameter_mm": 630  },
+      { "type": "800mm",  "max_diameter_mm": 820  },
+      { "type": "1000mm" }
+    ]
+  },
+
+  "wall": {
+    "category": "OST_Walls",
+    "family":   "Basic Wall",
+    "default_type": "Generic - 200mm",
+    "type_rules": [
+      { "type": "Generic - 100mm",  "max_height_mm": 150  },
+      { "type": "Generic - 200mm",  "max_height_mm": 250  },
+      { "type": "Generic - 300mm",  "max_height_mm": 350  },
+      { "type": "Generic - 400mm"  }
+    ]
+  },
+
+  "floor": {
+    "category": "OST_Floors",
+    "family":   "Floor",
+    "default_type": "Generic - 200mm",
+    "type_rules": [
+      { "type": "Generic - 150mm",  "max_height_mm": 160  },
+      { "type": "Generic - 200mm",  "max_height_mm": 250  },
+      { "type": "Generic - 300mm",  "max_height_mm": 350  },
+      { "type": "Generic - 400mm"  }
+    ]
+  },
+
+  "ceiling": {
+    "category": "OST_Ceilings",
+    "family":   "Compound Ceiling",
+    "default_type": "Generic - 200mm",
+    "type_rules": []
+  },
+
+  "column": {
+    "category": "OST_StructuralColumns",
+    "family":   "M_Concrete-Rectangular-Column",
+    "default_type": "300 x 300mm",
+    "type_rules": [
+      { "type": "200 x 200mm",  "max_major_mm": 220  },
+      { "type": "300 x 300mm",  "max_major_mm": 320  },
+      { "type": "400 x 400mm",  "max_major_mm": 420  },
+      { "type": "600 x 600mm",  "max_major_mm": 620  },
+      { "type": "800 x 800mm"  }
+    ]
+  },
+
+  "beam": {
+    "category": "OST_StructuralFraming",
+    "family":   "M_Concrete-Rectangular Beam",
+    "default_type": "300 x 600mm",
+    "type_rules": [
+      { "type": "200 x 400mm",  "max_height_mm": 420  },
+      { "type": "300 x 600mm",  "max_height_mm": 620  },
+      { "type": "400 x 800mm",  "max_height_mm": 820  },
+      { "type": "500 x 1000mm" }
+    ]
+  },
+
+  "stair": {
+    "category": "OST_Stairs",
+    "family":   "Assembled Stair",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "ramp": {
+    "category": "OST_Ramps",
+    "family":   "Ramp",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "door": {
+    "category": "OST_Doors",
+    "family":   "M_Single-Flush",
+    "default_type": "0915 x 2134mm",
+    "type_rules": [
+      { "type": "0762 x 2134mm",  "max_major_mm": 800  },
+      { "type": "0915 x 2134mm",  "max_major_mm": 950  },
+      { "type": "1067 x 2134mm",  "max_major_mm": 1100 },
+      { "type": "Double - 1600 x 2134mm" }
+    ]
+  },
+
+  "window": {
+    "category": "OST_Windows",
+    "family":   "M_Fixed",
+    "default_type": "0915 x 1220mm",
+    "type_rules": [
+      { "type": "0610 x 0610mm",  "max_major_mm": 650  },
+      { "type": "0915 x 1220mm",  "max_major_mm": 960  },
+      { "type": "1830 x 1220mm",  "max_major_mm": 1860 },
+      { "type": "2440 x 1525mm"  }
+    ]
+  },
+
+  "railing": {
+    "category": "OST_StairsRailing",
+    "family":   "Handrail - Pipe",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "duct": {
+    "category": "OST_DuctCurves",
+    "family":   "M_Rectangular Duct",
+    "default_type": "400 x 300mm",
+    "type_rules": [
+      { "type": "200 x 150mm",  "max_major_mm": 210  },
+      { "type": "400 x 300mm",  "max_major_mm": 410  },
+      { "type": "600 x 400mm",  "max_major_mm": 620  },
+      { "type": "800 x 600mm",  "max_major_mm": 820  },
+      { "type": "1200 x 800mm" }
+    ]
+  },
+
+  "conduit": {
+    "category": "OST_Conduit",
+    "family":   "Conduit without Fittings",
+    "default_type": "50mm",
+    "type_rules": [
+      { "type": "20mm",   "max_diameter_mm": 22  },
+      { "type": "32mm",   "max_diameter_mm": 34  },
+      { "type": "50mm",   "max_diameter_mm": 53  },
+      { "type": "75mm",   "max_diameter_mm": 78  },
+      { "type": "100mm"  }
+    ]
+  },
+
+  "cable_tray": {
+    "category": "OST_CableTray",
+    "family":   "Cable Tray without Fittings",
+    "default_type": "300mm",
+    "type_rules": [
+      { "type": "150mm",  "max_major_mm": 160 },
+      { "type": "300mm",  "max_major_mm": 310 },
+      { "type": "450mm",  "max_major_mm": 460 },
+      { "type": "600mm"  }
+    ]
+  },
+
+  "slab_opening": {
+    "category": "OST_FloorOpening",
+    "family":   "Opening",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "hatch": {
+    "category": "OST_FloorOpening",
+    "family":   "Opening",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "trench": {
+    "category": "OST_FloorOpening",
+    "family":   "Opening",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "kerb": {
+    "category": "OST_Walls",
+    "family":   "Basic Wall",
+    "default_type": "Generic - 150mm",
+    "type_rules": []
+  },
+
+  "bund_wall": {
+    "category": "OST_Walls",
+    "family":   "Basic Wall",
+    "default_type": "Generic - 300mm",
+    "type_rules": []
+  },
+
+  "grating": {
+    "category": "OST_Floors",
+    "family":   "Floor",
+    "default_type": "Generic - 50mm",
+    "type_rules": []
+  },
+
+  "containment_penetration": {
+    "category": "OST_FloorOpening",
+    "family":   "Opening",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "penetration_seal": {
+    "category": "OST_FloorOpening",
+    "family":   "Opening",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "valve": {
+    "category": "OST_PipeAccessory",
+    "family":   "M_Gate Valve - Flanged",
+    "default_type": "PN16",
+    "type_rules": [
+      { "type": "PN16",  "max_diameter_mm": 100 },
+      { "type": "PN25",  "max_diameter_mm": 300 },
+      { "type": "PN40" }
+    ]
+  },
+
+  "safety_relief_valve": {
+    "category": "OST_PipeAccessory",
+    "family":   "M_Safety Relief Valve",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "strainer": {
+    "category": "OST_PipeAccessory",
+    "family":   "M_Strainer - Y Type",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "expansion_joint": {
+    "category": "OST_PipeAccessory",
+    "family":   "M_Expansion Joint - Bellows",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "deluge_valve": {
+    "category": "OST_PipeAccessory",
+    "family":   "M_Deluge Valve",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "fire_damper": {
+    "category": "OST_DuctAccessory",
+    "family":   "M_Fire Damper - Rectangular",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "pipe_support": {
+    "category": "OST_StructuralFraming",
+    "family":   "M_Pipe Clamp - U-Bolt",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "tank": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Storage Tank - Vertical",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Small",   "max_diameter_mm": 600  },
+      { "type": "Medium",  "max_diameter_mm": 1500 },
+      { "type": "Large" }
+    ]
+  },
+
+  "pressure_vessel": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Pressure Vessel - Vertical",
+    "default_type": "Medium",
+    "type_rules": [
+      { "type": "Small",   "max_diameter_mm": 800  },
+      { "type": "Medium",  "max_diameter_mm": 1500 },
+      { "type": "Large" }
+    ]
+  },
+
+  "heat_exchanger": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Heat Exchanger - Shell and Tube",
+    "default_type": "Horizontal",
+    "type_rules": [
+      { "type": "Small",       "max_major_mm": 2000 },
+      { "type": "Horizontal",  "max_major_mm": 5000 },
+      { "type": "Large" }
+    ]
+  },
+
+  "pump": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Centrifugal Pump",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "compressor": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Compressor - Reciprocating",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Small",    "max_major_mm": 2000 },
+      { "type": "Standard" }
+    ]
+  },
+
+  "hvac_equipment": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Air Handling Unit",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "pressurizer": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Nuclear Pressurizer",
+    "default_type": "PWR-Standard",
+    "type_rules": []
+  },
+
+  "steam_generator": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Nuclear Steam Generator",
+    "default_type": "U-Tube",
+    "type_rules": []
+  },
+
+  "emergency_diesel_generator": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Diesel Generator",
+    "default_type": "Large",
+    "type_rules": [
+      { "type": "Medium",  "max_major_mm": 4000 },
+      { "type": "Large" }
+    ]
+  },
+
+  "seismic_isolator": {
+    "category": "OST_MechanicalEquipment",
+    "family":   "M_Seismic Isolator",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Small",    "max_diameter_mm": 400 },
+      { "type": "Standard", "max_diameter_mm": 700 },
+      { "type": "Large" }
+    ]
+  },
+
+  "sprinkler": {
+    "category": "OST_Sprinklers",
+    "family":   "M_Sprinkler - Upright",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "drainage": {
+    "category": "OST_PlumbingFixtures",
+    "family":   "M_Floor Drain",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "fire_hydrant": {
+    "category": "OST_FireProtection",
+    "family":   "M_Fire Hose Reel",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "smoke_detector": {
+    "category": "OST_FireAlarmDevices",
+    "family":   "M_Smoke Detector",
+    "default_type": "Ionisation",
+    "type_rules": []
+  },
+
+  "fire_alarm_panel": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_Fire Alarm Panel",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "radiation_monitor": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_Radiation Monitor",
+    "default_type": "Area",
+    "type_rules": []
+  },
+
+  "electrical_panel": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_Distribution Board",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Small",    "max_major_mm": 600  },
+      { "type": "Standard", "max_major_mm": 1200 },
+      { "type": "Large" }
+    ]
+  },
+
+  "transformer": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_Transformer - Dry Type",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Small",    "max_major_mm": 1000 },
+      { "type": "Standard", "max_major_mm": 2500 },
+      { "type": "Large" }
+    ]
+  },
+
+  "switchgear": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_Switchgear - MCC",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Short",    "max_major_mm": 3000 },
+      { "type": "Standard" }
+    ]
+  },
+
+  "ups_system": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_UPS - Battery Rack",
+    "default_type": "Standard",
+    "type_rules": []
+  },
+
+  "junction_box": {
+    "category": "OST_ElectricalEquipment",
+    "family":   "M_Junction Box",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Small",    "max_major_mm": 150 },
+      { "type": "Standard", "max_major_mm": 300 },
+      { "type": "Large" }
+    ]
+  },
+
+  "lighting_fitting": {
+    "category": "OST_LightingFixtures",
+    "family":   "M_Linear Fluorescent - Ceiling",
+    "default_type": "600mm",
+    "type_rules": [
+      { "type": "600mm",   "max_major_mm": 700  },
+      { "type": "1200mm",  "max_major_mm": 1300 },
+      { "type": "1800mm"  }
+    ]
+  },
+
+  "ladder": {
+    "category": "OST_StructuralFraming",
+    "family":   "M_Access Ladder",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Short",    "max_height_mm": 3000 },
+      { "type": "Standard", "max_height_mm": 6000 },
+      { "type": "Tall" }
+    ]
+  },
+
+  "overhead_crane": {
+    "category": "OST_StructuralFraming",
+    "family":   "M_Overhead Crane - Bridge",
+    "default_type": "Standard",
+    "type_rules": [
+      { "type": "Light",    "max_major_mm": 10000 },
+      { "type": "Standard", "max_major_mm": 20000 },
+      { "type": "Heavy" }
+    ]
+  }
+}

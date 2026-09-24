@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan-to-BIM — Full Component Detection Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06080e; --surface: #0c0f18; --surface2: #10141f;
+  --border: #182030; --border2: #263050;
+  --text: #b0c4e0; --muted: #4a5e78; --white: #e0eaff;
+  --accent: #00c896; --orange: #ff6b35; --blue: #4a90e2;
+  --purple: #a855f7; --red: #e84040; --cyan: #00d4ff;
+  --yellow: #f5a623; --green: #40c060; --teal: #00b4d8;
+  --pink: #ec4899;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; line-height:1.7; padding-bottom:80px; }
+
+/* hero */
+.hero { background:linear-gradient(135deg,#060d1a,#0a1a2e,#060d1a); border-bottom:1px solid var(--border2); padding:60px 40px 40px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 900px 400px at 50% 50%,rgba(74,144,226,0.07) 0%,transparent 70%); pointer-events:none; }
+.hero-tag { font-size:10px; font-weight:700; letter-spacing:3px; color:var(--blue); text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+.hero-tag::before { content:''; width:32px; height:1px; background:var(--blue); }
+.hero h1 { font-family:'Syne',sans-serif; font-size:clamp(26px,4vw,46px); font-weight:800; color:var(--white); line-height:1.1; margin-bottom:14px; }
+.hero h1 span { color:var(--blue); }
+.hero-sub { font-size:13px; color:var(--muted); max-width:720px; margin-bottom:24px; }
+.hero-pills { display:flex; gap:12px; flex-wrap:wrap; }
+.pill { font-size:10px; font-weight:700; letter-spacing:1px; padding:4px 12px; border-radius:20px; border:1px solid; }
+.pill-red    { border-color:rgba(232,64,64,.4);   color:var(--red); }
+.pill-blue   { border-color:rgba(74,144,226,.4);  color:var(--blue); }
+.pill-green  { border-color:rgba(0,200,150,.4);   color:var(--accent); }
+.pill-orange { border-color:rgba(255,107,53,.4);  color:var(--orange); }
+.pill-purple { border-color:rgba(168,85,247,.4);  color:var(--purple); }
+
+/* layout */
+.container { max-width:1120px; margin:0 auto; padding:0 32px; }
+.section-header { padding:48px 0 20px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+.section-header h2 { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; color:var(--white); display:flex; align-items:center; gap:12px; }
+.section-header p { font-size:12px; color:var(--muted); margin-top:6px; }
+.sec-num { font-size:10px; font-weight:700; letter-spacing:2px; color:var(--blue); background:rgba(74,144,226,.1); border:1px solid rgba(74,144,226,.3); padding:2px 8px; border-radius:4px; }
+
+/* TOC */
+.toc { background:var(--surface); border:1px solid var(--border2); border-radius:10px; padding:24px 28px; margin:32px 0; display:grid; grid-template-columns:1fr 1fr; gap:5px 40px; }
+.toc-title { font-size:10px; font-weight:700; letter-spacing:2px; color:var(--blue); text-transform:uppercase; margin-bottom:14px; grid-column:1/-1; }
+.toc a { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:8px; padding:3px 0; transition:color .2s; }
+.toc a:hover { color:var(--white); text-decoration:none; }
+.toc-n { color:var(--blue); font-weight:700; min-width:24px; }
+
+/* gap alert */
+.gap-banner { background:rgba(232,64,64,.07); border:1px solid rgba(232,64,64,.3); border-radius:8px; padding:20px 24px; margin:24px 0; display:flex; gap:16px; align-items:flex-start; }
+.gap-icon { font-size:24px; flex-shrink:0; }
+.gap-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--red); margin-bottom:6px; }
+.gap-desc { font-size:12px; color:var(--muted); }
+
+/* component grid */
+.comp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; margin:20px 0; }
+.comp-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.comp-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+.comp-icon { font-size:22px; }
+.comp-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--white); }
+.comp-disc { font-size:10px; font-weight:700; letter-spacing:1px; padding:2px 8px; border-radius:3px; margin-left:auto; }
+.disc-str { background:rgba(255,107,53,.15); color:var(--orange); }
+.disc-mep { background:rgba(74,144,226,.15); color:var(--blue); }
+.disc-arc { background:rgba(168,85,247,.15); color:var(--purple); }
+.disc-fir { background:rgba(232,64,64,.15); color:var(--red); }
+.disc-civ { background:rgba(0,212,255,.15); color:var(--cyan); }
+.comp-body { padding:16px 20px; }
+.comp-status-row { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+.status-badge { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:3px; }
+.s-built  { background:rgba(0,200,150,.15); color:var(--accent); }
+.s-gap    { background:rgba(232,64,64,.15); color:var(--red); }
+.s-partial{ background:rgba(245,166,35,.15); color:var(--yellow); }
+.detect-method { font-size:11px; color:var(--muted); }
+.detect-method span { color:var(--white); }
+.comp-gaps { margin-top:10px; }
+.comp-gaps li { font-size:11px; color:var(--muted); padding:3px 0; display:flex; gap:8px; }
+.comp-gaps li::before { content:'✗'; color:var(--red); flex-shrink:0; }
+.comp-gaps li.ok::before { content:'✓'; color:var(--accent); }
+.comp-gaps li.partial::before { content:'~'; color:var(--yellow); }
+
+/* change table */
+.change-table { width:100%; border-collapse:collapse; }
+.change-table th { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:10px 14px; text-align:left; border-bottom:1px solid var(--border2); }
+.change-table td { font-size:12px; padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+.change-table tr:hover td { background:rgba(255,255,255,.015); }
+.file-tag { font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--cyan); }
+.change-type { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 7px; border-radius:3px; white-space:nowrap; }
+.ct-new    { background:rgba(0,200,150,.15); color:var(--accent); }
+.ct-extend { background:rgba(74,144,226,.15); color:var(--blue); }
+.ct-replace{ background:rgba(255,107,53,.15); color:var(--orange); }
+.ct-add    { background:rgba(168,85,247,.15); color:var(--purple); }
+
+/* algorithm cards */
+.algo-grid { display:grid; gap:16px; margin:20px 0; }
+.algo-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 24px; }
+.algo-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.algo-icon { font-size:20px; }
+.algo-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--white); }
+.algo-badge { font-size:9px; font-weight:700; letter-spacing:1px; padding:2px 8px; border-radius:3px; margin-left:auto; }
+.algo-desc { font-size:12px; color:var(--muted); margin-bottom:12px; }
+.algo-detects { display:flex; gap:8px; flex-wrap:wrap; }
+.det-tag { font-size:10px; font-weight:600; padding:3px 10px; border-radius:4px; border:1px solid; }
+
+/* code block */
+.code-block { background:var(--surface2); border:1px solid var(--border2); border-radius:8px; padding:16px 20px; margin:12px 0; font-size:11px; line-height:1.8; overflow-x:auto; }
+.code-block .kw { color:var(--purple); }
+.code-block .cl { color:var(--blue); }
+.code-block .st { color:var(--accent); }
+.code-block .cm { color:var(--muted); font-style:italic; }
+.code-block .fn { color:var(--yellow); }
+.code-block .num { color:var(--orange); }
+
+/* phase cards */
+.phase-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:16px; }
+.phase-head { padding:18px 22px 14px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:14px; }
+.phase-icon { font-size:26px; flex-shrink:0; margin-top:2px; }
+.phase-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--white); }
+.phase-sub { font-size:11px; color:var(--muted); }
+.phase-body { padding:18px 22px; }
+.step-list { list-style:none; display:grid; gap:6px; }
+.step-list li { display:grid; grid-template-columns:24px 1fr auto; gap:8px; align-items:start; font-size:12px; padding:8px 12px; background:var(--surface2); border-radius:6px; border:1px solid var(--border); }
+.step-list li .step-n { color:var(--blue); font-weight:700; font-size:11px; margin-top:2px; }
+.step-list li .step-text { color:var(--text); }
+.step-list li .step-text strong { color:var(--white); display:block; }
+.step-list li .step-text small { color:var(--muted); font-size:10px; }
+.step-list li .step-eff { font-size:10px; color:var(--muted); white-space:nowrap; }
+
+/* data flow */
+.flow { display:flex; align-items:center; gap:0; flex-wrap:wrap; margin:16px 0; }
+.flow-box { padding:10px 16px; border-radius:6px; border:1px solid; font-size:11px; font-weight:600; line-height:1.3; text-align:center; }
+.flow-arrow { font-size:16px; color:var(--muted); padding:0 4px; flex-shrink:0; }
+
+/* priority rows */
+.priority-table { width:100%; border-collapse:collapse; margin:16px 0; }
+.priority-table th { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:8px 14px; text-align:left; border-bottom:1px solid var(--border2); }
+.priority-table td { font-size:12px; padding:8px 14px; border-bottom:1px solid var(--border); }
+.priority-table .p-name { color:var(--white); font-weight:600; }
+
+/* footer */
+.footer { text-align:center; padding:48px 32px; border-top:1px solid var(--border); color:var(--muted); font-size:11px; margin-top:60px; }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">Scan-to-BIM — Component Detection</div>
+    <h1>Detect Every Building<br><span>Component from Point Cloud</span></h1>
+    <p class="hero-sub">
+      Gap analysis of what's detected today vs what's needed for full Scan-to-BIM coverage.
+      Covers detection algorithms, code changes per file, new element types, parameter mapping, and Revit family placement.
+    </p>
+    <div class="hero-pills">
+      <span class="pill pill-green">5 types detected now</span>
+      <span class="pill pill-red">18 types missing</span>
+      <span class="pill pill-blue">7 algorithm upgrades</span>
+      <span class="pill pill-orange">9 files to change</span>
+      <span class="pill pill-purple">4 delivery phases</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="container">
+  <nav class="toc">
+    <div class="toc-title">Contents</div>
+    <a href="#gap"><span class="toc-n">01</span> Gap Analysis — What's Missing</a>
+    <a href="#all-components"><span class="toc-n">02</span> All 23 Component Types</a>
+    <a href="#algorithms"><span class="toc-n">03</span> Detection Algorithms Needed</a>
+    <a href="#code-changes"><span class="toc-n">04</span> Code Changes — File by File</a>
+    <a href="#pipeline"><span class="toc-n">05</span> Updated Detection Pipeline</a>
+    <a href="#parameters"><span class="toc-n">06</span> BIM Parameter Mapping</a>
+    <a href="#revit"><span class="toc-n">07</span> Revit Family Placement</a>
+    <a href="#phases"><span class="toc-n">08</span> Delivery Phases</a>
+    <a href="#priority"><span class="toc-n">09</span> Priority & Effort Table</a>
+  </nav>
+</div>
+
+<!-- ══ 01 GAP ANALYSIS ══ -->
+<div class="container" id="gap">
+  <div class="section-header">
+    <h2><span class="sec-num">01</span> Gap Analysis — What's Detected Today</h2>
+    <p>Current system detects 5 of 23 component types needed for a full building model</p>
+  </div>
+
+  <div class="gap-banner">
+    <div class="gap-icon">⚠️</div>
+    <div>
+      <div class="gap-title">Detection Coverage: 5 / 23 Component Types (22%)</div>
+      <div class="gap-desc">
+        Current Open3D pipeline: RANSAC detects vertical planes (walls/columns) and horizontal planes (floors/ceilings).
+        DBSCAN detects cylinders (pipes). That's it. Doors, windows, beams, ducts, stairs, MEP equipment,
+        cable trays, valves, fittings, and all external/civil elements are completely invisible to the current system.
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <span class="cm"># CURRENT: scan_tools.py — only 2 detection functions</span><br>
+    <span class="fn">detect_planes</span>()   <span class="cm"># RANSAC → walls + floors + columns (heuristic split)</span><br>
+    <span class="fn">detect_cylinders</span>() <span class="cm"># DBSCAN → pipes only</span><br><br>
+    <span class="cm"># CURRENT: classifier.py — 5 element types</span><br>
+    <span class="kw">class</span> <span class="cl">ElementType</span>(str, Enum):<br>
+    &nbsp;&nbsp;<span class="st">WALL</span> = <span class="st">"wall"</span>     <span class="cm"># ✓ detected via RANSAC vertical plane</span><br>
+    &nbsp;&nbsp;<span class="st">FLOOR</span> = <span class="st">"floor"</span>   <span class="cm"># ✓ detected via RANSAC horizontal plane</span><br>
+    &nbsp;&nbsp;<span class="st">COLUMN</span> = <span class="st">"column"</span> <span class="cm"># ~ partial: same path as wall, split by footprint heuristic</span><br>
+    &nbsp;&nbsp;<span class="st">PIPE</span> = <span class="st">"pipe"</span>     <span class="cm"># ✓ detected via DBSCAN cylinder</span><br>
+    &nbsp;&nbsp;<span class="st">BEAM</span> = <span class="st">"beam"</span>     <span class="cm"># ✗ in enum but NO detection logic exists</span><br><br>
+    <span class="cm"># MISSING entirely:</span><br>
+    <span class="cm"># DOOR, WINDOW, CEILING, ROOF, RAMP, STAIR, RAILING</span><br>
+    <span class="cm"># DUCT, DUCT_FITTING, HVAC_EQUIPMENT, CABLE_TRAY, CONDUIT</span><br>
+    <span class="cm"># ELECTRICAL_PANEL, VALVE, TANK, PUMP</span><br>
+    <span class="cm"># KERB, DRAINAGE, RETAINING_WALL, SLAB_OPENING</span>
+  </div>
+</div>
+
+<!-- ══ 02 ALL COMPONENTS ══ -->
+<div class="container" id="all-components">
+  <div class="section-header">
+    <h2><span class="sec-num">02</span> All 23 Component Types — Detection Status</h2>
+    <p>Full coverage needed for a complete as-built BIM model across structural, MEP, architectural, and civil disciplines</p>
+  </div>
+
+  <div class="comp-grid">
+
+    <!-- Structural -->
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🧱</div>
+        <div><div class="comp-title">Wall</div></div>
+        <span class="comp-disc disc-str">Structural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-built">Detected</span><span class="detect-method">RANSAC vertical plane</span></div>
+        <ul class="comp-gaps">
+          <li class="ok">Shape detected (PLANE_VERTICAL)</li>
+          <li class="ok">Bounding box extracted</li>
+          <li class="partial">No thickness parameter extracted</li>
+          <li>No door/window opening voids cut</li>
+          <li>No wall type (concrete/brick/steel) classification</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">⬜</div>
+        <div><div class="comp-title">Floor / Slab</div></div>
+        <span class="comp-disc disc-str">Structural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-built">Detected</span><span class="detect-method">RANSAC horizontal plane</span></div>
+        <ul class="comp-gaps">
+          <li class="ok">Shape detected (PLANE_HORIZONTAL)</li>
+          <li class="ok">Bounding box extracted</li>
+          <li class="partial">No slab thickness</li>
+          <li>No stair/lift openings detected</li>
+          <li>No structural slab vs topping slab distinction</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🏛️</div>
+        <div><div class="comp-title">Column</div></div>
+        <span class="comp-disc disc-str">Structural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-partial">Partial</span><span class="detect-method">Wall heuristic (footprint &lt;800mm)</span></div>
+        <ul class="comp-gaps">
+          <li class="ok">Basic detection via footprint heuristic</li>
+          <li>No circular column detection (only rectangular)</li>
+          <li>No section profile (H, I, RHS, CHS) extracted</li>
+          <li>Confused with short wall segments</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">↔️</div>
+        <div><div class="comp-title">Beam</div></div>
+        <span class="comp-disc disc-str">Structural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">In enum — zero logic</span></div>
+        <ul class="comp-gaps">
+          <li>No horizontal cylinder/profile detection at height</li>
+          <li>No span direction extracted</li>
+          <li>No section type (UB, UC, RHS) classification</li>
+          <li>Confused with pipes in current DBSCAN pass</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🛤️</div>
+        <div><div class="comp-title">Stair</div></div>
+        <span class="comp-disc disc-str">Structural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No sloped plane + step pattern detection</li>
+          <li>No tread/riser dimension extraction</li>
+          <li>No flight / landing separation</li>
+          <li>Often appears as noise cloud in current pipeline</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🔲</div>
+        <div><div class="comp-title">Ceiling</div></div>
+        <span class="comp-disc disc-arc">Architectural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">Merged with floor detection</span></div>
+        <ul class="comp-gaps">
+          <li>RANSAC horizontal plane finds ceiling as "floor"</li>
+          <li>No floor vs ceiling z-height separation logic</li>
+          <li>No ceiling tile / grid pattern recognition</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🚪</div>
+        <div><div class="comp-title">Door</div></div>
+        <span class="comp-disc disc-arc">Architectural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No void/opening detection in wall planes</li>
+          <li>No door leaf geometry recognition</li>
+          <li>No width/height parameter extraction</li>
+          <li>No single/double-leaf classification</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🪟</div>
+        <div><div class="comp-title">Window</div></div>
+        <span class="comp-disc disc-arc">Architectural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No rectangular void in wall detection</li>
+          <li>No sill/head height extraction</li>
+          <li>No glass vs frame distinction</li>
+          <li>Need z-height range to separate from doors</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">↗️</div>
+        <div><div class="comp-title">Ramp</div></div>
+        <span class="comp-arc disc-arc">Architectural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No sloped plane detection (angle 1°–20°)</li>
+          <li>No ramp vs stair distinction</li>
+          <li>No gradient / slope angle extraction</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🚧</div>
+        <div><div class="comp-title">Railing / Handrail</div></div>
+        <span class="comp-disc disc-arc">Architectural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No thin vertical + horizontal tube topology</li>
+          <li>Too few points — below DBSCAN min_cluster_size</li>
+          <li>No height / spacing parameter</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MEP -->
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🔧</div>
+        <div><div class="comp-title">Pipe</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-built">Detected</span><span class="detect-method">DBSCAN cylinder</span></div>
+        <ul class="comp-gaps">
+          <li class="ok">Cylinder shape detected</li>
+          <li class="ok">Bounding box, confidence, point count</li>
+          <li>No diameter / nominal bore extracted</li>
+          <li>No pipe run / flow direction</li>
+          <li>No insulation vs bare pipe</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">📦</div>
+        <div><div class="comp-title">HVAC Duct</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No rectangular box cluster detection</li>
+          <li>Currently merged with residual noise</li>
+          <li>No width × height dimension extraction</li>
+          <li>No supply vs return vs exhaust classification</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">⚙️</div>
+        <div><div class="comp-title">HVAC Equipment</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>No large box / compound shape detection</li>
+          <li>AHU, FCU, chiller — need volume + aspect ratio</li>
+          <li>Equipment type classification needed</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🔌</div>
+        <div><div class="comp-title">Cable Tray / Conduit</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Very thin — below DBSCAN density threshold</li>
+          <li>Open U-profile — not a closed cylinder</li>
+          <li>Need structured light or high-density scan</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🔴</div>
+        <div><div class="comp-title">Valve / Fitting</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Sphere / tee / elbow geometry not handled</li>
+          <li>Too small for DBSCAN at 10mm voxel</li>
+          <li>Need smaller voxel + SegmentShape.SPHERE</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🛢️</div>
+        <div><div class="comp-title">Tank / Vessel</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Large cylinder / box — misclassified as wall/floor</li>
+          <li>Need volume + aspect ratio heuristic to separate</li>
+          <li>Vertical vs horizontal vessel distinction</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🔥</div>
+        <div><div class="comp-title">Fire Sprinkler / Suppression</div></div>
+        <span class="comp-disc disc-fir">Fire</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Small drops from ceiling — tiny point cluster</li>
+          <li>Needs 5mm voxel or smaller</li>
+          <li>Need depth-from-ceiling parameter</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">⚡</div>
+        <div><div class="comp-title">Electrical Panel / Switchgear</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Flat box mounted on wall — merged with wall plane</li>
+          <li>Need protrusion detection from wall surface</li>
+          <li>Voltage / circuit count from label OCR (future)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">💧</div>
+        <div><div class="comp-title">Pump</div></div>
+        <span class="comp-disc disc-mep">MEP</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Compound shape (motor + impeller housing)</li>
+          <li>Needs equipment cluster + pipe connection topology</li>
+          <li>Floor-mounted vs in-line classification</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Civil -->
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🛣️</div>
+        <div><div class="comp-title">Kerb / Retaining Wall</div></div>
+        <span class="comp-disc disc-civ">Civil</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Short vertical plane — merged with walls</li>
+          <li>Need z-height threshold to separate (kerb &lt;300mm)</li>
+          <li>No kerb profile (L-shape, bull-nose) detection</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🌊</div>
+        <div><div class="comp-title">Drainage / Channel</div></div>
+        <span class="comp-disc disc-civ">Civil</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>U-profile below floor level — below current min_inliers</li>
+          <li>No below-grade geometry handling</li>
+          <li>No invert level / gradient extraction</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-head">
+        <div class="comp-icon">🕳️</div>
+        <div><div class="comp-title">Slab Opening / Penetration</div></div>
+        <span class="comp-disc disc-str">Structural</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-status-row"><span class="status-badge s-gap">Not Detected</span><span class="detect-method">—</span></div>
+        <ul class="comp-gaps">
+          <li>Hole in floor plane — inlier absence not analysed</li>
+          <li>No void geometry passed to Revit</li>
+          <li>No pipe/duct through-slab coordination</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ 03 ALGORITHMS ══ -->
+<div class="container" id="algorithms">
+  <div class="section-header">
+    <h2><span class="sec-num">03</span> Detection Algorithms Needed</h2>
+    <p>7 new or upgraded algorithms to add to scan_tools.py to cover all component types</p>
+  </div>
+
+  <div class="algo-grid">
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">🔷</div>
+        <div class="algo-title">A1 — Floor vs Ceiling Separation (upgrade existing)</div>
+        <span class="algo-badge" style="background:rgba(245,166,35,.15);color:var(--yellow)">Upgrade</span>
+      </div>
+      <div class="algo-desc">
+        Current RANSAC finds all horizontal planes and calls them "floor". Add z-height context:
+        planes near z=0 (± storey tolerance) = Floor; planes near z=storey_height = Ceiling.
+        Requires storey height parameter (config or auto-detected from data).
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(0,200,150,.3);color:var(--accent)">Floor</span>
+        <span class="det-tag" style="border-color:rgba(74,144,226,.3);color:var(--blue)">Ceiling</span>
+        <span class="det-tag" style="border-color:rgba(255,107,53,.3);color:var(--orange)">Roof slab</span>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">↔️</div>
+        <div class="algo-title">A2 — Beam Detection (new)</div>
+        <span class="algo-badge" style="background:rgba(232,64,64,.15);color:var(--red)">New</span>
+      </div>
+      <div class="algo-desc">
+        After plane removal, run DBSCAN on residual points. Clusters with one dimension much larger
+        than the other two AND z-centroid &gt; 2m = Beam. Distinguish from pipes: beams have rectangular
+        cross-section (hull aspect ratio &gt;1.5), pipes are circular (aspect ratio ~1.0).
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(255,107,53,.3);color:var(--orange)">Structural beam</span>
+        <span class="det-tag" style="border-color:rgba(0,212,255,.3);color:var(--cyan)">Lintel</span>
+        <span class="det-tag" style="border-color:rgba(168,85,247,.3);color:var(--purple)">Purlin</span>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">📦</div>
+        <div class="algo-title">A3 — Rectangular Box Detection for Ducts (new)</div>
+        <span class="algo-badge" style="background:rgba(232,64,64,.15);color:var(--red)">New</span>
+      </div>
+      <div class="algo-desc">
+        DBSCAN cluster post-processing: compute convex hull. If hull has 6 faces with near-orthogonal normals
+        AND aspect ratio of two short dimensions is 0.5–2.0 = Rectangular duct. If aspect ratio &gt;3 = Flat duct.
+        Volume threshold separates duct from electrical panel.
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(74,144,226,.3);color:var(--blue)">HVAC Duct</span>
+        <span class="det-tag" style="border-color:rgba(0,200,150,.3);color:var(--accent)">Duct fitting</span>
+        <span class="det-tag" style="border-color:rgba(168,85,247,.3);color:var(--purple)">Cable tray</span>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">🚪</div>
+        <div class="algo-title">A4 — Opening Detection in Walls (new)</div>
+        <span class="algo-badge" style="background:rgba(232,64,64,.15);color:var(--red)">New</span>
+      </div>
+      <div class="algo-desc">
+        After RANSAC extracts a wall plane, project inlier points onto 2D plane.
+        Rasterise to grid. Find rectangular voids (low-density rectangles) using connected-component
+        analysis on the grid. Classify: if void bottom z &lt; 0.2m = Door; if void bottom z &gt; 0.6m = Window.
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(232,64,64,.3);color:var(--red)">Door</span>
+        <span class="det-tag" style="border-color:rgba(0,212,255,.3);color:var(--cyan)">Window</span>
+        <span class="det-tag" style="border-color:rgba(168,85,247,.3);color:var(--purple)">Curtain wall panel</span>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">🛤️</div>
+        <div class="algo-title">A5 — Sloped Surface Detection for Stairs/Ramps (new)</div>
+        <span class="algo-badge" style="background:rgba(232,64,64,.15);color:var(--red)">New</span>
+      </div>
+      <div class="algo-desc">
+        Extend RANSAC to track plane normal z-component: |z| &gt; 0.93 = horizontal, |z| &lt; 0.3 = vertical,
+        0.3 &lt; |z| &lt; 0.93 = sloped surface. Sloped planes: if smooth gradient = Ramp;
+        if step-like z-discontinuities = Stair (detect by regulariy of height jumps).
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(255,107,53,.3);color:var(--orange)">Stair flight</span>
+        <span class="det-tag" style="border-color:rgba(0,200,150,.3);color:var(--accent)">Ramp</span>
+        <span class="det-tag" style="border-color:rgba(74,144,226,.3);color:var(--blue)">Roof slope</span>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">⚙️</div>
+        <div class="algo-title">A6 — Large Equipment Cluster Detection (new)</div>
+        <span class="algo-badge" style="background:rgba(232,64,64,.15);color:var(--red)">New</span>
+      </div>
+      <div class="algo-desc">
+        DBSCAN on residual points (after planes + cylinders removed). Clusters that are:
+        large volume (&gt;1m³) + roughly box-shaped + floor-touching = HVAC Equipment / Tank / Pump.
+        Sub-classify by aspect ratio: tall cylinder = Tank; squat box = AHU; small box = pump.
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(74,144,226,.3);color:var(--blue)">AHU / FCU</span>
+        <span class="det-tag" style="border-color:rgba(0,200,150,.3);color:var(--accent)">Tank / Vessel</span>
+        <span class="det-tag" style="border-color:rgba(255,107,53,.3);color:var(--orange)">Pump</span>
+      </div>
+    </div>
+
+    <div class="algo-card">
+      <div class="algo-head">
+        <div class="algo-icon">🕳️</div>
+        <div class="algo-title">A7 — Slab Opening / Void Detection (new)</div>
+        <span class="algo-badge" style="background:rgba(232,64,64,.15);color:var(--red)">New</span>
+      </div>
+      <div class="algo-desc">
+        Project floor plane inliers onto 2D grid. Apply morphological closing then find holes
+        (connected regions of near-zero density surrounded by inlier points).
+        Any hole &gt;50×50mm = slab opening. Link to MEP elements passing through via z-stack analysis.
+      </div>
+      <div class="algo-detects">
+        <span class="det-tag" style="border-color:rgba(232,64,64,.3);color:var(--red)">Stair opening</span>
+        <span class="det-tag" style="border-color:rgba(168,85,247,.3);color:var(--purple)">Lift shaft</span>
+        <span class="det-tag" style="border-color:rgba(0,212,255,.3);color:var(--cyan)">MEP penetration</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ 04 CODE CHANGES ══ -->
+<div class="container" id="code-changes">
+  <div class="section-header">
+    <h2><span class="sec-num">04</span> Code Changes — File by File</h2>
+    <p>Every file that needs to change, what changes, and why</p>
+  </div>
+
+  <table class="change-table">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Change Type</th>
+        <th>What Changes</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td><span class="file-tag">agent/models.py</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          <strong style="color:var(--white)">ElementType enum — 5 → 23 values</strong><br>
+          Add: CEILING, DOOR, WINDOW, RAMP, STAIR, RAILING, DUCT, DUCT_FITTING, HVAC_EQUIPMENT,
+          CABLE_TRAY, CONDUIT, VALVE, TANK, PUMP, SPRINKLER, ELECTRICAL_PANEL, KERB, DRAINAGE, SLAB_OPENING<br>
+          <br>
+          <strong style="color:var(--white)">SegmentShape enum — 4 → 9 values</strong><br>
+          Add: PLANE_SLOPED, RECTANGULAR_BOX, SPHERE, COMPOUND, OPENING<br>
+          <br>
+          <strong style="color:var(--white)">GeometrySegment — 4 new fields</strong><br>
+          opening_width_mm, opening_height_mm, opening_sill_z_mm, segment_subtype<br>
+          <br>
+          <strong style="color:var(--white)">ElementInstruction — richer parameters dict</strong><br>
+          Typed per-element parameters (width, height, slope, diameter, section_profile)
+        </td>
+        <td>Can't create Revit elements without element type. Can't extract dimensions without geometry fields.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">agent/tools/scan_tools.py</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          <strong style="color:var(--white)">Upgrade detect_planes()</strong> — add slope angle classification, z-height context for floor vs ceiling separation<br><br>
+          <strong style="color:var(--white)">Upgrade detect_cylinders()</strong> — split beam vs pipe by cross-section aspect ratio; add diameter extraction<br><br>
+          <strong style="color:var(--white)">New: detect_rectangular_boxes()</strong> — A3 algorithm<br>
+          <strong style="color:var(--white)">New: detect_openings_in_planes()</strong> — A4 algorithm<br>
+          <strong style="color:var(--white)">New: detect_sloped_surfaces()</strong> — A5 algorithm<br>
+          <strong style="color:var(--white)">New: detect_equipment_clusters()</strong> — A6 algorithm<br>
+          <strong style="color:var(--white)">New: detect_slab_openings()</strong> — A7 algorithm<br><br>
+          <strong style="color:var(--white)">Upgrade run_segmentation()</strong> — call all 7 detectors in sequence, merge results
+        </td>
+        <td>All new component types require new detection code. This is the main algorithmic work.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">agent/classifier.py</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          <strong style="color:var(--white)">classify_element_type()</strong> — extend to handle all 23 element types from new SegmentShape values<br><br>
+          <strong style="color:var(--white)">classify_discipline()</strong> — extend mapping: DOOR/WINDOW/STAIR/RAILING → ARCHITECTURAL (new discipline); DUCT/HVAC/CABLE_TRAY/CONDUIT/VALVE/PUMP → MEP; SPRINKLER → FIRE_PROTECTION; KERB/DRAINAGE → CIVIL<br><br>
+          <strong style="color:var(--white)">classify_safety_rule_based()</strong> — add rules for new types: ducts in DSEAR areas → SC3; fire suppression → SC2; tanks &gt;5000L → SC2<br><br>
+          <strong style="color:var(--white)">GPT-4o prompt</strong> — extend with new element type descriptions
+        </td>
+        <td>Each new element type needs a discipline mapping and safety classification rule.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">agent/models.py → Discipline enum</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          Add <strong style="color:var(--white)">ARCHITECTURAL = "architectural"</strong> discipline for doors, windows, stairs, ceilings, railings, ramps
+        </td>
+        <td>Currently only Structural, MEP, Fire, Civil, Infrastructure. No architectural discipline.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">agent/orchestrator.py</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          <strong style="color:var(--white)">run_segmentation()</strong> — pass storey_height config to scan_tools for floor/ceiling separation<br><br>
+          <strong style="color:var(--white)">classify_and_prepare()</strong> — extract typed parameters per element type and store in instruction.parameters dict<br><br>
+          <strong style="color:var(--white)">execute_instructions()</strong> — group by discipline, respect discipline-level CDE state; batch openings after walls
+        </td>
+        <td>Opening elements (doors/windows) must be created AFTER their host walls. Order of execution matters.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">agent/tools/discipline_tools.py</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          Add creation tools for all new element types:<br>
+          <strong style="color:var(--white)">create_ceiling(), create_door(), create_window(), create_beam(), create_stair(), create_ramp(), create_railing()</strong><br>
+          <strong style="color:var(--white)">create_duct(), create_hvac_equipment(), create_cable_tray(), create_valve(), create_tank(), create_pump()</strong><br>
+          <strong style="color:var(--white)">create_sprinkler(), create_electrical_panel()</strong>
+        </td>
+        <td>Each element type needs its own creation tool with correct parameters for Revit family placement.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">agent/main.py</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          <strong style="color:var(--white)">POST /sessions — add storey_height parameter</strong><br>
+          <strong style="color:var(--white)">GET /sessions/{id}/elements — add filter by discipline/element_type</strong><br>
+          <strong style="color:var(--white)">GET /sessions/{id}/openings — list all doors/windows with host wall</strong><br>
+          <strong style="color:var(--white)">GET /sessions/{id}/mep — list MEP elements with system classification</strong>
+        </td>
+        <td>New element types need filtered endpoints. Openings need a parent-child relationship API.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">revit-addin/SafetyGate/SafetyGateService.cs</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          Add shared params for new element types:<br>
+          <strong style="color:var(--white)">ScanToBIM_ElementSubtype, ScanToBIM_OpeningWidth, ScanToBIM_OpeningHeight, ScanToBIM_SectionProfile, ScanToBIM_Diameter, ScanToBIM_SlopeAngle, ScanToBIM_SystemType</strong>
+        </td>
+        <td>New element parameters must be written to Revit shared parameters for traceability.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">revit-addin/Services/AgentBridgeService.cs</span></td>
+        <td><span class="change-type ct-new">New logic</span></td>
+        <td>
+          <strong style="color:var(--white)">CreateElement() — dispatch to correct Revit API per element type</strong><br>
+          Wall → NewWall(); Floor → NewFloor(); Door → NewFamilyInstance() with host wall;
+          Window → NewFamilyInstance() with host wall + sill height; Beam → NewFamilyInstance();
+          Pipe → NewPipe(); Duct → NewDuct(); etc.<br><br>
+          <strong style="color:var(--white)">Add family resolver</strong> — map element type + section profile → Revit family name
+        </td>
+        <td>Each Revit element type uses a different API method. Currently only generic creation is implemented.</td>
+      </tr>
+
+      <tr>
+        <td><span class="file-tag">revit-addin/Models/AgentModels.cs</span></td>
+        <td><span class="change-type ct-extend">Extend</span></td>
+        <td>
+          Add fields:<br>
+          <strong style="color:var(--white)">OpeningWidth, OpeningHeight, OpeningSillZ, SectionProfile, NominalDiameter, SlopeAngle, SystemType, HostWallId, ElementSubtype</strong>
+        </td>
+        <td>New parameters needed for Revit family placement — width, height, sill height, host element.</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 05 PIPELINE ══ -->
+<div class="container" id="pipeline">
+  <div class="section-header">
+    <h2><span class="sec-num">05</span> Updated Detection Pipeline</h2>
+    <p>New 7-stage pipeline replacing the current 2-stage (RANSAC planes + DBSCAN cylinders)</p>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:28px;margin:20px 0;">
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Stage 1 — Load &amp; Downsample</div>
+      <div class="flow">
+        <div class="flow-box" style="background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.3);color:var(--cyan)">E57 / LAZ / LAS<br><small>Scanner file</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(74,144,226,.07);border-color:rgba(74,144,226,.3);color:var(--blue)">Voxel Downsample<br><small>10mm grid (large) / 5mm (fine)</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(0,200,150,.07);border-color:rgba(0,200,150,.3);color:var(--accent)">Statistical Outlier Removal<br><small>Clean noise before detection</small></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Stage 2 — Plane Detection (all orientations)</div>
+      <div class="flow">
+        <div class="flow-box" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);color:var(--orange)">RANSAC Iterative<br><small>All planes, 1000 iter</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);color:var(--orange)">Normal z-angle classify<br><small>Vertical / Horizontal / Sloped</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);color:var(--orange)">z-height classify<br><small>Floor / Ceiling / Wall / Ramp / Stair</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);color:var(--orange)">Opening scan<br><small>A4: Door / Window voids</small></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Stage 3 — Residual Point Processing</div>
+      <div class="flow">
+        <div class="flow-box" style="background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.3);color:var(--purple)">DBSCAN<br><small>eps=50mm, min_pts=30</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.3);color:var(--purple)">Shape classify<br><small>Cylinder / Box / Compound</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.3);color:var(--purple)">Aspect ratio<br><small>Pipe / Beam / Duct / Equipment</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.3);color:var(--purple)">z-position<br><small>Ceiling-mount / Floor-mount / In-line</small></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Stage 4 — Fine Detail (5mm voxel pass)</div>
+      <div class="flow">
+        <div class="flow-box" style="background:rgba(236,72,153,.07);border-color:rgba(236,72,153,.3);color:var(--pink)">Resample @ 5mm<br><small>Residual only</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(236,72,153,.07);border-color:rgba(236,72,153,.3);color:var(--pink)">Small cluster detect<br><small>Valves, fittings, sprinklers</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(236,72,153,.07);border-color:rgba(236,72,153,.3);color:var(--pink)">Protrusion detect<br><small>Panels on walls, brackets</small></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Stage 5 — Topology &amp; Relationship Building</div>
+      <div class="flow">
+        <div class="flow-box" style="background:rgba(0,200,150,.07);border-color:rgba(0,200,150,.3);color:var(--accent)">Host assignment<br><small>Door/Window → host Wall</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(0,200,150,.07);border-color:rgba(0,200,150,.3);color:var(--accent)">System grouping<br><small>Pipe runs, duct systems</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(0,200,150,.07);border-color:rgba(0,200,150,.3);color:var(--accent)">Clash pre-check<br><small>AABB intersections</small></div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Stage 6 — Classify → Safety Gate → Audit → Revit</div>
+      <div class="flow">
+        <div class="flow-box" style="background:rgba(245,166,35,.07);border-color:rgba(245,166,35,.3);color:var(--yellow)">Safety classify<br><small>Rule / GPT-4o</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(232,64,64,.07);border-color:rgba(232,64,64,.3);color:var(--red)">Safety Gate<br><small>SC1 block / SC2 approve</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.3);color:var(--purple)">Audit log<br><small>HMAC chain</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);color:var(--orange)">Revit creation<br><small>Typed API per element</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 06 PARAMETERS ══ -->
+<div class="container" id="parameters">
+  <div class="section-header">
+    <h2><span class="sec-num">06</span> BIM Parameter Mapping</h2>
+    <p>Parameters extracted from scan geometry for each element type — needed by Revit for correct family placement</p>
+  </div>
+
+  <table class="change-table">
+    <thead>
+      <tr>
+        <th>Element Type</th>
+        <th>Parameters from Scan</th>
+        <th>Revit Family Parameter</th>
+        <th>Extraction Method</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Wall</td>
+        <td>length, height, thickness</td>
+        <td>Width, Height, Unconnected Height</td>
+        <td>Bounding box extents of RANSAC plane inliers</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Floor / Ceiling</td>
+        <td>area outline, thickness, level</td>
+        <td>Offset from Level, Thickness</td>
+        <td>Convex hull of horizontal plane inliers → z centroid = level</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Column</td>
+        <td>width, depth, height, section_profile</td>
+        <td>b, h, Base Level, Top Level</td>
+        <td>DBSCAN cluster extents; hull aspect → square=RHS, round=CHS</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Beam</td>
+        <td>span_length, section_profile, z_elevation</td>
+        <td>Start/End Level, Family: UB/UC/RHS</td>
+        <td>Long axis of cluster; cross-section aspect → section type</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Door</td>
+        <td>width, height, sill_z (=0), host_wall_id</td>
+        <td>Width, Height, Host Wall</td>
+        <td>Void in wall 2D raster; bounding box of void; host = parent RANSAC plane</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Window</td>
+        <td>width, height, sill_height, head_height, host_wall_id</td>
+        <td>Width, Height, Sill Height, Host Wall</td>
+        <td>Void in wall 2D raster; bottom z = sill height</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Stair</td>
+        <td>num_risers, riser_height, tread_depth, flight_width</td>
+        <td>Desired Number of Risers, Actual Riser Height</td>
+        <td>Sloped plane + z-discontinuity count; step bounding boxes</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Ramp</td>
+        <td>slope_angle, width, length</td>
+        <td>Slope, Width</td>
+        <td>Sloped plane normal angle; bounding box width</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Pipe</td>
+        <td>nominal_diameter, length, z_elevation, system_type</td>
+        <td>Diameter, System Type</td>
+        <td>DBSCAN cluster; 2× minor axis of cross-section = diameter</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Duct (rectangular)</td>
+        <td>width, height, length, system_type</td>
+        <td>Width, Height, System Type</td>
+        <td>Box cluster; two short extents = width × height</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Duct (round)</td>
+        <td>diameter, length, system_type</td>
+        <td>Diameter, System Type</td>
+        <td>Same as pipe but z-elevation near ceiling</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">HVAC Equipment</td>
+        <td>length, width, height, equipment_subtype</td>
+        <td>Family Instance dimensions</td>
+        <td>Equipment cluster bounding box; volume → subtype (AHU/FCU/chiller)</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Tank / Vessel</td>
+        <td>diameter or width×depth, height, orientation</td>
+        <td>Family Instance dimensions</td>
+        <td>Large cylinder/box cluster; aspect → vertical/horizontal</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Valve</td>
+        <td>nominal_size, pipe_host_id, valve_type</td>
+        <td>Family Instance on pipe</td>
+        <td>Small sphere/tee cluster at pipe midpoint</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Slab Opening</td>
+        <td>width, length, shape (rect/round), host_slab_id</td>
+        <td>Shaft Opening dimensions</td>
+        <td>Hole in floor 2D raster; shape = rectangular or circular</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 07 REVIT ══ -->
+<div class="container" id="revit">
+  <div class="section-header">
+    <h2><span class="sec-num">07</span> Revit Family Placement Strategy</h2>
+    <p>Each element type needs a specific Revit API call and a loaded family in the template</p>
+  </div>
+
+  <table class="change-table">
+    <thead>
+      <tr>
+        <th>Element Type</th>
+        <th>Revit API Method</th>
+        <th>Required Family / Type</th>
+        <th>Key Parameters</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Wall</td>
+        <td><code style="color:var(--cyan)">Wall.Create()</code></td>
+        <td>Compound Wall — Basic Wall</td>
+        <td>Curve, height, level, wallType</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Floor</td>
+        <td><code style="color:var(--cyan)">Floor.Create()</code></td>
+        <td>Floor type from template</td>
+        <td>CurveLoop, floorType, level</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Ceiling</td>
+        <td><code style="color:var(--cyan)">Ceiling.Create()</code></td>
+        <td>Compound Ceiling</td>
+        <td>CurveLoop, ceilingType, level, offset</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Column</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>Structural Column families (UC, CHS, RHS)</td>
+        <td>point, symbol, level, mode=Column</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Beam</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>Structural Framing families (UB, RHS)</td>
+        <td>curve, symbol, level, mode=Beam</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Door</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>Door family (single/double leaf)</td>
+        <td>point, symbol, hostWall, level</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Window</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>Window family (fixed/casement)</td>
+        <td>point, symbol, hostWall, level, sillHeight</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Stair</td>
+        <td><code style="color:var(--cyan)">Stair.Create()</code> (Revit 2022+)</td>
+        <td>Assembled Stair type</td>
+        <td>baseLevel, topLevel, riserCount</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Pipe</td>
+        <td><code style="color:var(--cyan)">Pipe.Create()</code></td>
+        <td>Pipe type + system type</td>
+        <td>systemType, pipeType, level, startPt, endPt, diameter</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Duct (rect)</td>
+        <td><code style="color:var(--cyan)">Duct.Create()</code></td>
+        <td>Rectangular duct type</td>
+        <td>systemType, ductType, level, startPt, endPt, width, height</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Duct (round)</td>
+        <td><code style="color:var(--cyan)">Duct.Create()</code></td>
+        <td>Round duct type</td>
+        <td>systemType, ductType, level, startPt, endPt, diameter</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">HVAC Equipment</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>AHU / FCU / Chiller families</td>
+        <td>point, symbol, level, FaceBasedPlacement</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Tank / Vessel</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>Generic Equipment family</td>
+        <td>point, symbol, level, diameter, height</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Valve</td>
+        <td><code style="color:var(--cyan)">doc.Create.NewFamilyInstance()</code></td>
+        <td>Pipe Accessory — valve families</td>
+        <td>point, symbol, hostPipe, nominalSize</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Slab Opening</td>
+        <td><code style="color:var(--cyan)">Opening.CreateVerticalOpening()</code></td>
+        <td>n/a — native Revit void</td>
+        <td>hostFloor, CurveLoop boundary</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Cable Tray</td>
+        <td><code style="color:var(--cyan)">CableTray.Create()</code></td>
+        <td>Cable tray type</td>
+        <td>cableTrayType, level, startPt, endPt, width, height</td>
+      </tr>
+      <tr>
+        <td style="color:var(--white);font-weight:600">Conduit</td>
+        <td><code style="color:var(--cyan)">Conduit.Create()</code></td>
+        <td>Conduit type</td>
+        <td>conduitType, level, startPt, endPt, diameter</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 08 PHASES ══ -->
+<div class="container" id="phases">
+  <div class="section-header">
+    <h2><span class="sec-num">08</span> Delivery Phases</h2>
+    <p>4 phases — each delivers testable, demoable component detection capability</p>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-head">
+      <div class="phase-icon">🔷</div>
+      <div>
+        <div class="phase-title">Phase D1 — Structural Core Completion</div>
+        <div class="phase-sub">Add beam, ceiling, floor/ceiling separation, circular column, sloped surface detection</div>
+      </div>
+      <span style="font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:4px;background:rgba(0,200,150,.15);color:var(--accent);margin-left:auto;height:fit-content">Week 1–2</span>
+    </div>
+    <div class="phase-body">
+      <ul class="step-list">
+        <li><span class="step-n">1</span><div class="step-text"><strong>Upgrade detect_planes() — z-height context</strong><small>Add storey_height param. Planes z &lt; storey_height/4 = FLOOR, z &gt; storey_height*0.75 = CEILING, rest = WALL</small></div><span class="step-eff">1d</span></li>
+        <li><span class="step-n">2</span><div class="step-text"><strong>Upgrade detect_cylinders() — beam vs pipe split</strong><small>After DBSCAN: compute cross-section convex hull. Aspect ratio &gt;1.5 + z &gt;2m + horizontal axis = BEAM. Extract span direction.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">3</span><div class="step-text"><strong>Improve column detection</strong><small>Run DBSCAN on vertical plane residuals: small clusters with near-square hull = column. Distinguish round (CHS) vs square (RHS).</small></div><span class="step-eff">1d</span></li>
+        <li><span class="step-n">4</span><div class="step-text"><strong>Add A5 sloped surface detection</strong><small>Extend RANSAC to classify planes by normal angle: 0.3 &lt; |z| &lt; 0.93 = sloped. Ramp if smooth; Stair if z-step pattern detected.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">5</span><div class="step-text"><strong>Extend ElementType, SegmentShape, Discipline enums</strong><small>Add CEILING, BEAM, STAIR, RAMP, ARCHITECTURAL discipline. Update classifier.py dispatch.</small></div><span class="step-eff">0.5d</span></li>
+        <li><span class="step-n">6</span><div class="step-text"><strong>Update Revit add-in for beam + ceiling creation</strong><small>AgentBridgeService: NewFamilyInstance (beam), Ceiling.Create(). Add shared params: SectionProfile, SpanDirection.</small></div><span class="step-eff">2d</span></li>
+      </ul>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;">Outcome: <strong style="color:var(--accent)">9 element types</strong> detected (was 5). Full structural frame detectable from scan.</p>
+    </div>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-head">
+      <div class="phase-icon">🚪</div>
+      <div>
+        <div class="phase-title">Phase D2 — Architectural Openings</div>
+        <div class="phase-sub">Door and window detection via wall void analysis, opening parameters, Revit host placement</div>
+      </div>
+      <span style="font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:4px;background:rgba(74,144,226,.15);color:var(--blue);margin-left:auto;height:fit-content">Week 3–4</span>
+    </div>
+    <div class="phase-body">
+      <ul class="step-list">
+        <li><span class="step-n">1</span><div class="step-text"><strong>Implement detect_openings_in_planes() — A4 algorithm</strong><small>For each RANSAC wall plane: project inlier points → 2D 20mm grid → find void rectangles. Classify by sill z: &lt;0.2m=door, &gt;0.6m=window.</small></div><span class="step-eff">3d</span></li>
+        <li><span class="step-n">2</span><div class="step-text"><strong>Add Opening model to GeometrySegment</strong><small>New fields: opening_width_mm, opening_height_mm, opening_sill_z, host_segment_id. Opening is child of wall segment.</small></div><span class="step-eff">0.5d</span></li>
+        <li><span class="step-n">3</span><div class="step-text"><strong>Orchestrator: create walls before openings</strong><small>execute_instructions() groups by element type: walls first, then openings. Pass host_wall_element_id to Revit for each opening.</small></div><span class="step-eff">1d</span></li>
+        <li><span class="step-n">4</span><div class="step-text"><strong>Revit add-in: door/window family placement</strong><small>NewFamilyInstance(point, doorSymbol, hostWall, level). Family resolver maps width/height → nearest standard family size.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">5</span><div class="step-text"><strong>Add DOOR / WINDOW to safety rules</strong><small>Fire doors in fire-rated walls → SC2 (requires engineer review). Emergency exit doors → SC3 (flagged).</small></div><span class="step-eff">0.5d</span></li>
+      </ul>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;">Outcome: <strong style="color:var(--accent)">11 element types</strong> detected. Architectural shell complete — walls with openings, floors, ceilings, stairs.</p>
+    </div>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-head">
+      <div class="phase-icon">📦</div>
+      <div>
+        <div class="phase-title">Phase D3 — MEP Systems</div>
+        <div class="phase-sub">Ducts, HVAC equipment, tanks, valves, cable trays — the MEP layer</div>
+      </div>
+      <span style="font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:4px;background:rgba(255,107,53,.15);color:var(--orange);margin-left:auto;height:fit-content">Week 5–7</span>
+    </div>
+    <div class="phase-body">
+      <ul class="step-list">
+        <li><span class="step-n">1</span><div class="step-text"><strong>Implement detect_rectangular_boxes() — A3 algorithm</strong><small>Convex hull on DBSCAN clusters. 6 near-orthogonal faces + aspect ratio 0.5–2.0 = DUCT. Run at 10mm voxel pass.</small></div><span class="step-eff">3d</span></li>
+        <li><span class="step-n">2</span><div class="step-text"><strong>Implement detect_equipment_clusters() — A6 algorithm</strong><small>Large clusters (&gt;0.5m³) remaining after duct/pipe removal. Classify by aspect: tall cylinder=TANK, squat box=AHU, small=PUMP.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">3</span><div class="step-text"><strong>Fine voxel pass (5mm) for valves/fittings</strong><small>Re-run DBSCAN at 5mm on residual near detected pipes. Small sphere/tee clusters = VALVE. Link to host pipe segment.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">4</span><div class="step-text"><strong>Pipe diameter extraction</strong><small>Per cylinder cluster: compute 2× minor axis of cross-section point cloud = outer diameter. Map to nearest nominal bore (DN25, DN50, etc.)</small></div><span class="step-eff">1d</span></li>
+        <li><span class="step-n">5</span><div class="step-text"><strong>MEP system type classification</strong><small>Pipes near HVAC equipment = HVAC system. Pipes near plant room and floor-level = domestic water. Rule-based + zone context.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">6</span><div class="step-text"><strong>Revit MEP creation</strong><small>Duct.Create(), Pipe.Create() with system type. Equipment: NewFamilyInstance(). Cable tray: CableTray.Create(). All with typed parameters.</small></div><span class="step-eff">3d</span></li>
+        <li><span class="step-n">7</span><div class="step-text"><strong>DSEAR safety rules for MEP</strong><small>Tanks &gt;5000L = SC2. HVAC in classified areas → SC3. Valves on safety-critical piping → SC2. Update classifier.py.</small></div><span class="step-eff">1d</span></li>
+      </ul>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;">Outcome: <strong style="color:var(--accent)">20 element types</strong> detected. Full MEP layer — pipes, ducts, equipment, valves, cable trays.</p>
+    </div>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-head">
+      <div class="phase-icon">🕳️</div>
+      <div>
+        <div class="phase-title">Phase D4 — Voids, Civil &amp; Fine Detail</div>
+        <div class="phase-sub">Slab openings, penetrations, kerbs, drainage, sprinklers, electrical panels</div>
+      </div>
+      <span style="font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:4px;background:rgba(168,85,247,.15);color:var(--purple);margin-left:auto;height:fit-content">Week 8–10</span>
+    </div>
+    <div class="phase-body">
+      <ul class="step-list">
+        <li><span class="step-n">1</span><div class="step-text"><strong>Implement detect_slab_openings() — A7 algorithm</strong><small>Floor plane 2D raster → morphological analysis → find holes → classify by size/shape (stair=large rect, lift=square, MEP=small round).</small></div><span class="step-eff">3d</span></li>
+        <li><span class="step-n">2</span><div class="step-text"><strong>Civil element separation</strong><small>Short vertical planes (z &lt; 500mm) near ground = KERB or RETAINING_WALL. U-profile below ground = DRAINAGE. Add civil ElementTypes.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">3</span><div class="step-text"><strong>Wall protrusion detection (panels)</strong><small>After wall plane extracted, find clusters within 200mm of wall plane surface = wall-mounted element (panel, bracket, duct support).</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">4</span><div class="step-text"><strong>Ceiling-mounted element detection</strong><small>Clusters hanging within 300mm below ceiling plane = sprinkler, light fitting, smoke detector. Classify by shape/size.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">5</span><div class="step-text"><strong>Revit: Opening.Create, civil families</strong><small>Slab openings via Opening.CreateVerticalOpening(). Kerb/drainage as Generic Model family instances. Civil elements → civil discipline.</small></div><span class="step-eff">2d</span></li>
+        <li><span class="step-n">6</span><div class="step-text"><strong>Full test suite for all 23 types</strong><small>Extend synthetic generator: add beams, ceilings, doors, windows, ducts, equipment, openings. Update conftest.py mocks.</small></div><span class="step-eff">3d</span></li>
+      </ul>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;">Outcome: <strong style="color:var(--accent)">23 element types</strong> detected — complete Scan-to-BIM coverage from one scan file.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ 09 PRIORITY ══ -->
+<div class="container" id="priority">
+  <div class="section-header">
+    <h2><span class="sec-num">09</span> Priority &amp; Effort Table</h2>
+    <p>Ordered by value delivered / effort ratio. Start from top.</p>
+  </div>
+
+  <table class="priority-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Component</th>
+        <th>Algorithm</th>
+        <th>Effort</th>
+        <th>BIM Value</th>
+        <th>Safety Impact</th>
+        <th>Phase</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td class="p-name">Beam</td><td>DBSCAN aspect ratio</td><td style="color:var(--accent)">2d</td><td>⭐⭐⭐⭐⭐</td><td style="color:var(--orange)">SC2 potential</td><td>D1</td></tr>
+      <tr><td>2</td><td class="p-name">Ceiling</td><td>RANSAC z-height split</td><td style="color:var(--accent)">1d</td><td>⭐⭐⭐⭐</td><td style="color:var(--muted)">NS</td><td>D1</td></tr>
+      <tr><td>3</td><td class="p-name">Door</td><td>Wall void 2D raster</td><td style="color:var(--yellow)">3d</td><td>⭐⭐⭐⭐⭐</td><td style="color:var(--orange)">SC2 (fire door)</td><td>D2</td></tr>
+      <tr><td>4</td><td class="p-name">Window</td><td>Wall void 2D raster</td><td style="color:var(--accent)">0.5d</td><td>⭐⭐⭐⭐</td><td style="color:var(--muted)">NS</td><td>D2</td></tr>
+      <tr><td>5</td><td class="p-name">HVAC Duct</td><td>Box hull detection</td><td style="color:var(--yellow)">3d</td><td>⭐⭐⭐⭐⭐</td><td style="color:var(--orange)">SC3 MEP</td><td>D3</td></tr>
+      <tr><td>6</td><td class="p-name">Pipe diameter</td><td>Cross-section minor axis</td><td style="color:var(--accent)">1d</td><td>⭐⭐⭐⭐⭐</td><td style="color:var(--red)">SC2/SC3</td><td>D3</td></tr>
+      <tr><td>7</td><td class="p-name">Column (improved)</td><td>DBSCAN small cluster</td><td style="color:var(--accent)">1d</td><td>⭐⭐⭐⭐</td><td style="color:var(--red)">SC2 (low conf)</td><td>D1</td></tr>
+      <tr><td>8</td><td class="p-name">Stair</td><td>Sloped plane + z-steps</td><td style="color:var(--yellow)">2d</td><td>⭐⭐⭐</td><td style="color:var(--orange)">SC3</td><td>D1</td></tr>
+      <tr><td>9</td><td class="p-name">HVAC Equipment</td><td>Equipment cluster</td><td style="color:var(--yellow)">2d</td><td>⭐⭐⭐⭐</td><td style="color:var(--orange)">SC3</td><td>D3</td></tr>
+      <tr><td>10</td><td class="p-name">Tank / Vessel</td><td>Large cylinder cluster</td><td style="color:var(--yellow)">2d</td><td>⭐⭐⭐⭐⭐</td><td style="color:var(--red)">SC2 (&gt;5000L)</td><td>D3</td></tr>
+      <tr><td>11</td><td class="p-name">Slab Opening</td><td>Floor 2D raster voids</td><td style="color:var(--orange)">3d</td><td>⭐⭐⭐⭐</td><td style="color:var(--orange)">SC3</td><td>D4</td></tr>
+      <tr><td>12</td><td class="p-name">Valve</td><td>5mm voxel fine pass</td><td style="color:var(--yellow)">2d</td><td>⭐⭐⭐</td><td style="color:var(--red)">SC2</td><td>D3</td></tr>
+      <tr><td>13</td><td class="p-name">Ramp</td><td>Sloped plane (smooth)</td><td style="color:var(--accent)">0.5d</td><td>⭐⭐⭐</td><td style="color:var(--muted)">NS</td><td>D1</td></tr>
+      <tr><td>14</td><td class="p-name">Pump</td><td>Equipment cluster subtype</td><td style="color:var(--accent)">1d</td><td>⭐⭐⭐</td><td style="color:var(--orange)">SC3</td><td>D3</td></tr>
+      <tr><td>15</td><td class="p-name">Cable Tray</td><td>Flat box cluster</td><td style="color:var(--yellow)">2d</td><td>⭐⭐⭐</td><td style="color:var(--muted)">NS</td><td>D3</td></tr>
+      <tr><td>16</td><td class="p-name">Electrical Panel</td><td>Wall protrusion detect</td><td style="color:var(--yellow)">2d</td><td>⭐⭐</td><td style="color:var(--orange)">SC3</td><td>D4</td></tr>
+      <tr><td>17</td><td class="p-name">Kerb</td><td>Short vertical plane</td><td style="color:var(--accent)">1d</td><td>⭐⭐</td><td style="color:var(--muted)">NS</td><td>D4</td></tr>
+      <tr><td>18</td><td class="p-name">Railing</td><td>Thin tube topology</td><td style="color:var(--orange)">3d</td><td>⭐⭐</td><td style="color:var(--muted)">NS</td><td>D4</td></tr>
+      <tr><td>19</td><td class="p-name">Sprinkler</td><td>Ceiling-mount + 5mm</td><td style="color:var(--yellow)">2d</td><td>⭐⭐</td><td style="color:var(--red)">SC2</td><td>D4</td></tr>
+      <tr><td>20</td><td class="p-name">Drainage</td><td>Below-grade U-profile</td><td style="color:var(--orange)">3d</td><td>⭐⭐</td><td style="color:var(--muted)">NS</td><td>D4</td></tr>
+      <tr><td>21</td><td class="p-name">Conduit</td><td>Very thin cylinder</td><td style="color:var(--orange)">3d</td><td>⭐</td><td style="color:var(--muted)">NS</td><td>D4</td></tr>
+      <tr><td>22</td><td class="p-name">Fire Sprinkler (head)</td><td>5mm voxel tiny cluster</td><td style="color:var(--orange)">3d</td><td>⭐</td><td style="color:var(--red)">SC2</td><td>D4</td></tr>
+      <tr><td>23</td><td class="p-name">Retaining Wall</td><td>Short vertical plane + z</td><td style="color:var(--accent)">1d</td><td>⭐⭐</td><td style="color:var(--orange)">SC3</td><td>D4</td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px;margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+    <div>
+      <div style="font-size:24px;font-weight:800;color:var(--accent);font-family:'Syne',sans-serif">8d</div>
+      <div style="font-size:11px;color:var(--muted)">Phase D1 effort<br>(structural core)</div>
+    </div>
+    <div>
+      <div style="font-size:24px;font-weight:800;color:var(--blue);font-family:'Syne',sans-serif">7d</div>
+      <div style="font-size:11px;color:var(--muted)">Phase D2 effort<br>(openings)</div>
+    </div>
+    <div>
+      <div style="font-size:24px;font-weight:800;color:var(--orange);font-family:'Syne',sans-serif">14d</div>
+      <div style="font-size:11px;color:var(--muted)">Phase D3 effort<br>(MEP systems)</div>
+    </div>
+    <div>
+      <div style="font-size:24px;font-weight:800;color:var(--purple);font-family:'Syne',sans-serif">12d</div>
+      <div style="font-size:11px;color:var(--muted)">Phase D4 effort<br>(fine detail)</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
+    Total: <strong style="color:var(--white)">~41 working days</strong> for 23-component full Scan-to-BIM detection
+  </div>
+
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="footer">
+  <div class="container">
+    <p style="color:var(--white);font-weight:700;margin-bottom:8px">Scan-to-BIM — Full Component Detection Plan</p>
+    <p>23 component types · 7 detection algorithms · 9 files to change · 4 delivery phases · ~41 days</p>
+    <p style="margin-top:8px">Open3D · RANSAC · DBSCAN · Python 3.11 · Pydantic v2 · FastAPI · C# .NET 8 Revit API</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ScanToBIM — Deployment &amp; Execution Guide</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --accent: #388bfd;
+    --accent-dim: #1f4068;
+    --green: #3fb950;
+    --green-dim: #0d2e18;
+    --amber: #d29922;
+    --amber-dim: #2e1f05;
+    --purple: #a371f7;
+    --purple-dim: #1e1133;
+    --red: #f85149;
+    --muted: #8b949e;
+    --code-bg: #0d1117;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav .nav-left { display: flex; align-items: center; gap: 20px; }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a svg { flex-shrink: 0; }
+  nav .nav-title {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  nav .nav-badge {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 680px;
+  }
+  .header-tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .tag-blue  { background: var(--accent-dim);  color: var(--accent);  border-color: var(--accent); }
+  .tag-green { background: var(--green-dim);   color: var(--green);   border-color: var(--green); }
+  .tag-amber { background: var(--amber-dim);   color: var(--amber);   border-color: var(--amber); }
+  .tag-purple{ background: var(--purple-dim);  color: var(--purple);  border-color: var(--purple); }
+
+  /* ── SECTION HEADERS ── */
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 30px; height: 30px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+  }
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+  .card ul { padding-left: 0; list-style: none; }
+  .card ul li {
+    color: var(--muted);
+    font-size: 13px;
+    padding: 3px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .card ul li::before {
+    content: "·";
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .card-blue  { border-color: #1f6feb; }
+  .card-amber { border-color: #9e6a03; }
+  .card-green { border-color: #238636; }
+  .card-purple{ border-color: #6e40c9; }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .label-blue   { color: var(--accent); }
+  .label-amber  { color: var(--amber); }
+  .label-green  { color: var(--green); }
+  .label-purple { color: var(--purple); }
+
+  /* ── SVG WRAPPERS ── */
+  .svg-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  .svg-wrap svg { display: block; margin: 0 auto; }
+
+  /* ── STEP CARDS ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color 0.15s;
+  }
+  .step-card:hover { border-color: var(--accent); }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-num-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid var(--green); }
+  .step-num-blue   { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent); }
+  .step-num-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple); }
+  .step-num-amber  { background: var(--amber-dim);  color: var(--amber);  border: 1px solid var(--amber); }
+  .step-body { flex: 1; min-width: 0; }
+  .step-body h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .step-body p { color: var(--muted); font-size: 12px; margin: 0 0 8px; }
+  .step-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .step-who {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .step-time {
+    font-size: 10px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── PERSONA CARDS ── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+  }
+  .persona-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 20px;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .persona-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .persona-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    display: block;
+  }
+  .persona-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 3px;
+  }
+  .persona-role {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .persona-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 14px;
+  }
+  .persona-badge-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .persona-badge-label {
+    color: var(--muted);
+    flex-shrink: 0;
+    min-width: 80px;
+    font-weight: 600;
+  }
+  .persona-badge-val { color: var(--text); }
+  .persona-section { margin-top: 12px; }
+  .persona-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .persona-section ul { list-style: none; padding: 0; }
+  .persona-section ul li {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 2px 0;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .persona-section ul li::before {
+    content: "→";
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .persona-section.pain ul li::before { content: "✓"; color: var(--green); }
+
+  /* ── TABS ── */
+  .tabs-wrap { margin-top: 20px; }
+  .tab-btns {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: -1px;
+  }
+  .tab-btn {
+    background: none;
+    border: 1px solid transparent;
+    border-bottom: none;
+    color: var(--muted);
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: var(--radius) var(--radius) 0 0;
+    transition: color 0.15s, background 0.15s;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); background: var(--surface); }
+  .tab-btn.active {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border);
+    border-bottom-color: var(--surface);
+    position: relative;
+    z-index: 1;
+  }
+  .tab-panels {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+    padding: 24px;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin: 12px 0;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-block pre {
+    font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--text);
+    white-space: pre;
+  }
+  .code-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .token-comment { color: #6e7681; }
+  .token-string  { color: #a5d6ff; }
+  .token-keyword { color: #ff7b72; }
+  .token-number  { color: #79c0ff; }
+  .token-cmd     { color: var(--green); }
+  .token-flag    { color: var(--amber); }
+
+  /* ── SECURITY CARDS ── */
+  .security-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .security-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .security-icon-blue   { background: var(--accent-dim); }
+  .security-icon-amber  { background: var(--amber-dim); }
+  .security-icon-green  { background: var(--green-dim); }
+  .security-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .security-card ul { list-style: none; padding: 0; }
+  .security-card ul li {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 2px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+  }
+  .security-card ul li::before {
+    content: "·";
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  /* ── SUBTITLE ── */
+  .subsection-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 24px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subsection-title::before {
+    content: "";
+    display: block;
+    width: 3px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 700px) {
+    .card-grid-2 { grid-template-columns: 1fr; }
+    .card-grid-3 { grid-template-columns: 1fr; }
+    .persona-grid { grid-template-columns: 1fr 1fr; }
+    nav .nav-title { font-size: 12px; }
+  }
+  @media (max-width: 480px) {
+    .persona-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ NAV ═══════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-left">
+    <a href="index.html">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M9.78 12.78a.75.75 0 01-1.06 0L4.47 8.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L6.06 8l3.72 3.72a.75.75 0 010 1.06z"/>
+      </svg>
+      Back to Docs
+    </a>
+    <a href="uml.html">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M2 2.5A2.5 2.5 0 014.5 0h7A2.5 2.5 0 0114 2.5v11.056c0 .757-.367 1.453-.979 1.868l-1.508 1.005a.75.75 0 01-.832-1.248l1.509-1.006A.25.25 0 0012.5 14v-.5h-9V14a.25.25 0 00.143.225l1.508 1.006a.75.75 0 01-.832 1.248l-1.508-1.006A2.25 2.25 0 011.5 13.556V2.5zm11 0A1 1 0 0011.5 1.5h-7A1 1 0 003.5 2.5V13h9V2.5z"/>
+      </svg>
+      UML &amp; Deliverables
+    </a>
+  </div>
+  <div class="nav-title">ScanToBIM — Deployment &amp; Execution Guide</div>
+  <div class="nav-badge">FastAPI :8765</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ MAIN ═══════════════════════════════════════════════ -->
+<main>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Deployment &amp; Execution Guide</h1>
+    <p>End-to-end reference for deploying the ScanToBIM agentic pipeline — from LiDAR field capture through AI classification, safety gating, Revit element creation, and IFC 4.0 export. Built for industrial and nuclear facility projects.</p>
+    <div class="header-tags">
+      <span class="tag tag-blue">FastAPI · Python 3.11</span>
+      <span class="tag tag-green">IFC 4.0 Export</span>
+      <span class="tag tag-amber">SC1 / SC2 / SC3 Safety Gates</span>
+      <span class="tag tag-purple">HMAC Audit Ledger</span>
+      <span class="tag tag-blue">pyRevit Bridge</span>
+      <span class="tag tag-green">GPT-4o Classifier</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ SECTION 1 ═══════════════════════════════════ -->
+  <div class="section" id="architecture">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>Deployment Architecture</h2>
+    </div>
+
+    <!-- SVG INFRA DIAGRAM -->
+    <div class="svg-wrap">
+      <svg width="900" height="480" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#8b949e"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#388bfd"/>
+          </marker>
+          <marker id="arr-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#3fb950"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#d29922"/>
+          </marker>
+        </defs>
+
+        <!-- ── BACKGROUND ── -->
+        <rect width="900" height="480" fill="#0d1117" rx="10"/>
+
+        <!-- ── FIELD COLUMN ── -->
+        <rect x="14" y="20" width="160" height="440" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="94" y="44" text-anchor="middle" fill="#8b949e" font-size="10" font-weight="700" letter-spacing="0.06em">FIELD</text>
+
+        <!-- Site box -->
+        <rect x="26" y="52" width="136" height="55" rx="6" fill="#0d2e18" stroke="#238636" stroke-width="1"/>
+        <!-- building icon -->
+        <text x="44" y="74" fill="#3fb950" font-size="14">🏗</text>
+        <text x="60" y="72" fill="#e6edf3" font-size="11" font-weight="600">Site / Field</text>
+        <text x="44" y="88" fill="#8b949e" font-size="9.5">Industrial / Nuclear</text>
+        <text x="44" y="100" fill="#8b949e" font-size="9.5">Facility</text>
+
+        <!-- Scanner box -->
+        <rect x="26" y="118" width="136" height="65" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <!-- scanner icon circles -->
+        <circle cx="44" cy="143" r="7" fill="none" stroke="#3fb950" stroke-width="1.5"/>
+        <circle cx="44" cy="143" r="4" fill="none" stroke="#3fb950" stroke-width="1"/>
+        <circle cx="44" cy="143" r="1.5" fill="#3fb950"/>
+        <line x1="44" y1="132" x2="44" y2="130" stroke="#3fb950" stroke-width="1"/>
+        <line x1="55" y1="143" x2="57" y2="143" stroke="#3fb950" stroke-width="1"/>
+        <line x1="50" y1="136" x2="52" y2="134" stroke="#3fb950" stroke-width="1"/>
+        <text x="56" y="139" fill="#e6edf3" font-size="10" font-weight="600">Leica RTC360</text>
+        <text x="56" y="152" fill="#8b949e" font-size="9">FARO Scanner</text>
+        <text x="34" y="176" fill="#8b949e" font-size="9">Ruggedised Tablet</text>
+        <text x="34" y="188" fill="#3fb950" font-size="9">.e57 / .las / .pts</text>
+
+        <!-- Tablet icon -->
+        <rect x="34" y="194" width="22" height="30" rx="3" fill="none" stroke="#3fb950" stroke-width="1.2"/>
+        <rect x="37" y="197" width="16" height="22" rx="1" fill="none" stroke="#3fb950" stroke-width="0.8"/>
+        <circle cx="45" cy="222" r="1.5" fill="#3fb950"/>
+
+        <!-- Files box -->
+        <rect x="26" y="238" width="136" height="40" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="44" y="255" fill="#e6edf3" font-size="10">📁</text>
+        <text x="58" y="255" fill="#e6edf3" font-size="10" font-weight="600">Scan Files</text>
+        <text x="44" y="269" fill="#8b949e" font-size="9">.e57 · .las · .pts (2–5 GB)</text>
+
+        <!-- Upload Portal box -->
+        <rect x="26" y="290" width="136" height="38" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="44" y="307" fill="#e6edf3" font-size="10">⬆</text>
+        <text x="56" y="307" fill="#e6edf3" font-size="10" font-weight="600">Upload Portal</text>
+        <text x="44" y="320" fill="#8b949e" font-size="9">SFTP / REST API</text>
+
+        <!-- ── MIDDLE COLUMN (Corporate/Azure) ── -->
+        <rect x="192" y="20" width="494" height="440" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="439" y="44" text-anchor="middle" fill="#8b949e" font-size="10" font-weight="700" letter-spacing="0.06em">CORPORATE NETWORK / AZURE VNET</text>
+
+        <!-- Agent Server box -->
+        <rect x="204" y="56" width="228" height="200" rx="8" fill="#0d1117" stroke="#388bfd" stroke-width="2"/>
+        <text x="318" y="77" text-anchor="middle" fill="#388bfd" font-size="11" font-weight="700">ScanToBIM Agent Server</text>
+
+        <!-- FastAPI badge -->
+        <rect x="220" y="84" width="88" height="20" rx="10" fill="#1f4068" stroke="#388bfd" stroke-width="1"/>
+        <text x="264" y="97" text-anchor="middle" fill="#388bfd" font-size="10" font-weight="700">FastAPI :8765</text>
+
+        <!-- Components inside server -->
+        <rect x="218" y="112" width="100" height="26" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="268" y="129" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">🎯 Orchestrator</text>
+
+        <rect x="326" y="112" width="96" height="26" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="374" y="129" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">🤖 Classifier</text>
+        <text x="374" y="140" text-anchor="middle" fill="#8b949e" font-size="8">GPT-4o</text>
+
+        <rect x="218" y="148" width="100" height="26" rx="5" fill="#161b22" stroke="#f85149" stroke-width="1"/>
+        <text x="268" y="165" text-anchor="middle" fill="#f85149" font-size="10" font-weight="600">🔒 Safety Gate</text>
+        <text x="268" y="176" text-anchor="middle" fill="#8b949e" font-size="8">SC1 / SC2 / SC3</text>
+
+        <rect x="326" y="148" width="96" height="26" rx="5" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+        <text x="374" y="163" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">📋 Audit Ledger</text>
+        <text x="374" y="174" text-anchor="middle" fill="#8b949e" font-size="8">HMAC / SQLite</text>
+
+        <rect x="218" y="184" width="100" height="26" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="268" y="199" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">📐 Segmentation</text>
+        <text x="268" y="210" text-anchor="middle" fill="#8b949e" font-size="8">Open3D DBSCAN</text>
+
+        <rect x="326" y="184" width="96" height="26" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="374" y="199" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">⚡ Clash Detect</text>
+        <text x="374" y="210" text-anchor="middle" fill="#8b949e" font-size="8">AABB pairwise</text>
+
+        <rect x="218" y="220" width="204" height="26" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="320" y="237" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">📡 SSE Progress Stream</text>
+
+        <!-- Revit Workstation box -->
+        <rect x="204" y="275" width="200" height="116" rx="8" fill="#0d1117" stroke="#9e6a03" stroke-width="2"/>
+        <text x="304" y="294" text-anchor="middle" fill="#d29922" font-size="11" font-weight="700">Revit Workstation</text>
+
+        <rect x="218" y="301" width="172" height="24" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="304" y="317" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">Autodesk Revit 202x</text>
+
+        <rect x="218" y="333" width="80" height="24" rx="5" fill="#161b22" stroke="#9e6a03" stroke-width="1"/>
+        <text x="258" y="349" text-anchor="middle" fill="#d29922" font-size="10" font-weight="600">pyRevit Bridge</text>
+
+        <rect x="306" y="333" width="84" height="24" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="348" y="349" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">family_map.json</text>
+
+        <rect x="218" y="365" width="172" height="18" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="304" y="378" text-anchor="middle" fill="#8b949e" font-size="9">Same LAN / VPN connection</text>
+
+        <!-- CDE Platform box -->
+        <rect x="420" y="275" width="252" height="116" rx="8" fill="#0d1117" stroke="#238636" stroke-width="2"/>
+        <text x="546" y="294" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="700">CDE Platform</text>
+
+        <rect x="434" y="301" width="110" height="24" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="489" y="317" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">ACC / BIM 360</text>
+
+        <rect x="552" y="301" width="106" height="24" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="605" y="317" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">BIMcollab / NW</text>
+
+        <rect x="434" y="333" width="110" height="24" rx="5" fill="#238636" stroke="#238636" stroke-width="1"/>
+        <text x="489" y="349" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">IFC Repository</text>
+
+        <rect x="552" y="333" width="106" height="24" rx="5" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="605" y="349" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="600">Audit Archive</text>
+
+        <rect x="434" y="365" width="224" height="18" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="546" y="378" text-anchor="middle" fill="#8b949e" font-size="9">ISO 19650 · IFC 4.0 · Webhooks</text>
+
+        <!-- Vertical arrow server → revit -->
+        <line x1="304" y1="256" x2="304" y2="272" stroke="#d29922" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+        <text x="308" y="267" fill="#d29922" font-size="8" font-weight="600">pyRevit API / JSON</text>
+
+        <!-- Arrow server → CDE -->
+        <line x1="432" y1="160" x2="660" y2="160" stroke="#3fb950" stroke-width="1.5"/>
+        <line x1="660" y1="160" x2="660" y2="272" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arr-green)"/>
+        <text x="522" y="154" text-anchor="middle" fill="#3fb950" font-size="8" font-weight="600">IFC 4.0 Export / Webhook</text>
+
+        <!-- ── RIGHT COLUMN (Users) ── -->
+        <rect x="704" y="20" width="180" height="440" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <text x="794" y="44" text-anchor="middle" fill="#8b949e" font-size="10" font-weight="700" letter-spacing="0.06em">USERS / REMOTE</text>
+
+        <!-- BIM Engineer -->
+        <rect x="716" y="56" width="156" height="70" rx="6" fill="#0d1117" stroke="#388bfd" stroke-width="1"/>
+        <!-- person icon blue -->
+        <circle cx="734" cy="75" r="7" fill="#1f4068" stroke="#388bfd" stroke-width="1.2"/>
+        <path d="M726 96 Q726 86 734 86 Q742 86 742 96" fill="#1f4068" stroke="#388bfd" stroke-width="1.2"/>
+        <text x="748" y="74" fill="#e6edf3" font-size="11" font-weight="700">BIM Engineer</text>
+        <text x="748" y="87" fill="#8b949e" font-size="9">Revit / Web Browser</text>
+        <text x="748" y="99" fill="#8b949e" font-size="9">Postman / Python SDK</text>
+        <text x="748" y="116" fill="#388bfd" font-size="8" font-weight="600">REST API calls</text>
+
+        <!-- Safety Engineer -->
+        <rect x="716" y="138" width="156" height="70" rx="6" fill="#0d1117" stroke="#f85149" stroke-width="1"/>
+        <circle cx="734" cy="158" r="7" fill="#2d0f0e" stroke="#f85149" stroke-width="1.2"/>
+        <path d="M726 178 Q726 168 734 168 Q742 168 742 178" fill="#2d0f0e" stroke="#f85149" stroke-width="1.2"/>
+        <text x="748" y="157" fill="#e6edf3" font-size="11" font-weight="700">Safety Engineer</text>
+        <text x="748" y="170" fill="#8b949e" font-size="9">Web Browser / Teams</text>
+        <text x="748" y="183" fill="#8b949e" font-size="9">Adaptive Cards</text>
+        <text x="748" y="199" fill="#f85149" font-size="8" font-weight="600">SC2 Gate Approvals</text>
+
+        <!-- CDE Manager -->
+        <rect x="716" y="220" width="156" height="70" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+        <circle cx="734" cy="240" r="7" fill="#0d2e18" stroke="#3fb950" stroke-width="1.2"/>
+        <path d="M726 260 Q726 250 734 250 Q742 250 742 260" fill="#0d2e18" stroke="#3fb950" stroke-width="1.2"/>
+        <text x="748" y="239" fill="#e6edf3" font-size="11" font-weight="700">CDE Manager</text>
+        <text x="748" y="252" fill="#8b949e" font-size="9">ACC / CDE Portal</text>
+        <text x="748" y="265" fill="#8b949e" font-size="9">IFC Approvals</text>
+        <text x="748" y="281" fill="#3fb950" font-size="8" font-weight="600">Publish / NCR Reports</text>
+
+        <!-- Field Surveyor -->
+        <rect x="716" y="302" width="156" height="70" rx="6" fill="#0d1117" stroke="#d29922" stroke-width="1"/>
+        <circle cx="734" cy="322" r="7" fill="#2e1f05" stroke="#d29922" stroke-width="1.2"/>
+        <path d="M726 342 Q726 332 734 332 Q742 332 742 342" fill="#2e1f05" stroke="#d29922" stroke-width="1.2"/>
+        <text x="748" y="321" fill="#e6edf3" font-size="11" font-weight="700">Field Surveyor</text>
+        <text x="748" y="334" fill="#8b949e" font-size="9">Mobile App / Tablet</text>
+        <text x="748" y="347" fill="#8b949e" font-size="9">Upload Portal</text>
+        <text x="748" y="363" fill="#d29922" font-size="8" font-weight="600">Scan upload · Quality check</text>
+
+        <!-- ── ARROWS Field → Server ── -->
+        <line x1="162" y1="150" x2="200" y2="150" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="170" y="144" fill="#8b949e" font-size="7.5" font-weight="600">Upload .e57</text>
+        <text x="170" y="154" fill="#8b949e" font-size="7.5">/ SFTP</text>
+
+        <!-- ── ARROWS BIM Engineer → Server ── -->
+        <line x1="714" y1="91" x2="540" y2="118" stroke="#388bfd" stroke-width="1.3" stroke-dasharray="4,2" marker-end="url(#arr-blue)"/>
+
+        <!-- ── ARROWS Safety Engineer → Server ── -->
+        <line x1="714" y1="173" x2="540" y2="166" stroke="#f85149" stroke-width="1.3" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+        <!-- Teams notification arrow -->
+        <line x1="432" y1="155" x2="714" y2="155" stroke="#f85149" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="580" y="149" text-anchor="middle" fill="#f85149" font-size="7.5">Teams Adaptive Cards (SC2)</text>
+
+        <!-- Field Surveyor → Upload Portal arrow -->
+        <line x1="714" y1="337" x2="164" y2="310" stroke="#d29922" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arr-amber)"/>
+
+        <!-- Legend -->
+        <rect x="204" y="405" width="462" height="48" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+        <text x="216" y="423" fill="#8b949e" font-size="9" font-weight="700">LEGEND</text>
+        <line x1="270" y1="420" x2="295" y2="420" stroke="#388bfd" stroke-width="2"/>
+        <text x="298" y="423" fill="#8b949e" font-size="9">REST API / HTTPS</text>
+        <line x1="370" y1="420" x2="395" y2="420" stroke="#3fb950" stroke-width="2"/>
+        <text x="398" y="423" fill="#8b949e" font-size="9">IFC / Webhook</text>
+        <line x1="460" y1="420" x2="485" y2="420" stroke="#d29922" stroke-width="2"/>
+        <text x="488" y="423" fill="#8b949e" font-size="9">pyRevit API</text>
+        <line x1="540" y1="420" x2="565" y2="420" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="568" y="423" fill="#8b949e" font-size="9">User Interaction</text>
+
+        <line x1="270" y1="440" x2="295" y2="440" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="298" y="443" fill="#8b949e" font-size="9">Teams Notification</text>
+        <line x1="390" y1="440" x2="415" y2="440" stroke="#8b949e" stroke-width="1.5"/>
+        <text x="418" y="443" fill="#8b949e" font-size="9">Network / SFTP</text>
+      </svg>
+    </div>
+
+    <!-- DEPLOYMENT MODE CARDS -->
+    <div class="subsection-title">Deployment Modes</div>
+    <div class="card-grid-2">
+      <div class="card card-blue">
+        <div class="card-label label-blue">Mode 1</div>
+        <h3>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="#388bfd"><path d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14.5C4.42 14.5 1.5 11.58 1.5 8S4.42 1.5 8 1.5 14.5 4.42 14.5 8 11.58 14.5 8 14.5z"/></svg>
+          On-Premise (Nuclear / Industrial)
+        </h3>
+        <p>Air-gapped or private-network deployment with no external internet dependency except optional OpenAI API. All data stays on corporate infrastructure.</p>
+        <ul>
+          <li>Ubuntu 22.04 LTS or Windows Server 2022</li>
+          <li>Python 3.11 in isolated virtualenv</li>
+          <li>SQLite (dev) → PostgreSQL 15 (production)</li>
+          <li>Revit workstation on same LAN or VLAN</li>
+          <li>pyRevit bridge connects via localhost or private IP</li>
+          <li>SFTP server for scan file ingestion</li>
+          <li>Optional: on-premise GPT-4 via Azure Private Endpoint</li>
+        </ul>
+        <div style="margin-top:14px; padding-top:10px; border-top:1px solid var(--border)">
+          <div style="font-size:11px; font-weight:700; color:var(--accent); margin-bottom:6px;">WHEN TO USE</div>
+          <div style="font-size:12px; color:var(--muted);">Nuclear facilities, defense projects, classified environments, facilities with data sovereignty requirements.</div>
+        </div>
+      </div>
+
+      <div class="card card-green">
+        <div class="card-label label-green">Mode 2</div>
+        <h3>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="#3fb950"><path d="M1.5 8a6.5 6.5 0 1013 0 6.5 6.5 0 00-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 110-2 1 1 0 010 2z"/></svg>
+          Azure Cloud (Engineering Consultancy)
+        </h3>
+        <p>Azure-hosted agent server with hybrid Revit deployment — engineers connect their on-premise Revit workstations via VPN to the Azure-hosted API.</p>
+        <ul>
+          <li>Azure App Service (B2/P2) or ACI container</li>
+          <li>Azure Key Vault for HMAC secret and API keys</li>
+          <li>Azure SQL or Cosmos DB for audit ledger</li>
+          <li>Revit on engineer workstations, VPN to Azure VNet</li>
+          <li>Azure Blob Storage for scan files and IFC exports</li>
+          <li>Azure AD authentication (planned)</li>
+          <li>CI/CD via GitHub Actions → Azure deploy</li>
+        </ul>
+        <div style="margin-top:14px; padding-top:10px; border-top:1px solid var(--border)">
+          <div style="font-size:11px; font-weight:700; color:var(--green); margin-bottom:6px;">WHEN TO USE</div>
+          <div style="font-size:12px; color:var(--muted);">Multi-site engineering consultancies, distributed BIM teams, projects without strict data residency requirements.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ SECTION 2 ═══════════════════════════════════ -->
+  <div class="section" id="execution">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Execution Flow</h2>
+    </div>
+
+    <!-- SVG TIMELINE -->
+    <div class="svg-wrap">
+      <svg width="880" height="220" viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+        <defs>
+          <marker id="arr2" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+            <polygon points="0 0, 7 2.5, 0 5" fill="#8b949e"/>
+          </marker>
+        </defs>
+
+        <rect width="880" height="220" fill="#0d1117" rx="8"/>
+
+        <!-- Lane labels -->
+        <text x="8" y="54" fill="#3fb950" font-size="9" font-weight="700" transform="rotate(-90,8,54)" text-anchor="middle">FIELD</text>
+        <text x="8" y="126" fill="#388bfd" font-size="9" font-weight="700" transform="rotate(-90,8,126)" text-anchor="middle">AGENT</text>
+        <text x="8" y="198" fill="#a371f7" font-size="9" font-weight="700" transform="rotate(-90,8,198)" text-anchor="middle">OUTPUT</text>
+
+        <!-- Lane backgrounds -->
+        <rect x="20" y="14" width="852" height="54" rx="4" fill="#0d2e18" opacity="0.5"/>
+        <rect x="20" y="76" width="852" height="54" rx="4" fill="#1f4068" opacity="0.35"/>
+        <rect x="20" y="148" width="852" height="54" rx="4" fill="#1e1133" opacity="0.5"/>
+
+        <!-- Lane separators -->
+        <line x1="20" y1="70" x2="872" y2="70" stroke="#30363d" stroke-width="0.5"/>
+        <line x1="20" y1="142" x2="872" y2="142" stroke="#30363d" stroke-width="0.5"/>
+
+        <!-- ── FIELD LANE STEPS ── -->
+        <!-- Capture Scan -->
+        <rect x="30" y="20" width="88" height="36" rx="5" fill="#0d2e18" stroke="#3fb950" stroke-width="1.5"/>
+        <text x="74" y="36" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="700">Capture Scan</text>
+        <text x="74" y="49" text-anchor="middle" fill="#8b949e" font-size="8">Leica RTC360</text>
+        <line x1="118" y1="38" x2="138" y2="38" stroke="#3fb950" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Export .e57 -->
+        <rect x="140" y="20" width="78" height="36" rx="5" fill="#0d2e18" stroke="#3fb950" stroke-width="1.5"/>
+        <text x="179" y="36" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="700">Export .e57</text>
+        <text x="179" y="49" text-anchor="middle" fill="#8b949e" font-size="8">2–5 GB file</text>
+        <line x1="218" y1="38" x2="238" y2="38" stroke="#3fb950" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Upload via API -->
+        <rect x="240" y="20" width="88" height="36" rx="5" fill="#0d2e18" stroke="#3fb950" stroke-width="1.5"/>
+        <text x="284" y="36" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="700">Upload via API</text>
+        <text x="284" y="49" text-anchor="middle" fill="#8b949e" font-size="8">POST /sessions</text>
+
+        <!-- ── SERVER LANE STEPS ── -->
+        <!-- Quality Check -->
+        <rect x="30" y="82" width="80" height="36" rx="5" fill="#0d1117" stroke="#388bfd" stroke-width="1.5"/>
+        <text x="70" y="97" text-anchor="middle" fill="#388bfd" font-size="9.5" font-weight="700">Quality</text>
+        <text x="70" y="108" text-anchor="middle" fill="#388bfd" font-size="9.5" font-weight="700">Check</text>
+        <line x1="110" y1="100" x2="128" y2="100" stroke="#388bfd" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Segmentation -->
+        <rect x="130" y="82" width="88" height="36" rx="5" fill="#0d1117" stroke="#388bfd" stroke-width="1.5"/>
+        <text x="174" y="97" text-anchor="middle" fill="#388bfd" font-size="9.5" font-weight="700">Segmentation</text>
+        <text x="174" y="108" text-anchor="middle" fill="#8b949e" font-size="8">Open3D DBSCAN</text>
+        <line x1="218" y1="100" x2="236" y2="100" stroke="#388bfd" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Classification -->
+        <rect x="238" y="82" width="92" height="36" rx="5" fill="#0d1117" stroke="#388bfd" stroke-width="1.5"/>
+        <text x="284" y="97" text-anchor="middle" fill="#388bfd" font-size="9.5" font-weight="700">Classification</text>
+        <text x="284" y="108" text-anchor="middle" fill="#8b949e" font-size="8">GPT-4o · Rules</text>
+        <line x1="330" y1="100" x2="348" y2="100" stroke="#388bfd" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Safety Gate -->
+        <rect x="350" y="82" width="88" height="36" rx="5" fill="#0d1117" stroke="#f85149" stroke-width="1.5"/>
+        <text x="394" y="97" text-anchor="middle" fill="#f85149" font-size="9.5" font-weight="700">Safety Gate</text>
+        <text x="394" y="108" text-anchor="middle" fill="#8b949e" font-size="8">SC1/SC2/SC3</text>
+        <line x1="438" y1="100" x2="456" y2="100" stroke="#388bfd" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Clash Detection -->
+        <rect x="458" y="82" width="90" height="36" rx="5" fill="#0d1117" stroke="#388bfd" stroke-width="1.5"/>
+        <text x="503" y="97" text-anchor="middle" fill="#388bfd" font-size="9.5" font-weight="700">Clash Detect</text>
+        <text x="503" y="108" text-anchor="middle" fill="#8b949e" font-size="8">AABB pairwise</text>
+        <line x1="548" y1="100" x2="566" y2="100" stroke="#388bfd" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Create Elements -->
+        <rect x="568" y="82" width="96" height="36" rx="5" fill="#0d1117" stroke="#388bfd" stroke-width="1.5"/>
+        <text x="616" y="97" text-anchor="middle" fill="#388bfd" font-size="9.5" font-weight="700">Create Elements</text>
+        <text x="616" y="108" text-anchor="middle" fill="#8b949e" font-size="8">pyRevit dispatch</text>
+
+        <!-- ── OUTPUT LANE STEPS ── -->
+        <!-- Revit Model Updated -->
+        <rect x="30" y="154" width="94" height="36" rx="5" fill="#0d1117" stroke="#a371f7" stroke-width="1.5"/>
+        <text x="77" y="169" text-anchor="middle" fill="#a371f7" font-size="9" font-weight="700">Revit Model</text>
+        <text x="77" y="181" text-anchor="middle" fill="#a371f7" font-size="9" font-weight="700">Updated</text>
+        <line x1="124" y1="172" x2="142" y2="172" stroke="#a371f7" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- IFC Exported -->
+        <rect x="144" y="154" width="88" height="36" rx="5" fill="#0d1117" stroke="#a371f7" stroke-width="1.5"/>
+        <text x="188" y="169" text-anchor="middle" fill="#a371f7" font-size="9" font-weight="700">IFC Exported</text>
+        <text x="188" y="181" text-anchor="middle" fill="#8b949e" font-size="8">IFC 4.0 / Psets</text>
+        <line x1="232" y1="172" x2="250" y2="172" stroke="#a371f7" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- CDE Published -->
+        <rect x="252" y="154" width="90" height="36" rx="5" fill="#0d1117" stroke="#a371f7" stroke-width="1.5"/>
+        <text x="297" y="169" text-anchor="middle" fill="#a371f7" font-size="9" font-weight="700">CDE Published</text>
+        <text x="297" y="181" text-anchor="middle" fill="#8b949e" font-size="8">ACC / BIMcollab</text>
+        <line x1="342" y1="172" x2="360" y2="172" stroke="#a371f7" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+        <!-- Audit Signed -->
+        <rect x="362" y="154" width="88" height="36" rx="5" fill="#0d1117" stroke="#a371f7" stroke-width="1.5"/>
+        <text x="406" y="169" text-anchor="middle" fill="#a371f7" font-size="9" font-weight="700">Audit Signed</text>
+        <text x="406" y="181" text-anchor="middle" fill="#8b949e" font-size="8">HMAC chain</text>
+
+        <!-- Vertical dashed handoff lines -->
+        <!-- Field→Server handoff at ~284 -->
+        <line x1="284" y1="56" x2="284" y2="82" stroke="#30363d" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- Server→Output handoff at ~616 -->
+        <line x1="616" y1="118" x2="616" y2="148" stroke="#30363d" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- CDE handoff -->
+        <line x1="297" y1="118" x2="297" y2="148" stroke="#30363d" stroke-width="1" stroke-dasharray="3,2"/>
+
+        <!-- Timeline label -->
+        <text x="440" y="212" text-anchor="middle" fill="#8b949e" font-size="9">Typical end-to-end: 45–90 min for a 2 GB scan · SC2 approval time variable · IFC export ~2 min</text>
+      </svg>
+    </div>
+
+    <!-- STEP CARDS -->
+    <div class="subsection-title">Step-by-Step Execution</div>
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <div class="step-num step-num-green">1</div>
+        <div class="step-body">
+          <h4>Scan Capture</h4>
+          <p>Surveyor deploys Leica RTC360 on site, captures 360° point cloud at control point locations. Exports .e57 format (~2–5 GB). Transfers via SFTP or USB to upload workstation.</p>
+          <div class="step-meta">
+            <span class="step-who">Field Surveyor</span>
+            <span class="step-time">30–120 min on site</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">2</div>
+        <div class="step-body">
+          <h4>Session Start</h4>
+          <p>BIM Engineer calls POST /sessions with file path or enables use_synthetic:true for testing. Server returns session_id and initial status. SSE stream available at /sessions/{id}/stream.</p>
+          <div class="step-meta">
+            <span class="step-who">BIM Engineer</span>
+            <span class="step-time">&lt;1 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">3</div>
+        <div class="step-body">
+          <h4>Quality Gate</h4>
+          <p>Auto-runs immediately: density check (min 50 pts/m²), noise ratio (&lt;15%), point count (&gt;1000). Fails fast if scan quality is insufficient — surveyor is notified to re-scan.</p>
+          <div class="step-meta">
+            <span class="step-who">System Auto</span>
+            <span class="step-time">~30 sec</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">4</div>
+        <div class="step-body">
+          <h4>Coordinate Alignment</h4>
+          <p>Survey control points fed via POST /sessions/{id}/align. Kabsch/SVD rigid transform computed. RMSE validated against 5mm threshold. Fails if alignment is insufficient.</p>
+          <div class="step-meta">
+            <span class="step-who">BIM Engineer</span>
+            <span class="step-time">2–5 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">5</div>
+        <div class="step-body">
+          <h4>Segmentation</h4>
+          <p>Open3D DBSCAN clusters point cloud into geometric segments. Bounding boxes computed per cluster. Outliers filtered. Results stored in session database for classification.</p>
+          <div class="step-meta">
+            <span class="step-who">System Auto</span>
+            <span class="step-time">5–20 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">6</div>
+        <div class="step-body">
+          <h4>Classification</h4>
+          <p>Rule-based classifier assigns element_type and safety_category. GPT-4o invoked for ambiguous segments (confidence &lt; 0.75). Each classification logged with confidence score.</p>
+          <div class="step-meta">
+            <span class="step-who">System Auto</span>
+            <span class="step-time">5–15 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-amber">7</div>
+        <div class="step-body">
+          <h4>Safety Gate Evaluation</h4>
+          <p>SC1 elements hard-blocked — cannot proceed under any circumstance. SC2 elements raise a gate and pause element creation. Teams adaptive card sent to Safety Engineer with full element context.</p>
+          <div class="step-meta">
+            <span class="step-who">System Auto</span>
+            <span class="step-time">&lt;1 min (auto)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-amber">8</div>
+        <div class="step-body">
+          <h4>SC2 Gate Approval</h4>
+          <p>Safety Engineer reviews element details (type, location, bounding box, confidence, classification rationale) in browser or Teams. POSTs approve or reject with optional comment. HMAC signature stamped on decision.</p>
+          <div class="step-meta">
+            <span class="step-who">Safety Engineer</span>
+            <span class="step-time">&lt;5 min per gate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">9</div>
+        <div class="step-body">
+          <h4>Element Creation</h4>
+          <p>Approved elements dispatched to pyRevit bridge JSON API. family_map.json resolves Revit family and type for each element_type. Element placed at computed location and bounding box in model.</p>
+          <div class="step-meta">
+            <span class="step-who">System Auto</span>
+            <span class="step-time">1–5 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-blue">10</div>
+        <div class="step-body">
+          <h4>Clash Detection</h4>
+          <p>Runs automatically after all elements created. AABB pairwise intersection check across all new elements. Hard clashes (overlap &gt;0) and soft clashes (clearance &lt;threshold) reported separately.</p>
+          <div class="step-meta">
+            <span class="step-who">System Auto</span>
+            <span class="step-time">&lt;2 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-purple">11</div>
+        <div class="step-body">
+          <h4>IFC Export</h4>
+          <p>GET /sessions/{id}/export/ifc generates IFC 4.0 file with full Pset_ScanToBIM property sets. Includes source scan reference, classification confidence, safety category, and HMAC audit hash per element.</p>
+          <div class="step-meta">
+            <span class="step-who">BIM Engineer</span>
+            <span class="step-time">~2 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num step-num-purple">12</div>
+        <div class="step-body">
+          <h4>CDE Upload &amp; Publish</h4>
+          <p>CDE Manager uploads IFC to ACC or BIMcollab. Transitions model state WIP→Shared→Published per ISO 19650 workflow. Audit ledger downloadable as CSV for compliance records.</p>
+          <div class="step-meta">
+            <span class="step-who">CDE Manager</span>
+            <span class="step-time">5–10 min</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ SECTION 3 ═══════════════════════════════════ -->
+  <div class="section" id="personas">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>User Personas — Who Uses It From Where</h2>
+    </div>
+
+    <div class="persona-grid">
+
+      <!-- Persona 1: Field Surveyor -->
+      <div class="persona-card">
+        <svg class="persona-avatar" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="32" fill="#2e1f05"/>
+          <!-- hard hat -->
+          <ellipse cx="32" cy="22" rx="16" ry="9" fill="#d29922"/>
+          <rect x="16" y="22" width="32" height="4" rx="2" fill="#9e6a03"/>
+          <!-- face -->
+          <circle cx="32" cy="36" r="11" fill="#e6cba8"/>
+          <!-- eyes -->
+          <circle cx="27" cy="34" r="2" fill="#3d2b1f"/>
+          <circle cx="37" cy="34" r="2" fill="#3d2b1f"/>
+          <!-- smile -->
+          <path d="M27 40 Q32 44 37 40" fill="none" stroke="#3d2b1f" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- body -->
+          <rect x="22" y="48" width="20" height="14" rx="4" fill="#d29922"/>
+          <!-- vest stripes -->
+          <line x1="32" y1="48" x2="32" y2="62" stroke="#9e6a03" stroke-width="1.5"/>
+          <!-- scanner tool -->
+          <rect x="44" y="44" width="10" height="14" rx="2" fill="#8b949e"/>
+          <circle cx="49" cy="51" r="3" fill="#0d1117"/>
+        </svg>
+        <div class="persona-role">Field Surveyor</div>
+        <div class="persona-badges">
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Works from:</span>
+            <span class="persona-badge-val">Site / Field Office</span>
+          </div>
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Access:</span>
+            <span class="persona-badge-val">Mobile portal · SFTP · Ruggedised tablet</span>
+          </div>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-title">Key Actions</div>
+          <ul>
+            <li>Captures scans with Leica RTC360 on site</li>
+            <li>Exports .e57 / .las point cloud files</li>
+            <li>Uploads via SFTP or upload portal</li>
+            <li>Monitors quality gate results in real-time</li>
+            <li>Re-scans affected areas if quality fails</li>
+          </ul>
+        </div>
+        <div class="persona-section pain">
+          <div class="persona-section-title">Pain Points Solved</div>
+          <ul>
+            <li>Previously waited weeks for manual BIM conversion</li>
+            <li>Now gets quality feedback in minutes on site</li>
+            <li>Catch coverage gaps before leaving site</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Persona 2: BIM Engineer -->
+      <div class="persona-card">
+        <svg class="persona-avatar" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="32" fill="#1f4068"/>
+          <!-- laptop -->
+          <rect x="14" y="42" width="36" height="22" rx="3" fill="#0d1117"/>
+          <rect x="16" y="44" width="32" height="16" rx="1" fill="#161b22"/>
+          <!-- screen content lines -->
+          <line x1="19" y1="47" x2="35" y2="47" stroke="#388bfd" stroke-width="1.5"/>
+          <line x1="19" y1="50" x2="42" y2="50" stroke="#30363d" stroke-width="1"/>
+          <line x1="19" y1="53" x2="38" y2="53" stroke="#30363d" stroke-width="1"/>
+          <line x1="19" y1="56" x2="33" y2="56" stroke="#3fb950" stroke-width="1"/>
+          <!-- face -->
+          <circle cx="32" cy="28" r="11" fill="#e6cba8"/>
+          <!-- glasses -->
+          <rect x="23" y="25" width="7" height="5" rx="2" fill="none" stroke="#388bfd" stroke-width="1.2"/>
+          <rect x="34" y="25" width="7" height="5" rx="2" fill="none" stroke="#388bfd" stroke-width="1.2"/>
+          <line x1="30" y1="27.5" x2="34" y2="27.5" stroke="#388bfd" stroke-width="1"/>
+          <!-- eyes behind glasses -->
+          <circle cx="26.5" cy="27.5" r="1.5" fill="#3d2b1f"/>
+          <circle cx="37.5" cy="27.5" r="1.5" fill="#3d2b1f"/>
+          <!-- smile -->
+          <path d="M27 33 Q32 37 37 33" fill="none" stroke="#3d2b1f" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- shirt -->
+          <rect x="22" y="39" width="20" height="5" rx="2" fill="#388bfd"/>
+        </svg>
+        <div class="persona-role">BIM Engineer</div>
+        <div class="persona-badges">
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Works from:</span>
+            <span class="persona-badge-val">Office or remote (VPN)</span>
+          </div>
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Access:</span>
+            <span class="persona-badge-val">REST API · Postman · Revit · Dashboard</span>
+          </div>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-title">Key Actions</div>
+          <ul>
+            <li>Starts sessions via POST /sessions</li>
+            <li>Reviews AI classifications and overrides</li>
+            <li>Exports IFC 4.0 files for CDE upload</li>
+            <li>Runs clash detection reports</li>
+            <li>Monitors SSE progress stream during processing</li>
+            <li>Manages session lifecycle (pause/resume)</li>
+          </ul>
+        </div>
+        <div class="persona-section pain">
+          <div class="persona-section-title">Pain Points Solved</div>
+          <ul>
+            <li>Previously placed every element manually in Revit</li>
+            <li>Now approves AI-classified outputs only</li>
+            <li>Handles exceptions rather than routine work</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Persona 3: Safety Engineer -->
+      <div class="persona-card">
+        <svg class="persona-avatar" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="32" fill="#2d0f0e"/>
+          <!-- shield icon on shirt -->
+          <rect x="20" y="44" width="24" height="18" rx="3" fill="#f85149" opacity="0.8"/>
+          <path d="M32 47 L38 51 L38 56 Q32 59 26 56 L26 51 Z" fill="#2d0f0e" stroke="#f85149" stroke-width="0.8"/>
+          <text x="32" y="55" text-anchor="middle" fill="#f85149" font-size="8" font-weight="700">SC2</text>
+          <!-- face -->
+          <circle cx="32" cy="28" r="11" fill="#e6cba8"/>
+          <!-- eyes -->
+          <circle cx="27" cy="26" r="2" fill="#3d2b1f"/>
+          <circle cx="37" cy="26" r="2" fill="#3d2b1f"/>
+          <!-- serious expression -->
+          <path d="M27 33 Q32 32 37 33" fill="none" stroke="#3d2b1f" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- hair -->
+          <path d="M21 24 Q22 16 32 15 Q42 16 43 24 Q40 19 32 19 Q24 19 21 24Z" fill="#4a3728"/>
+        </svg>
+        <div class="persona-role">Safety Engineer</div>
+        <div class="persona-badges">
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Works from:</span>
+            <span class="persona-badge-val">Office or remote (mobile)</span>
+          </div>
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Access:</span>
+            <span class="persona-badge-val">Web browser · Microsoft Teams cards</span>
+          </div>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-title">Key Actions</div>
+          <ul>
+            <li>Reviews SC2 gate notifications in Teams</li>
+            <li>Examines element type, location, bounding box</li>
+            <li>Reviews classification confidence and rationale</li>
+            <li>Approves or rejects gates with comments</li>
+            <li>Escalates ambiguous SC2 elements to SC1 block</li>
+          </ul>
+        </div>
+        <div class="persona-section pain">
+          <div class="persona-section-title">Pain Points Solved</div>
+          <ul>
+            <li>Was a bottleneck in manual review process</li>
+            <li>Now gets structured gates with full context</li>
+            <li>Decisions in &lt;5 min with all data presented</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Persona 4: CDE Manager -->
+      <div class="persona-card">
+        <svg class="persona-avatar" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="32" fill="#0d2e18"/>
+          <!-- document stack icon -->
+          <rect x="22" y="43" width="24" height="18" rx="2" fill="#3fb950" opacity="0.3"/>
+          <rect x="20" y="41" width="24" height="18" rx="2" fill="#3fb950" opacity="0.5"/>
+          <rect x="18" y="39" width="24" height="18" rx="2" fill="#0d2e18" stroke="#3fb950" stroke-width="1.2"/>
+          <line x1="22" y1="44" x2="38" y2="44" stroke="#3fb950" stroke-width="1"/>
+          <line x1="22" y1="47" x2="38" y2="47" stroke="#30363d" stroke-width="1"/>
+          <line x1="22" y1="50" x2="34" y2="50" stroke="#30363d" stroke-width="1"/>
+          <text x="37" y="54" fill="#3fb950" font-size="9" font-weight="700">✓</text>
+          <!-- face -->
+          <circle cx="32" cy="26" r="11" fill="#c8a87a"/>
+          <!-- eyes -->
+          <circle cx="27" cy="24" r="2" fill="#3d2b1f"/>
+          <circle cx="37" cy="24" r="2" fill="#3d2b1f"/>
+          <!-- smile -->
+          <path d="M27 31 Q32 35 37 31" fill="none" stroke="#3d2b1f" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- hair bun -->
+          <path d="M21 22 Q22 13 32 13 Q42 13 43 22" fill="#8B6914" stroke="none"/>
+          <circle cx="38" cy="14" r="4" fill="#8B6914"/>
+        </svg>
+        <div class="persona-role">CDE Manager</div>
+        <div class="persona-badges">
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Works from:</span>
+            <span class="persona-badge-val">Office · ACC / BIM 360 portal</span>
+          </div>
+          <div class="persona-badge-row">
+            <span class="persona-badge-label">Access:</span>
+            <span class="persona-badge-val">ACC · BIMcollab · Audit export endpoint</span>
+          </div>
+        </div>
+        <div class="persona-section">
+          <div class="persona-section-title">Key Actions</div>
+          <ul>
+            <li>Reviews published IFC files in ACC / BIMcollab</li>
+            <li>Manages WIP → Shared → Published transitions</li>
+            <li>Downloads HMAC audit ledger for compliance</li>
+            <li>Runs Non-Conformance Reports (NCR)</li>
+            <li>Coordinates clash resolution with BIM team</li>
+            <li>Validates ISO 19650 metadata on IFC exports</li>
+          </ul>
+        </div>
+        <div class="persona-section pain">
+          <div class="persona-section-title">Pain Points Solved</div>
+          <ul>
+            <li>Previously no traceability on element authorship</li>
+            <li>Every element now has full HMAC audit chain</li>
+            <li>Compliance reporting is automated, not manual</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ SECTION 4 ═══════════════════════════════════ -->
+  <div class="section" id="quickstart">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Quick Start — 3 Deployment Modes</h2>
+    </div>
+
+    <div class="tabs-wrap">
+      <div class="tab-btns" role="tablist">
+        <button class="tab-btn active" onclick="switchTab(event,'tab-local')" role="tab" aria-selected="true">Local Dev</button>
+        <button class="tab-btn" onclick="switchTab(event,'tab-docker')" role="tab" aria-selected="false">Docker</button>
+        <button class="tab-btn" onclick="switchTab(event,'tab-azure')" role="tab" aria-selected="false">Azure App Service</button>
+      </div>
+
+      <div class="tab-panels">
+
+        <!-- TAB 1: Local Dev -->
+        <div class="tab-panel active" id="tab-local">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+            Fastest way to run the agent locally for development and testing. Requires Python 3.11+ on Ubuntu or Windows.
+          </div>
+          <div class="code-label">Terminal — Ubuntu / Linux</div>
+          <div class="code-block"><pre><span class="token-comment"># Clone and enter project directory</span>
+<span class="token-cmd">git clone</span> https://github.com/example/scantobim.git ScanToBIM
+<span class="token-cmd">cd</span> ScanToBIM
+
+<span class="token-comment"># Create virtualenv and install all dependencies</span>
+<span class="token-cmd">make install</span>       <span class="token-comment"># creates .venv/ with Python 3.11+</span>
+
+<span class="token-comment"># Copy environment template and configure secrets</span>
+<span class="token-cmd">make env</span>           <span class="token-comment"># copies .env.example → .env</span>
+<span class="token-comment"># Edit .env: set AUDIT_HMAC_SECRET, JWT_SECRET, REVIT_BRIDGE_URL</span>
+
+<span class="token-comment"># Start FastAPI server on port 8765</span>
+<span class="token-cmd">make server</span>        <span class="token-comment"># uvicorn agent.main:app --reload --port 8765</span>
+
+<span class="token-comment"># Verify the server is running</span>
+<span class="token-cmd">curl</span> http://localhost:8765/health
+<span class="token-comment"># → {"status":"ok","version":"0.1.0","db":"connected"}</span>
+
+<span class="token-comment"># Test with synthetic data (no real scan file needed)</span>
+<span class="token-cmd">curl</span> <span class="token-flag">-X POST</span> http://localhost:8765/sessions \
+  <span class="token-flag">-H</span> <span class="token-string">"Content-Type: application/json"</span> \
+  <span class="token-flag">-H</span> <span class="token-string">"X-API-Key: dev-key-local"</span> \
+  <span class="token-flag">-d</span> <span class="token-string">'{"site_name":"Demo Nuclear Plant","use_synthetic":true}'</span>
+<span class="token-comment"># → {"session_id":"sess_abc123","status":"quality_check","...}</span>
+
+<span class="token-comment"># Stream progress via Server-Sent Events</span>
+<span class="token-cmd">curl</span> <span class="token-flag">-N</span> http://localhost:8765/sessions/sess_abc123/stream
+
+<span class="token-comment"># Run unit tests</span>
+<span class="token-cmd">make test</span>          <span class="token-comment"># pytest tests/ -v --tb=short</span>
+
+<span class="token-comment"># Lint and type check</span>
+<span class="token-cmd">make lint</span>          <span class="token-comment"># ruff check .</span></pre></div>
+
+          <div class="code-label" style="margin-top:16px;">PowerShell — Windows 10 / 11</div>
+          <div class="code-block"><pre><span class="token-comment"># Clone and enter project directory</span>
+<span class="token-cmd">git clone</span> https://github.com/example/scantobim.git ScanToBIM
+<span class="token-cmd">cd</span> ScanToBIM
+
+<span class="token-comment"># Create virtualenv and install all dependencies (uses py launcher)</span>
+<span class="token-cmd">.\make.ps1 install</span>
+
+<span class="token-comment"># Copy environment template and configure secrets</span>
+<span class="token-cmd">.\make.ps1 env</span>
+
+<span class="token-comment"># Start FastAPI server on port 8765</span>
+<span class="token-cmd">.\make.ps1 server</span>
+
+<span class="token-comment"># Run tests</span>
+<span class="token-cmd">.\make.ps1 test</span>
+
+<span class="token-comment"># Build Revit sidecar executable (stb-processor.exe)</span>
+<span class="token-cmd">.\make.ps1 build-sidecar</span></pre></div>
+
+          <div style="margin-top:16px; padding:12px 16px; background:var(--accent-dim); border:1px solid var(--accent); border-radius:6px;">
+            <div style="font-size:11px; font-weight:700; color:var(--accent); margin-bottom:4px;">NOTE — SYNTHETIC MODE</div>
+            <div style="font-size:12px; color:var(--muted);">When <code style="background:var(--bg);padding:1px 4px;border-radius:3px;font-size:11px;">use_synthetic:true</code> is set, the server generates procedural point cloud data and simulates all processing steps without requiring a real .e57 file. All safety gates, HMAC signing, and IFC export still execute normally. Ideal for CI/CD pipelines and integration testing.</div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Docker -->
+        <div class="tab-panel" id="tab-docker">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+            Containerised deployment for consistent environments and easy orchestration. Supports both local Docker and Kubernetes (Helm chart in /deploy/helm/).
+          </div>
+          <div class="code-label">Dockerfile</div>
+          <div class="code-block"><pre><span class="token-keyword">FROM</span> python:<span class="token-string">3.11-slim</span>
+
+<span class="token-keyword">LABEL</span> org.opencontainers.image.title=<span class="token-string">"ScanToBIM Agent"</span>
+<span class="token-keyword">LABEL</span> org.opencontainers.image.vendor=<span class="token-string">"ScanToBIM"</span>
+
+<span class="token-keyword">WORKDIR</span> /app
+
+<span class="token-comment"># Install system dependencies (Open3D needs libGL)</span>
+<span class="token-keyword">RUN</span> apt-get update &amp;&amp; apt-get install <span class="token-flag">-y</span> \
+    libgl1 libglib2.0-0 libgomp1 \
+    &amp;&amp; rm <span class="token-flag">-rf</span> /var/lib/apt/lists/*
+
+<span class="token-comment"># Copy and install Python dependencies first (layer cache)</span>
+<span class="token-keyword">COPY</span> pyproject.toml setup.cfg ./
+<span class="token-keyword">RUN</span> pip install <span class="token-flag">--no-cache-dir</span> -e <span class="token-string">".[server]"</span>
+
+<span class="token-comment"># Copy application source</span>
+<span class="token-keyword">COPY</span> . .
+
+<span class="token-comment"># Create data directories</span>
+<span class="token-keyword">RUN</span> mkdir <span class="token-flag">-p</span> /scans /data /exports
+
+<span class="token-keyword">EXPOSE</span> <span class="token-number">8765</span>
+
+<span class="token-comment"># Healthcheck for Docker / k8s liveness probe</span>
+<span class="token-keyword">HEALTHCHECK</span> --interval=30s --timeout=10s --start-period=20s \
+  <span class="token-keyword">CMD</span> curl <span class="token-flag">-f</span> http://localhost:8765/health || exit 1
+
+<span class="token-keyword">CMD</span> [<span class="token-string">"uvicorn"</span>, <span class="token-string">"agent.main:app"</span>, \
+     <span class="token-string">"--host"</span>, <span class="token-string">"0.0.0.0"</span>, \
+     <span class="token-string">"--port"</span>, <span class="token-string">"8765"</span>, \
+     <span class="token-string">"--workers"</span>, <span class="token-string">"2"</span>]</pre></div>
+
+          <div class="code-label" style="margin-top:16px;">Terminal — Build &amp; Run</div>
+          <div class="code-block"><pre><span class="token-comment"># Build image</span>
+<span class="token-cmd">docker build</span> <span class="token-flag">-t</span> scantobim:latest .
+
+<span class="token-comment"># Run with environment variables and scan volume mount</span>
+<span class="token-cmd">docker run</span> <span class="token-flag">-d</span> \
+  <span class="token-flag">--name</span> scantobim-agent \
+  <span class="token-flag">-p</span> 8765:8765 \
+  <span class="token-flag">-e</span> <span class="token-string">OPENAI_API_KEY=sk-...</span> \
+  <span class="token-flag">-e</span> <span class="token-string">APPROVAL_SECRET=your-hmac-secret</span> \
+  <span class="token-flag">-e</span> <span class="token-string">REVIT_BRIDGE_URL=http://192.168.1.10:8766</span> \
+  <span class="token-flag">-e</span> <span class="token-string">TEAMS_WEBHOOK_URL=https://outlook.office.com/...</span> \
+  <span class="token-flag">-v</span> /data/scans:/scans \
+  <span class="token-flag">-v</span> /data/db:/data \
+  <span class="token-flag">-v</span> /data/exports:/exports \
+  scantobim:latest
+
+<span class="token-comment"># Check logs</span>
+<span class="token-cmd">docker logs</span> <span class="token-flag">-f</span> scantobim-agent
+
+<span class="token-comment"># Run with Docker Compose (includes Postgres + pgAdmin)</span>
+<span class="token-cmd">docker-compose</span> <span class="token-flag">-f</span> deploy/docker-compose.yml up <span class="token-flag">-d</span>
+
+<span class="token-comment"># Scale workers (requires Compose or k8s)</span>
+<span class="token-cmd">docker-compose</span> up <span class="token-flag">--scale</span> agent=3
+
+<span class="token-comment"># View running containers</span>
+<span class="token-cmd">docker ps</span> <span class="token-flag">--filter</span> name=scantobim</pre></div>
+        </div>
+
+        <!-- TAB 3: Azure App Service -->
+        <div class="tab-panel" id="tab-azure">
+          <div style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+            Production Azure deployment using App Service with Key Vault integration. Revit workstations connect via Azure VPN Gateway to the private VNet.
+          </div>
+          <div class="code-label">Azure CLI — Infrastructure Setup</div>
+          <div class="code-block"><pre><span class="token-comment"># 1. Create resource group in UK South (adjust region as needed)</span>
+<span class="token-cmd">az group create</span> \
+  <span class="token-flag">--name</span> scantobim-rg \
+  <span class="token-flag">--location</span> uksouth
+
+<span class="token-comment"># 2. Create App Service Plan (Linux, B2 = 2 cores 3.5GB RAM)</span>
+<span class="token-cmd">az appservice plan create</span> \
+  <span class="token-flag">--name</span> scantobim-plan \
+  <span class="token-flag">--resource-group</span> scantobim-rg \
+  <span class="token-flag">--sku</span> B2 \
+  <span class="token-flag">--is-linux</span>
+
+<span class="token-comment"># 3. Create Key Vault for secrets</span>
+<span class="token-cmd">az keyvault create</span> \
+  <span class="token-flag">--name</span> scantobim-kv \
+  <span class="token-flag">--resource-group</span> scantobim-rg \
+  <span class="token-flag">--location</span> uksouth
+
+<span class="token-comment"># 4. Store secrets in Key Vault</span>
+<span class="token-cmd">az keyvault secret set</span> <span class="token-flag">--vault-name</span> scantobim-kv \
+  <span class="token-flag">--name</span> OpenAIAPIKey <span class="token-flag">--value</span> <span class="token-string">"sk-..."</span>
+<span class="token-cmd">az keyvault secret set</span> <span class="token-flag">--vault-name</span> scantobim-kv \
+  <span class="token-flag">--name</span> ApprovalSecret <span class="token-flag">--value</span> <span class="token-string">"$(openssl rand -hex 32)"</span>
+
+<span class="token-comment"># 5. Create Web App with Python 3.11 runtime</span>
+<span class="token-cmd">az webapp create</span> \
+  <span class="token-flag">--name</span> scantobim-api \
+  <span class="token-flag">--resource-group</span> scantobim-rg \
+  <span class="token-flag">--plan</span> scantobim-plan \
+  <span class="token-flag">--runtime</span> <span class="token-string">"PYTHON:3.11"</span>
+
+<span class="token-comment"># 6. Assign managed identity for Key Vault access</span>
+<span class="token-cmd">az webapp identity assign</span> \
+  <span class="token-flag">--name</span> scantobim-api \
+  <span class="token-flag">--resource-group</span> scantobim-rg
+
+<span class="token-comment"># 7. Grant Key Vault access to managed identity</span>
+IDENTITY_ID=$(<span class="token-cmd">az webapp identity show</span> \
+  <span class="token-flag">-n</span> scantobim-api <span class="token-flag">-g</span> scantobim-rg \
+  <span class="token-flag">--query</span> principalId <span class="token-flag">-o</span> tsv)
+<span class="token-cmd">az keyvault set-policy</span> \
+  <span class="token-flag">--name</span> scantobim-kv \
+  <span class="token-flag">--object-id</span> $IDENTITY_ID \
+  <span class="token-flag">--secret-permissions</span> get list
+
+<span class="token-comment"># 8. Configure app settings (KV references)</span>
+<span class="token-cmd">az webapp config appsettings set</span> \
+  <span class="token-flag">--name</span> scantobim-api \
+  <span class="token-flag">--resource-group</span> scantobim-rg \
+  <span class="token-flag">--settings</span> \
+  OPENAI_API_KEY=<span class="token-string">"@Microsoft.KeyVault(SecretUri=https://scantobim-kv.vault.azure.net/secrets/OpenAIAPIKey)"</span> \
+  APPROVAL_SECRET=<span class="token-string">"@Microsoft.KeyVault(SecretUri=https://scantobim-kv.vault.azure.net/secrets/ApprovalSecret)"</span> \
+  SCM_DO_BUILD_DURING_DEPLOYMENT=<span class="token-string">true</span> \
+  WEBSITES_PORT=<span class="token-number">8765</span>
+
+<span class="token-comment"># 9. Package and deploy application</span>
+<span class="token-cmd">zip</span> <span class="token-flag">-r</span> dist/scantobim.zip . \
+  <span class="token-flag">--exclude</span> <span class="token-string">".venv/*"</span> <span class="token-string">".git/*"</span> <span class="token-string">"*.pyc"</span> <span class="token-string">"__pycache__/*"</span>
+
+<span class="token-cmd">az webapp deploy</span> \
+  <span class="token-flag">--name</span> scantobim-api \
+  <span class="token-flag">--resource-group</span> scantobim-rg \
+  <span class="token-flag">--src-path</span> ./dist/scantobim.zip
+
+<span class="token-comment"># 10. Verify deployment</span>
+<span class="token-cmd">curl</span> https://scantobim-api.azurewebsites.net/health
+<span class="token-comment"># → {"status":"ok","version":"0.1.0","db":"connected"}</span></pre></div>
+
+          <div style="margin-top:16px; padding:12px 16px; background:var(--amber-dim); border:1px solid #9e6a03; border-radius:6px;">
+            <div style="font-size:11px; font-weight:700; color:var(--amber); margin-bottom:4px;">REVIT WORKSTATION CONNECTIVITY</div>
+            <div style="font-size:12px; color:var(--muted);">For the pyRevit bridge to reach Azure, configure an Azure VPN Gateway with point-to-site VPN. Engineers install the VPN client on their Revit workstation. Set <code style="background:var(--bg);padding:1px 4px;border-radius:3px;font-size:11px;">REVIT_BRIDGE_URL</code> to the workstation's VPN-assigned private IP (e.g., <code style="background:var(--bg);padding:1px 4px;border-radius:3px;font-size:11px;">http://10.10.0.5:8766</code>). The agent server calls the pyRevit bridge inbound — so the Revit machine must have the bridge listener running.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ SECTION 5 ═══════════════════════════════════ -->
+  <div class="section" id="security">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Security &amp; Compliance Notes</h2>
+    </div>
+
+    <div class="card-grid-3">
+
+      <div class="security-card">
+        <div class="security-icon security-icon-blue">
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="#388bfd">
+            <path d="M8 0a8 8 0 100 16A8 8 0 008 0zM1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zm4.879-2.773l3 1.68A.25.25 0 019.5 7.13v1.74a.25.25 0 01-.121.216l-3 1.68A.25.25 0 016 10.55V5.45a.25.25 0 01.379-.223z"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Authentication</h3>
+          <ul>
+            <li>API key header (<code style="background:var(--bg);padding:1px 4px;border-radius:3px;font-size:11px;">X-API-Key</code>) on all endpoints</li>
+            <li>Azure AD / Entra ID integration planned (v0.2)</li>
+            <li>HMAC-SHA256 signature on all SC2 approvals</li>
+            <li>Approval tokens are single-use, 24h expiry</li>
+            <li>API keys stored in Key Vault, never in source</li>
+            <li>Rate limiting: 100 req/min per key by default</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon security-icon-amber">
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="#d29922">
+            <path d="M8.533.133a1.75 1.75 0 00-1.066 0l-5.25 1.68A1.75 1.75 0 001 3.48V8c0 3.3 2.158 5.648 5.498 7.034a1.75 1.75 0 001.004 0C10.842 13.648 13 11.3 13 8V3.48a1.75 1.75 0 00-1.217-1.667L8.533.133zm-.68 1.408a.25.25 0 01.152 0l5.25 1.68a.25.25 0 01.174.238V8c0 2.826-1.803 4.906-4.902 6.22a.25.25 0 01-.143 0C5.053 12.906 3.25 10.826 3.25 8V3.48a.25.25 0 01.174-.238l5.43-1.68z"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Network Security</h3>
+          <ul>
+            <li>TLS 1.3 enforced in all production deployments</li>
+            <li>VPN required for on-premise Revit bridge calls</li>
+            <li>No external network calls except OpenAI API (optional)</li>
+            <li>Azure Private Endpoints for air-gapped GPT-4 access</li>
+            <li>Revit bridge on private VLAN, not internet-exposed</li>
+            <li>SFTP with ED25519 key authentication for scan uploads</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon security-icon-green">
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="#3fb950">
+            <path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0114.25 13H8.06l-2.573 2.573A1.457 1.457 0 013 14.543V13H1.75A1.75 1.75 0 010 11.25V1.75zm1.75-.25a.25.25 0 00-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 01.75.75v2.19l2.72-2.72a.749.749 0 01.53-.22h6.5a.25.25 0 00.25-.25v-9.5a.25.25 0 00-.25-.25H1.75z"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Audit &amp; Compliance</h3>
+          <ul>
+            <li>Every action logged before execution (pre-commit audit)</li>
+            <li>SQLite WAL mode for crash-safe writes on-premise</li>
+            <li>HMAC-chained audit ledger: each entry signs the previous</li>
+            <li>Daily automated backup to Azure Blob or S3</li>
+            <li>ISO 19650 metadata alignment on all IFC exports</li>
+            <li>Pset_ScanToBIM properties: source, confidence, gate decision</li>
+            <li>Audit ledger exportable as signed CSV for regulators</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Additional compliance note -->
+    <div style="margin-top:20px; padding:16px 20px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); display:flex; gap:14px; align-items:flex-start;">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="#8b949e" style="flex-shrink:0;margin-top:1px;">
+        <path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0114.25 13H8.06l-2.573 2.573A1.457 1.457 0 013 14.543V13H1.75A1.75 1.75 0 010 11.25V1.75zm1.75-.25a.25.25 0 00-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 01.75.75v2.19l2.72-2.72a.749.749 0 01.53-.22h6.5a.25.25 0 00.25-.25v-9.5a.25.25 0 00-.25-.25H1.75z"/>
+      </svg>
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:5px;">Nuclear &amp; Safety-Critical Facility Notes</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.7;">
+          For ONR-regulated nuclear facilities, SC1 (safety-critical) elements are permanently hard-blocked — the pipeline will never create them in Revit regardless of any API call or manual override. SC2 elements require a cryptographically signed approval by a qualified Safety Engineer before dispatch to pyRevit. The HMAC audit chain provides a tamper-evident record of every gate decision, classification, and element creation event. The audit ledger is designed to satisfy ONR LC24 (Operating Instructions) and LC28 (Examination, Inspection, Maintenance and Testing) record-keeping requirements.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:gap;">
+    <div>
+      <div style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:3px;">ScanToBIM Agentic Pipeline</div>
+      <div style="font-size:12px; color:var(--muted);">Industrial &amp; Nuclear Facilities · FastAPI Python 3.11 · Port 8765</div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <a href="index.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Docs Home</a>
+      <span style="color:var(--border);">·</span>
+      <a href="uml.html" style="font-size:12px; color:var(--muted); text-decoration:none;">UML &amp; Deliverables</a>
+      <span style="color:var(--border);">·</span>
+      <a href="algorithm-guide.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Algorithm Guide</a>
+      <span style="color:var(--border);">·</span>
+      <a href="scan-to-bim-guide.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Full Guide</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function switchTab(e, targetId) {
+    // Deactivate all tab buttons in the same group
+    var btn = e.currentTarget;
+    var tabBtns = btn.closest('.tab-btns').querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(b) {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+
+    // Deactivate all panels in the same group
+    var panels = btn.closest('.tabs-wrap').querySelectorAll('.tab-panel');
+    panels.forEach(function(p) {
+      p.classList.remove('active');
+    });
+
+    // Activate target panel
+    var target = document.getElementById(targetId);
+    if (target) target.classList.add('active');
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

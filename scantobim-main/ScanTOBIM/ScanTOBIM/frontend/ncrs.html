@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanToBIM — NCRs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/ui/js/api.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800" x-data="ncrsApp()" x-init="init()">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Mobile overlay -->
+  <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+       class="fixed inset-0 bg-black/50 z-20 lg:hidden"></div>
+
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+         class="fixed inset-y-0 left-0 z-30 w-56 bg-slate-800 text-slate-100 flex flex-col flex-shrink-0 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0">
+    <div class="h-16 flex items-center px-5 border-b border-slate-700">
+      <svg class="w-6 h-6 text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+      </svg>
+      <span class="font-semibold text-sm">ScanToBIM</span>
+    </div>
+    <nav class="flex-1 py-4 px-2 space-y-0.5 text-sm">
+      <a href="/ui/dashboard.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="/ui/sessions.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Sessions
+      </a>
+      <a href="/ui/gates.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Safety Gates
+      </a>
+      <a href="/ui/ncrs.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700 text-white font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        NCRs
+      </a>
+      <a href="/ui/audit.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Audit Chain
+      </a>
+    </nav>
+    <div class="border-t border-slate-700 p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold uppercase"
+          x-text="(user?.username || 'U')[0]"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-medium truncate" x-text="user?.username || '—'"></p>
+          <p class="text-xs text-slate-400 capitalize" x-text="user?.role || ''"></p>
+        </div>
+      </div>
+      <button onclick="auth.logout()" class="w-full text-xs text-slate-400 hover:text-white text-left">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto">
+    <!-- Mobile top bar -->
+    <div class="sticky top-0 z-10 lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+      <button @click="sidebarOpen = true" class="text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <span class="font-semibold text-gray-800 text-sm">ScanToBIM</span>
+    </div>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Non-Conformance Reports</h1>
+          <p class="text-sm text-gray-500 mt-0.5">Track and resolve element non-conformances</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- Session selector -->
+          <select x-model="selectedSession" @change="loadNcrs()"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+            <option value="">All Sessions</option>
+            <template x-for="s in sessions" :key="s.session_id">
+              <option :value="s.session_id" x-text="s.site_name || shortId(s.session_id)"></option>
+            </template>
+          </select>
+          <button @click="showRaiseModal = true" :disabled="!selectedSession"
+            class="bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            + Raise NCR
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-gray-900" x-text="ncrs.length"></p>
+          <p class="text-xs text-gray-500 mt-0.5">Total NCRs</p>
+        </div>
+        <div class="bg-white rounded-xl border border-red-100 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-red-600" x-text="ncrs.filter(n => !n.resolved_at).length"></p>
+          <p class="text-xs text-gray-500 mt-0.5">Open</p>
+        </div>
+        <div class="bg-white rounded-xl border border-green-100 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-green-600" x-text="ncrs.filter(n => n.resolved_at).length"></p>
+          <p class="text-xs text-gray-500 mt-0.5">Resolved</p>
+        </div>
+      </div>
+
+      <!-- NCR Table -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+              <th class="text-left px-5 py-3 text-xs text-gray-500 font-semibold uppercase">NCR ID</th>
+              <th class="text-left px-4 py-3 text-xs text-gray-500 font-semibold uppercase">Severity</th>
+              <th class="text-left px-4 py-3 text-xs text-gray-500 font-semibold uppercase">Description</th>
+              <th class="text-left px-4 py-3 text-xs text-gray-500 font-semibold uppercase">Raised By</th>
+              <th class="text-left px-4 py-3 text-xs text-gray-500 font-semibold uppercase">Raised</th>
+              <th class="text-left px-4 py-3 text-xs text-gray-500 font-semibold uppercase">Status</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <template x-if="loading">
+              <tr><td colspan="7" class="px-5 py-10 text-center text-gray-400">Loading NCRs…</td></tr>
+            </template>
+            <template x-if="!loading && ncrs.length === 0">
+              <tr>
+                <td colspan="7" class="px-5 py-10 text-center">
+                  <svg class="w-8 h-8 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <p class="text-gray-400">No NCRs found — all clear!</p>
+                </td>
+              </tr>
+            </template>
+            <template x-for="n in ncrs" :key="n.ncr_id">
+              <tr class="hover:bg-gray-50" :class="!n.resolved_at ? '' : 'opacity-70'">
+                <td class="px-5 py-3">
+                  <code class="font-mono text-xs text-gray-600" x-text="shortId(n.ncr_id)"></code>
+                </td>
+                <td class="px-4 py-3"><span x-html="ncrSeverityBadge(n.severity)"></span></td>
+                <td class="px-4 py-3 text-gray-700 max-w-xs">
+                  <p class="truncate" x-text="n.description || '—'"></p>
+                  <p class="text-xs text-gray-400 font-mono" x-text="`elem: ${shortId(n.element_id || '')}`"></p>
+                </td>
+                <td class="px-4 py-3 text-gray-500 text-xs" x-text="n.raised_by || '—'"></td>
+                <td class="px-4 py-3 text-gray-500 text-xs" x-text="fmtDate(n.raised_at)"></td>
+                <td class="px-4 py-3">
+                  <span class="text-xs px-2 py-0.5 rounded font-medium"
+                    :class="n.resolved_at ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+                    x-text="n.resolved_at ? 'Resolved' : 'Open'">
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-right">
+                  <button x-show="!n.resolved_at" @click="openResolveModal(n)"
+                    class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Resolve</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── Raise NCR Modal ─────────────────────────────────────────────────────── -->
+<div x-show="showRaiseModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Raise NCR</h2>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Element ID *</label>
+        <input x-model="raiseForm.elementId" type="text" placeholder="Element UUID"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+        <textarea x-model="raiseForm.description" rows="3" placeholder="Describe the non-conformance…"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Severity</label>
+        <select x-model="raiseForm.severity"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+          <option value="CRITICAL">CRITICAL</option>
+          <option value="MAJOR" selected>MAJOR</option>
+          <option value="MINOR">MINOR</option>
+        </select>
+      </div>
+      <div x-show="raiseError" class="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs" x-text="raiseError"></div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button @click="showRaiseModal = false; raiseError = ''"
+        class="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">Cancel</button>
+      <button @click="raiseNcr()" :disabled="raising || !raiseForm.elementId.trim() || !raiseForm.description.trim()"
+        class="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white text-sm font-medium py-2 rounded-lg">
+        <span x-text="raising ? 'Raising…' : 'Raise NCR'"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Resolve NCR Modal ───────────────────────────────────────────────────── -->
+<div x-show="showResolveModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-1">Resolve NCR</h2>
+    <p class="text-sm text-gray-500 mb-4" x-text="resolveForm.ncr?.description || ''"></p>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Resolved By *</label>
+        <input x-model="resolveForm.resolvedBy" type="text" placeholder="engineer@company.com"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Resolution *</label>
+        <textarea x-model="resolveForm.resolution" rows="3" placeholder="Describe how this was resolved…"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+      </div>
+      <div x-show="resolveError" class="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs" x-text="resolveError"></div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button @click="showResolveModal = false; resolveError = ''"
+        class="flex-1 border border-gray-300 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">Cancel</button>
+      <button @click="resolveNcr()" :disabled="resolving || !resolveForm.resolvedBy.trim() || !resolveForm.resolution.trim()"
+        class="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-300 text-white text-sm font-medium py-2 rounded-lg">
+        <span x-text="resolving ? 'Resolving…' : 'Mark Resolved'"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="//unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script>
+  function ncrsApp() {
+    return {
+      sidebarOpen: false,
+      user: auth.user(),
+      loading: true,
+      sessions: [],
+      selectedSession: new URLSearchParams(location.search).get('session') || '',
+      ncrs: [],
+
+      showRaiseModal: false,
+      raising: false,
+      raiseError: '',
+      raiseForm: { elementId: '', description: '', severity: 'MAJOR' },
+
+      showResolveModal: false,
+      resolving: false,
+      resolveError: '',
+      resolveForm: { ncr: null, resolvedBy: '', resolution: '' },
+
+      async init() {
+        if (!auth.require()) return;
+        await this.loadSessions();
+        await this.loadNcrs();
+      },
+
+      async loadSessions() {
+        try {
+          const data = await api.listSessions();
+          this.sessions = data?.sessions || [];
+        } catch { this.sessions = []; }
+      },
+
+      async loadNcrs() {
+        this.loading = true;
+        this.ncrs = [];
+        try {
+          if (this.selectedSession) {
+            const data = await api.listNcrs(this.selectedSession);
+            this.ncrs = data?.ncrs || data || [];
+          } else {
+            // Load NCRs from all sessions
+            const allNcrs = [];
+            for (const s of this.sessions) {
+              try {
+                const data = await api.listNcrs(s.session_id);
+                const list = data?.ncrs || data || [];
+                allNcrs.push(...list);
+              } catch { /* skip */ }
+            }
+            this.ncrs = allNcrs;
+          }
+        } catch (e) {
+          console.warn('NCR load failed', e);
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      async raiseNcr() {
+        if (!this.selectedSession) return;
+        this.raising = true;
+        this.raiseError = '';
+        try {
+          await api.raiseNcr(this.selectedSession, this.raiseForm.elementId, this.raiseForm.description, this.raiseForm.severity);
+          this.showRaiseModal = false;
+          this.raiseForm = { elementId: '', description: '', severity: 'MAJOR' };
+          toast('NCR raised', 'warn');
+          await this.loadNcrs();
+        } catch (e) {
+          this.raiseError = e.detail || 'Failed to raise NCR.';
+          this.raising = false;
+        }
+      },
+
+      openResolveModal(ncr) {
+        this.resolveForm = { ncr, resolvedBy: auth.user()?.username || '', resolution: '' };
+        this.resolveError = '';
+        this.showResolveModal = true;
+      },
+
+      async resolveNcr() {
+        this.resolving = true;
+        this.resolveError = '';
+        try {
+          await api.resolveNcr(this.resolveForm.ncr.ncr_id, this.resolveForm.resolvedBy, this.resolveForm.resolution);
+          this.showResolveModal = false;
+          toast('NCR resolved', 'success');
+          await this.loadNcrs();
+        } catch (e) {
+          this.resolveError = e.detail || 'Failed to resolve NCR.';
+          this.resolving = false;
+        }
+      },
+
+      fmtDate, shortId, ncrSeverityBadge,
+    };
+  }
+</script>
+</body>
+</html>
