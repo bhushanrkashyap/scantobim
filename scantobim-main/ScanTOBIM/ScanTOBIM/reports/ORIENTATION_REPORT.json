@@ -1,0 +1,22 @@
+{
+  "report": "ORIENTATION_REPORT",
+  "phase": "PHASE_2",
+  "component": "agent.tools.orientation_tools",
+  "vertical_axis_methods": [
+    "surface_normal_distribution",
+    "dominant_horizontal_planes",
+    "pca_eigenvalue_analysis"
+  ],
+  "horizontal_frame_method": "wall_normal_circular_histogram",
+  "consensus_threshold_cosine": 0.95,
+  "confidence_levels": [
+    "ORIENTATION_VERIFIED",
+    "ORIENTATION_INFERRED",
+    "ORIENTATION_AMBIGUOUS"
+  ],
+  "canonical_rotation_guarantees": {
+    "orthonormality": "R @ R.T == eye(3)",
+    "proper_rotation": "det(R) == +1.0",
+    "handedness": "Right-handed Cartesian"
+  }
+}

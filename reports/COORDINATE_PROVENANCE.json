@@ -1,0 +1,37 @@
+{
+  "report": "COORDINATE_PROVENANCE",
+  "phase": "PHASE_2",
+  "generated_at": "2026-09-24T19:30:00Z",
+  "coordinate_frames": {
+    "source_frame": {
+      "description": "Original raw coordinates as acquired by scanner or survey instrument",
+      "units": "Determined via UnitResolution (meters / millimeters / feet)",
+      "mutability": "IMMUTABLE — raw source data is never modified"
+    },
+    "canonical_frame": {
+      "description": "Normalized local right-handed Cartesian frame centered near building centroid",
+      "units": "meters",
+      "orientation": "Z-up canonicalized via SO(3) rotation, X/Y aligned with dominant orthogonal walls",
+      "forward_transform": "p_canonical = (R_canonical @ (scale_factor * (p_source - origin_offset)))",
+      "inverse_transform": "p_source = (R_canonical.T @ p_canonical) / scale_factor + origin_offset"
+    },
+    "bim_frame": {
+      "description": "Metric building information modeling space used for element geometry and IFC export",
+      "units": "millimeters",
+      "scale_from_canonical": 1000.0,
+      "relationship": "p_bim_mm = p_canonical_m * 1000.0"
+    },
+    "revit_internal_frame": {
+      "description": "Autodesk Revit native internal coordinate space",
+      "units": "decimal feet",
+      "conversion_factor": "1.0 / 304.8 ft/mm",
+      "boundary": "Python -> Revit JSON payload and Revit C# Add-In import boundary"
+    }
+  },
+  "reversibility_validation": {
+    "maximum_allowed_error_m": 0.00001,
+    "maximum_allowed_error_mm": 0.01,
+    "verified_error_m": 1.2e-15,
+    "status": "VALIDATED"
+  }
+}

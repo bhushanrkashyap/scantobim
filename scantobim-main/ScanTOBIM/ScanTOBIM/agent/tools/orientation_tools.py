@@ -114,7 +114,7 @@ def estimate_vertical_axis(
 
     # ── Consensus ─────────────────────────────────────────────────────────
     # Weight-average the estimates, checking for agreement
-    best_axis, best_weight, best_method = max(estimates, key=lambda x: x[1])
+    best_axis, _best_weight, best_method = max(estimates, key=lambda x: x[1])
 
     # Ensure consistent sign (flip if necessary so Z-component is positive or largest)
     best_axis = _canonical_sign(best_axis)

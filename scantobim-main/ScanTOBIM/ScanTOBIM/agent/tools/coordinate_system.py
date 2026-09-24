@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Union
+from typing import Any
 
 import numpy as np
 
@@ -201,17 +201,24 @@ class AuthoritativeTransform:
         canonical = self.transform_points(pts_m, direction="forward")
         reconstructed = self.transform_points(canonical, direction="inverse")
         errors = np.linalg.norm(reconstructed - pts_m, axis=1)
+        max_err = float(np.max(errors))
+        mean_err = float(np.mean(errors))
+        rmse_val = float(np.sqrt(np.mean(errors**2)))
         return {
-            "max_error": float(np.max(errors)),
-            "mean_error": float(np.mean(errors)),
-            "rmse": float(np.sqrt(np.mean(errors**2))),
+            "max_error": max_err,
+            "max_error_m": max_err,
+            "max_error_mm": max_err * MM_PER_METER,
+            "mean_error": mean_err,
+            "mean_error_m": mean_err,
+            "rmse": rmse_val,
+            "rmse_m": rmse_val,
         }
 
     def validate(self) -> dict[str, Any]:
         """Validate the transform: orthogonality, determinant, finite values, consistency.
 
         Returns:
-            {"valid": bool, "checks": dict, "errors": list[str]}
+            {"valid": bool, "is_valid": bool, "checks": dict, "errors": list[str]}
         """
         R = self._effective_rotation()
         errors: list[str] = []
@@ -263,13 +270,20 @@ class AuthoritativeTransform:
             TRANSFORM_VALIDATED if len(errors) == 0 else TRANSFORM_INVALID
         )
 
-        return {"valid": len(errors) == 0, "checks": checks, "errors": errors}
+        return {
+            "valid": len(errors) == 0,
+            "is_valid": len(errors) == 0,
+            "checks": checks,
+            "errors": errors,
+            "orthogonality_error": orth_err,
+            "determinant_error": abs(det_r - 1.0),
+        }
 
     # ── Legacy methods (backward compatible) ──────────────────────────────
 
     def e57_to_bim_mm(
         self,
-        xyz_m: Union[np.ndarray, list[float], tuple[float, float, float]],
+        xyz_m: np.ndarray | list[float] | tuple[float, float, float],
     ) -> tuple[float, float, float]:
         """Transform coordinates from source metres to BIM millimetres."""
         arr = np.asarray(xyz_m, dtype=float) - self.origin_offset_m
@@ -284,7 +298,7 @@ class AuthoritativeTransform:
 
     def bim_mm_to_e57_m(
         self,
-        xyz_mm: Union[np.ndarray, list[float], tuple[float, float, float]],
+        xyz_mm: np.ndarray | list[float] | tuple[float, float, float],
     ) -> tuple[float, float, float]:
         """Transform coordinates from BIM millimetres back to source metres."""
         arr = np.asarray(xyz_mm, dtype=float) * METERS_PER_MM
@@ -300,7 +314,7 @@ class AuthoritativeTransform:
 
     def bim_mm_to_revit_feet(
         self,
-        xyz_mm: Union[np.ndarray, list[float], tuple[float, float, float]],
+        xyz_mm: np.ndarray | list[float] | tuple[float, float, float],
     ) -> tuple[float, float, float]:
         """Transform coordinates from BIM millimetres to Revit internal feet."""
         arr = np.asarray(xyz_mm, dtype=float)
@@ -312,7 +326,7 @@ class AuthoritativeTransform:
 
     def e57_to_revit_feet(
         self,
-        xyz_m: Union[np.ndarray, list[float], tuple[float, float, float]],
+        xyz_m: np.ndarray | list[float] | tuple[float, float, float],
     ) -> tuple[float, float, float]:
         """Transform coordinates directly from source metres to Revit internal feet."""
         bim_mm = self.e57_to_bim_mm(xyz_m)

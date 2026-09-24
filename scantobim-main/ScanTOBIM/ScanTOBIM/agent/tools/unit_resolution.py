@@ -17,7 +17,7 @@ The source file is NEVER modified.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -26,7 +26,6 @@ import structlog
 from agent.tools.coordinate_system import (
     UNIT_AMBIGUOUS,
     UNIT_INFERRED,
-    UNIT_INVALID,
     UNIT_VERIFIED,
 )
 
@@ -276,8 +275,9 @@ def _inspect_las_metadata(
                                     "LAS VLR WKT declares UNIT=foot"
                                 )
                                 return "feet", 0.3048, evidence
-                    except Exception:
-                        pass  # VLR parse failure — continue
+                    except (AttributeError, ValueError, KeyError):
+                        logger.debug("las_vlr_parse_skipped")
+                        continue
 
             # Check scale factors — very small scales (< 0.01) hint at metres
             scales = [header.x_scale, header.y_scale, header.z_scale]
@@ -287,7 +287,7 @@ def _inspect_las_metadata(
                 # Not definitive enough to VERIFY
     except ImportError:
         evidence.append("laspy not installed; cannot inspect LAS header")
-    except Exception as exc:
+    except (OSError, RuntimeError, ValueError) as exc:
         evidence.append(f"LAS header inspection error: {exc}")
 
     return "unknown", 1.0, evidence
@@ -342,7 +342,7 @@ def _inspect_e57_metadata(
             break  # Only check first scan
     except ImportError:
         evidence.append("pye57 not installed; cannot inspect E57 metadata")
-    except Exception as exc:
+    except (OSError, RuntimeError, ValueError) as exc:
         evidence.append(f"E57 metadata inspection error: {exc}")
 
     return "unknown", 1.0, evidence

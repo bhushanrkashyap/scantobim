@@ -1,0 +1,30 @@
+{
+  "report": "UNIT_RESOLUTION_REPORT",
+  "phase": "PHASE_2",
+  "component": "agent.tools.unit_resolution",
+  "supported_units": ["meters", "millimeters", "feet"],
+  "resolution_statuses": [
+    "UNIT_VERIFIED",
+    "UNIT_INFERRED",
+    "UNIT_AMBIGUOUS",
+    "UNIT_INVALID"
+  ],
+  "priority_order": [
+    "1. Explicit STB_INPUT_UNIT environment override (VERIFIED)",
+    "2. File metadata inspection (LAS header scale/VLR, E57 bounds) (VERIFIED/INFERRED)",
+    "3. Geometric plausibility bounding envelope analysis (INFERRED)",
+    "4. Ambiguous fallback without scaling (AMBIGUOUS, scale=1.0)"
+  ],
+  "envelope_thresholds_m": {
+    "meters_diagonal_range": [1.0, 2000.0],
+    "millimeters_diagonal_range": [1000.0, 2000000.0],
+    "feet_diagonal_range": [3.0, 6500.0]
+  },
+  "provenance_fields": [
+    "detected_unit",
+    "status",
+    "scale_to_meters",
+    "evidence",
+    "confidence_score"
+  ]
+}

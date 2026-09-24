@@ -1,0 +1,38 @@
+{
+  "report": "REGISTRATION_REPORT",
+  "phase": "PHASE_2",
+  "component": "agent.tools.registration_tools",
+  "modes": {
+    "mode_a_standalone": {
+      "trigger": "Single scan provided (len(file_paths) == 1)",
+      "action": "Bypass registration completely",
+      "status": "REGISTRATION_NOT_REQUIRED",
+      "fabrication_policy": "NO fake targets or identity transforms fabricated"
+    },
+    "mode_b_multi_scan": {
+      "trigger": "Multiple scan stations provided (len(file_paths) >= 2)",
+      "pipeline": "FPFH feature extraction -> RANSAC global alignment -> Point-to-plane ICP refinement",
+      "degradation_guard": "ICP retained only if fitness >= 0.9 * RANSAC and RMSE <= 1.5 * RANSAC; otherwise RANSAC retained",
+      "quality_validation_gate": {
+        "min_fitness": 0.3,
+        "max_rmse_m": 0.2,
+        "rotation_orthogonality_error_max": 0.01,
+        "determinant_error_max": 0.01
+      }
+    }
+  },
+  "provenance_fields": [
+    "status",
+    "fitness",
+    "rmse_m",
+    "rmse_mm",
+    "inlier_count",
+    "inlier_ratio",
+    "overlap",
+    "transform_determinant",
+    "rotation_orthogonality_error",
+    "method",
+    "is_valid",
+    "failure_reasons"
+  ]
+}

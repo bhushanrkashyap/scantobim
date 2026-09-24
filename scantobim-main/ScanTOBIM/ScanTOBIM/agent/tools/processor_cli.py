@@ -186,6 +186,14 @@ def _build_metadata(
         payload["storeys"] = storeys
     if survey_transform is not None:
         payload["survey_transform"] = survey_transform
+        payload["authoritative_transform"] = survey_transform
+        payload["transform_4x4"] = survey_transform.get("transform_matrix_4x4")
+        payload["inverse_transform_4x4"] = survey_transform.get("inverse_transform_4x4")
+        payload["source_units"] = survey_transform.get("source_units", "unknown")
+        payload["unit_status"] = survey_transform.get("unit_status", "UNIT_INFERRED")
+        payload["up_axis"] = survey_transform.get("up_axis", [0.0, 0.0, 1.0])
+        payload["orientation_confidence"] = survey_transform.get("orientation_confidence", "ORIENTATION_INFERRED")
+        payload["registration_status"] = survey_transform.get("registration_status", "REGISTRATION_NOT_REQUIRED")
     if fusion_audit is not None:
         payload["fusion_audit"] = fusion_audit
     return payload
@@ -711,14 +719,54 @@ def process(
 
     if downsampled_pts_m is not None and len(downsampled_pts_m) >= 50:
         try:
+            from agent.tools.coordinate_system import (
+                GLOBAL_TRANSFORM,
+                REGISTRATION_NOT_REQUIRED,
+            )
+            from agent.tools.unit_resolution import resolve_units
+            from agent.tools.orientation_tools import (
+                estimate_vertical_axis,
+                estimate_horizontal_frame,
+                build_canonical_frame,
+            )
+
+            # 1. Authoritative Unit Resolution
+            unit_res = resolve_units(points=downsampled_pts_m, file_path=input_path)
+            GLOBAL_TRANSFORM.source_units = unit_res.detected_unit
+            GLOBAL_TRANSFORM.unit_confidence = unit_res.status
+            GLOBAL_TRANSFORM.scale_source_to_canonical = unit_res.scale_to_meters
+
+            # 2. Vertical Axis & Horizontal Frame Estimation
+            up_est, orient_conf, orient_ev = estimate_vertical_axis(downsampled_pts_m)
+            h1, h2, h_conf = estimate_horizontal_frame(downsampled_pts_m, up_axis=up_est)
+            R_canonical = build_canonical_frame(up_est, h1, h2)
+
+            GLOBAL_TRANSFORM.up_axis_estimated = up_est
+            GLOBAL_TRANSFORM.horizontal_axes = np.array([h1, h2], dtype=float)
+            GLOBAL_TRANSFORM.orientation_confidence = orient_conf
+            GLOBAL_TRANSFORM.rotation_matrix = R_canonical
+            GLOBAL_TRANSFORM.registration_status = REGISTRATION_NOT_REQUIRED
+
+            # 3. Survey Transform / Origin Centering
             centered_pts, T_4x4, origin_offset = compute_survey_transform(downsampled_pts_m)
-            from agent.tools.coordinate_system import GLOBAL_TRANSFORM
             GLOBAL_TRANSFORM.origin_offset_m = np.asarray(origin_offset, dtype=float)
-            survey_transform_dict = {
-                "transform_matrix_4x4": T_4x4.tolist(),
-                "origin_offset_m": origin_offset.tolist(),
-                "origin_offset_mm": [round(meters_to_mm(v), 1) for v in origin_offset],
-            }
+
+            # 4. Bounds
+            src_min = np.min(downsampled_pts_m, axis=0)
+            src_max = np.max(downsampled_pts_m, axis=0)
+            GLOBAL_TRANSFORM.source_bounds_m = np.array([src_min, src_max], dtype=float)
+            can_min = np.min(centered_pts, axis=0)
+            can_max = np.max(centered_pts, axis=0)
+            GLOBAL_TRANSFORM.canonical_bounds_m = np.array([can_min, can_max], dtype=float)
+
+            # 5. Validation & Serialization
+            val_res = GLOBAL_TRANSFORM.validate()
+
+            survey_transform_dict = GLOBAL_TRANSFORM.to_dict()
+            survey_transform_dict["origin_offset_mm"] = [round(meters_to_mm(v), 1) for v in origin_offset]
+            survey_transform_dict["validation"] = val_res
+            survey_transform_dict["unit_resolution"] = unit_res.to_dict()
+            survey_transform_dict["orientation_evidence"] = orient_ev
         except Exception as exc:
             warnings.append(f"Survey transform calculation warning: {exc}")
         use_hybrid = enable_hybrid_fusion or os.environ.get("STB_ENABLE_HYBRID_FUSION", "0").strip().lower() in {

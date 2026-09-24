@@ -85,6 +85,23 @@ def _mock_open3d() -> None:
     o3d.pipelines.registration.TransformationEstimationPointToPlane.return_value = MagicMock()
     o3d.pipelines.registration.ICPConvergenceCriteria.return_value = MagicMock()
 
+    # RANSAC registration & FPFH feature computation mocks
+    ransac_result = MagicMock()
+    ransac_result.transformation = np.eye(4, dtype=np.float64)
+    ransac_result.inlier_rmse = 0.005
+    ransac_result.fitness = 0.85
+    ransac_result.correspondence_set = list(range(100))
+    o3d.pipelines.registration.registration_ransac_based_on_feature_matching.return_value = ransac_result
+    o3d.pipelines.registration.CorrespondenceCheckerBasedOnDistance.return_value = MagicMock()
+    o3d.pipelines.registration.CorrespondenceCheckerBasedOnNormal.return_value = MagicMock()
+    o3d.pipelines.registration.CorrespondenceCheckerBasedOnEdgeLength.return_value = MagicMock()
+    o3d.pipelines.registration.RANSACConvergenceCriteria.return_value = MagicMock()
+
+    fpfh_feat = MagicMock()
+    fpfh_feat.dimension.return_value = 33
+    fpfh_feat.num.return_value = 500
+    o3d.pipelines.registration.compute_fpfh_feature.return_value = fpfh_feat
+
     # pcd.transform() — used in register_all_scans; returns the same pcd mock
     pcd.transform.return_value = pcd
     # pcd.__add__ — used for merged = merged + source_world

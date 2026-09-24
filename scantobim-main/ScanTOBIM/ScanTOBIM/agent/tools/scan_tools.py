@@ -832,13 +832,23 @@ def detect_planes(
     remaining = pcd
     points_array = np.asarray(remaining.points)
 
-    up_axis_name = os.environ.get("STB_UP_AXIS", "z").strip().lower()
-    up_axis_map = {
-        "x": np.array([1.0, 0.0, 0.0], dtype=float),
-        "y": np.array([0.0, 1.0, 0.0], dtype=float),
-        "z": np.array([0.0, 0.0, 1.0], dtype=float),
-    }
-    up_axis = up_axis_map.get(up_axis_name, up_axis_map["z"])
+    up_axis = None
+    try:
+        from agent.tools.coordinate_system import GLOBAL_TRANSFORM
+        if hasattr(GLOBAL_TRANSFORM, "up_axis_estimated"):
+            up_axis = np.asarray(GLOBAL_TRANSFORM.up_axis_estimated, dtype=float)
+        elif hasattr(GLOBAL_TRANSFORM, "up_axis"):
+            up_axis = np.asarray(GLOBAL_TRANSFORM.up_axis, dtype=float)
+    except Exception:
+        pass
+    if up_axis is None:
+        up_axis_name = os.environ.get("STB_UP_AXIS", "z").strip().lower()
+        up_axis_map = {
+            "x": np.array([1.0, 0.0, 0.0], dtype=float),
+            "y": np.array([0.0, 1.0, 0.0], dtype=float),
+            "z": np.array([0.0, 0.0, 1.0], dtype=float),
+        }
+        up_axis = up_axis_map.get(up_axis_name, up_axis_map["z"])
 
     # Vertical/horizontal plane thresholds measured against the configured up-axis.
     vertical_normal_up_max = float(os.environ.get("STB_VERTICAL_NORMAL_UP_MAX", "0.30"))

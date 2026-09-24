@@ -61,6 +61,7 @@ _NORMAL_MAX_NN = 30  # max neighbours for normal estimation
 class RegistrationQuality:
     """Quantitative registration quality metrics."""
 
+    status: str = REGISTRATION_SUCCESS
     fitness: float = 0.0  # fraction of points within threshold
     rmse: float = 0.0  # metres
     inlier_count: int = 0
@@ -69,9 +70,13 @@ class RegistrationQuality:
     transform_determinant: float = 1.0
     rotation_orthogonality_error: float = 0.0
     method: str = "none"
+    is_valid: bool = True
+    failure_reasons: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
+            "status": self.status,
+            "is_valid": self.is_valid,
             "fitness": round(self.fitness, 6),
             "rmse_m": round(self.rmse, 6),
             "rmse_mm": round(self.rmse * 1000.0, 3),
@@ -83,6 +88,7 @@ class RegistrationQuality:
                 self.rotation_orthogonality_error, 8
             ),
             "method": self.method,
+            "failure_reasons": self.failure_reasons,
         }
 
 
@@ -203,13 +209,18 @@ def downsample_for_registration(
     import open3d as o3d
 
     down = pcd.voxel_down_sample(voxel_size)
-    down.estimate_normals(
-        o3d.geometry.KDTreeSearchParamHybrid(
-            radius=voxel_size * 2,
-            max_nn=_NORMAL_MAX_NN,
+    if len(down.points) >= 3:
+        down.estimate_normals(
+            o3d.geometry.KDTreeSearchParamHybrid(
+                radius=voxel_size * 2,
+                max_nn=_NORMAL_MAX_NN,
+            )
         )
-    )
-    down.orient_normals_consistent_tangent_plane(k=15)
+        if len(down.points) >= 15:
+            try:
+                down.orient_normals_consistent_tangent_plane(k=min(15, len(down.points) - 1))
+            except (RuntimeError, ValueError) as exc:
+                logger.debug("orient_normals_skipped", error=str(exc))
     logger.debug(
         "downsampled_for_registration",
         before=len(pcd.points),
@@ -383,6 +394,16 @@ def register_pair_full(
         src_down, tgt_down, src_fpfh, tgt_fpfh, voxel_size
     )
 
+    # If RANSAC global registration failed, do not attempt local ICP
+    if not q_ransac.is_valid:
+        logger.warning(
+            "ransac_global_registration_failed",
+            fitness=round(q_ransac.fitness, 4),
+            rmse_m=round(q_ransac.rmse, 6),
+            reasons=q_ransac.failure_reasons,
+        )
+        return T_ransac, q_ransac
+
     # ICP refinement
     T_icp, q_icp = register_pair_icp(
         src_down,
@@ -425,9 +446,8 @@ def register_all_scans(
     Returns:
         (merged_pcd, pair_results, registration_status)
     """
-    mode, reason = resolve_registration_mode(file_paths)
-    if mode == REGISTRATION_NOT_REQUIRED:
-        raise ValueError(reason)
+    if len(file_paths) < 2:
+        raise ValueError("At least 2 scan files are required for registration.")
 
     results: list[_PairResult] = []
 
@@ -448,10 +468,8 @@ def register_all_scans(
 
     accumulated_transforms = [np.eye(4, dtype=np.float64)]
     merged = raw_pcds[0]
-    all_success = True
 
     for i in range(1, len(file_paths)):
-        target_down = _build_merged_down(merged, voxel_size)
         source = raw_pcds[i]
 
         T_pair, quality = register_pair_full(source, merged, voxel_size)
@@ -464,7 +482,6 @@ def register_all_scans(
                 fitness=round(quality.fitness, 4),
                 rmse_m=round(quality.rmse, 6),
             )
-            all_success = False
 
         # Chain the transform
         T_world = accumulated_transforms[-1] @ T_pair
@@ -479,7 +496,7 @@ def register_all_scans(
                 station_index=i,
                 source_file=file_paths[i].name,
                 transform=T_world,
-                rmse=quality.rmse,
+                rmse=quality.rmse * 1000.0,  # mm for downstream reporting convention
                 inlier_ratio=quality.fitness,
                 quality=quality,
                 method=quality.method,
@@ -497,8 +514,7 @@ def register_all_scans(
     # Light downsample at stitch boundaries
     merged = merged.voxel_down_sample(voxel_size / 2)
 
-    status = REGISTRATION_SUCCESS if all_success else REGISTRATION_FAILED
-    return merged, results, status
+    return merged, results
 
 
 def merged_pcd_to_numpy_mm(merged_pcd: o3d.geometry.PointCloud) -> np.ndarray:
@@ -509,7 +525,7 @@ def merged_pcd_to_numpy_mm(merged_pcd: o3d.geometry.PointCloud) -> np.ndarray:
 
 def global_rmse_mm(pair_results: list[_PairResult]) -> float:
     """Compute a single global RMSE across all station pairs (mm)."""
-    non_ref = [r.rmse * 1000.0 for r in pair_results if r.station_index > 0]
+    non_ref = [r.rmse for r in pair_results if r.station_index > 0]
     if not non_ref:
         return 0.0
     return float(np.sqrt(np.mean(np.square(non_ref))))
@@ -525,26 +541,52 @@ def _validate_transform(
     method: str,
 ) -> RegistrationQuality:
     """Validate a 4×4 transform for plausibility."""
-    R = T[:3, :3]
+    try:
+        T_arr = np.asarray(T, dtype=np.float64)
+    except (ValueError, TypeError, AttributeError):
+        T_arr = np.array([])
+
+    fit_val = float(fitness) if isinstance(fitness, (int, float)) else 0.0
+    rmse_val = float(rmse) if isinstance(rmse, (int, float)) else float("inf")
+
+    if T_arr.shape != (4, 4) or not np.all(np.isfinite(T_arr)):
+        logger.warning("transform_invalid_shape_or_non_finite", method=method, shape=getattr(T_arr, "shape", None))
+        return RegistrationQuality(
+            status=REGISTRATION_FAILED,
+            fitness=0.0,
+            rmse=float("inf"),
+            is_valid=False,
+            method=method,
+            failure_reasons=[f"Invalid transform shape {getattr(T_arr, 'shape', None)} or non-finite values"],
+        )
+
+    R = T_arr[:3, :3]
     det_r = float(np.linalg.det(R))
     orth_err = float(np.max(np.abs(R.T @ R - np.eye(3))))
 
-    # Check finite
-    if not np.all(np.isfinite(T)):
-        logger.warning("transform_not_finite", method=method)
-        return RegistrationQuality(
-            fitness=0.0,
-            rmse=float("inf"),
-            method=method,
-        )
+    is_good = (fit_val >= 0.3 and rmse_val <= 0.2 and abs(det_r - 1.0) < 1e-2 and orth_err < 1e-2)
+    status = REGISTRATION_SUCCESS if is_good else REGISTRATION_FAILED
+
+    failure_reasons = []
+    if fit_val < 0.3:
+        failure_reasons.append(f"Low fitness {fit_val:.3f} < 0.3")
+    if rmse_val > 0.2:
+        failure_reasons.append(f"High RMSE {rmse_val:.3f} > 0.2m")
+    if abs(det_r - 1.0) >= 1e-2:
+        failure_reasons.append(f"Improper rotation det(R)={det_r:.4f}")
+    if orth_err >= 1e-2:
+        failure_reasons.append(f"Non-orthogonal rotation error={orth_err:.4f}")
 
     return RegistrationQuality(
-        fitness=fitness,
-        rmse=rmse,
-        inlier_ratio=fitness,
+        status=status,
+        fitness=fit_val,
+        rmse=rmse_val,
+        inlier_ratio=fit_val,
         transform_determinant=det_r,
         rotation_orthogonality_error=orth_err,
         method=method,
+        is_valid=is_good,
+        failure_reasons=failure_reasons,
     )
 
 

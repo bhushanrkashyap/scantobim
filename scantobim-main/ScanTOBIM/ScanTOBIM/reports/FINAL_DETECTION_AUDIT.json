@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "metadata": {
     "processor_version": "1.0.0",
-    "processed_at": "2026-09-24T02:37:47.993211+00:00",
+    "processed_at": "2026-09-24T14:09:29.844071+00:00",
     "input_file": "scan.xyz",
-    "input_path": "/private/var/folders/dj/c24z7rn96gj9493srkk0khy00000gn/T/pytest-of-bhushanrkaashyap/pytest-11/test_stdout_when_no_output_pat0/scan.xyz",
+    "input_path": "/private/var/folders/dj/c24z7rn96gj9493srkk0khy00000gn/T/pytest-of-bhushanrkaashyap/pytest-19/test_stdout_when_no_output_pat0/scan.xyz",
     "file_size_bytes": 0,
     "file_format": "e57",
     "point_count_raw": 50000,
@@ -24,7 +24,7 @@
   },
   "segments": [
     {
-      "segment_id": "a0ff654e-5084-4015-9c3c-0f63371801d1",
+      "segment_id": "54508e89-09f3-40a4-8fe2-ff5391f0961c",
       "zone_id": "zone-001",
       "shape": "plane_vertical",
       "normal": null,
@@ -55,7 +55,7 @@
     }
   ],
   "storeys": [],
-  "execution_timestamp": "2026-09-24T02:37:47.993356+00:00",
+  "execution_timestamp": "2026-09-24T14:09:29.844176+00:00",
   "scan_source": "scan.xyz",
   "raw_point_count": null,
   "level0_points_preserved": null,
