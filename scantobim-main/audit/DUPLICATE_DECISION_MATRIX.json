@@ -1,0 +1,726 @@
+{
+  "audit_timestamp": "2026-09-24T22:48:00Z",
+  "total_decisions": 72,
+  "decisions": [
+    {
+      "group_id": "DUP-001",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/fmea.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/fmea 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-002",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/opening_tools.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/opening_tools 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-003",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/wall_classifier.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/wall_classifier 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-004",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/coordinate_system.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/coordinate_system 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains authoritative Phase 2 SO(3) rotation matrix, scale, origin, validation, and unit/orientation status constants. Candidate B is pre-Phase 1 stale version without transform math.",
+      "unique_logic_preserved": "All Phase 2 SE(3) contract methods preserved. Candidate B had no unique valid logic.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-005",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/column_tools.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/column_tools 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-006",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/loa_tools.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/loa_tools 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-007",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/registration_tools.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/registration_tools 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A implements full Phase 2 FPFH + RANSAC + ICP + UnitResolution + degradation checks + Mode A bypass. Candidate B is older ICP-only code.",
+      "unique_logic_preserved": "Candidate B defined `downsample_for_icp`; backward-compatibility alias `downsample_for_icp = downsample_for_registration` merged into Candidate A.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-008",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/deviation_heatmap.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/deviation_heatmap 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-009",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/build_semantic_checkpoint.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/build_semantic_checkpoint 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-010",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/scan_tools.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/scan_tools 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A integrates Phase 2 `resolve_units` from unit_resolution and respects `GLOBAL_TRANSFORM.up_axis_estimated`. Candidate B used hardcoded env overrides and assumptions.",
+      "unique_logic_preserved": "Multi-format LAS/E57 unit resolution and orientation adaptation preserved.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-011",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/semantic_models.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/semantic_models 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-012",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/detection_config.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/detection_config 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-013",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/handover_bundle.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/handover_bundle 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-014",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/registration_report.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/registration_report 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-015",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/coordinator_tools.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/coordinator_tools 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-016",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/open3d_viewer.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/open3d_viewer 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-017",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/nqa1_package.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/nqa1_package 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-018",
+      "category": "PRODUCTION_TOOL",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/validate_run.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/validate_run 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A and B have 100% identical AST and byte content. Candidate A is the canonical production module imported across the codebase. Candidate B is an unreferenced Finder copy with invalid Python identifier spacing.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-019",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_nqa1_package.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_nqa1_package 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-020",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_overlap.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_overlap 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-021",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_ncr.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_ncr 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-022",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_utf8_pipeline.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_utf8_pipeline 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-023",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_iso15926.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_iso15926 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-024",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_loa.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_loa 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-025",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_reconstruction_pipeline.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_reconstruction_pipeline 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-026",
+      "category": "TEST_FIXTURE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_stage2_core.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tests/test_stage2_core 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A conforms to standard pytest test discovery naming. Candidate B is a duplicate copy that causes doubled test execution and pytest cache pollution. Byte content is 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-027",
+      "category": "SCRIPT_OR_ROOT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/demo.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/demo 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is standard CLI runner invoked by Makefile/scripts. Candidate B is unreferenced duplicate with spaces in filename. Contents are 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-028",
+      "category": "SCRIPT_OR_ROOT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/check_wall_detection.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/check_wall_detection 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is standard CLI runner invoked by Makefile/scripts. Candidate B is unreferenced duplicate with spaces in filename. Contents are 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-029",
+      "category": "SCRIPT_OR_ROOT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/test_wall_detection.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/test_wall_detection 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is standard CLI runner invoked by Makefile/scripts. Candidate B is unreferenced duplicate with spaces in filename. Contents are 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-030",
+      "category": "SCRIPT_OR_ROOT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/demo_runner.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/demo_runner 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is standard CLI runner invoked by Makefile/scripts. Candidate B is unreferenced duplicate with spaces in filename. Contents are 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-031",
+      "category": "SCRIPT_OR_ROOT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/worker.py",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/worker 2.py",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is standard CLI runner invoked by Makefile/scripts. Candidate B is unreferenced duplicate with spaces in filename. Contents are 100% identical.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-032",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_VERIFICATION_REPORT.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_VERIFICATION_REPORT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-033",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_DETECTION_AUDIT.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_DETECTION_AUDIT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-034",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_RESEARCH_PROVENANCE.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_RESEARCH_PROVENANCE 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-035",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_REAL_E57_VALIDATION.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_REAL_E57_VALIDATION 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-036",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/AI_GEOMETRIC_FUSION_REPORT.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/AI_GEOMETRIC_FUSION_REPORT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-037",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_DETECTION_AUDIT.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_DETECTION_AUDIT 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-038",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/POINT_CLOUD_RESOLUTION_AUDIT.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/POINT_CLOUD_RESOLUTION_AUDIT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-039",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_AI_GEOMETRIC_VALIDATION.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_AI_GEOMETRIC_VALIDATION 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-040",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_AI_GEOMETRIC_VALIDATION.md",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/FINAL_AI_GEOMETRIC_VALIDATION 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-041",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/POINT_CLOUD_RESOLUTION_AUDIT.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/reports/POINT_CLOUD_RESOLUTION_AUDIT 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-042",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/numeric_constants.csv",
+      "candidate_b": "scantobim-main/audit/numeric_constants 2.csv",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-043",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/PHASE_1_GENERALITY_REAUDIT.json",
+      "candidate_b": "scantobim-main/audit/PHASE_1_GENERALITY_REAUDIT 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-044",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/PHASE_1_REMEDIATION_REPORT.json",
+      "candidate_b": "scantobim-main/audit/PHASE_1_REMEDIATION_REPORT 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-045",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/REPOSITORY_INVENTORY.md",
+      "candidate_b": "scantobim-main/audit/REPOSITORY_INVENTORY 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-046",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/PHASE_1_GENERALITY_REAUDIT.md",
+      "candidate_b": "scantobim-main/audit/PHASE_1_GENERALITY_REAUDIT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-047",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/PHASE_1_REMEDIATION_REPORT.md",
+      "candidate_b": "scantobim-main/audit/PHASE_1_REMEDIATION_REPORT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-048",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/CONFIGURATION_CANDIDATES.md",
+      "candidate_b": "scantobim-main/audit/CONFIGURATION_CANDIDATES 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-049",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/PHASE_0_GENERALITY_AUDIT.md",
+      "candidate_b": "scantobim-main/audit/PHASE_0_GENERALITY_AUDIT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-050",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/audit/PHASE_0_GENERALITY_AUDIT.json",
+      "candidate_b": "scantobim-main/audit/PHASE_0_GENERALITY_AUDIT 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-051",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/reports/FINAL_VERIFICATION_REPORT.md",
+      "candidate_b": "scantobim-main/reports/FINAL_VERIFICATION_REPORT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-052",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/reports/DL_RESEARCH_INTEGRATION.md",
+      "candidate_b": "scantobim-main/reports/DL_RESEARCH_INTEGRATION 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-053",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/reports/FINAL_RESEARCH_PROVENANCE.md",
+      "candidate_b": "scantobim-main/reports/FINAL_RESEARCH_PROVENANCE 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-054",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/reports/AI_GEOMETRIC_FUSION_REPORT.md",
+      "candidate_b": "scantobim-main/reports/AI_GEOMETRIC_FUSION_REPORT 2.md",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-055",
+      "category": "AUDIT_OR_REPORT",
+      "candidate_a": "scantobim-main/reports/FINAL_AI_GEOMETRIC_VALIDATION.json",
+      "candidate_b": "scantobim-main/reports/FINAL_AI_GEOMETRIC_VALIDATION 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A contains current audit baseline / verification results. Candidate B is an older or identical snapshot copy.",
+      "unique_logic_preserved": "All baseline figures preserved in canonical reports.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-056",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/ScanToBIMAgent.csproj",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/ScanToBIMAgent 2.csproj",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-057",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/ScanToBIMAgent.addin",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/ScanToBIMAgent 2.addin",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-058",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/ScanToBIMAgent.csproj.nuget.g.props",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/ScanToBIMAgent.csproj.nuget.g 2.props",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-059",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/project.nuget.cache",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/project.nuget 2.cache",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-060",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent.addin",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent 2.addin",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-061",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent.dll",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent 2.dll",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-062",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent.pdb",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent 2.pdb",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-063",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/SafetyGate/SafetyGateService.cs",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/SafetyGate/SafetyGateService 2.cs",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-064",
+      "category": "MODEL_WEIGHTS",
+      "candidate_a": "scantobim-main/yolov8n.pt",
+      "candidate_b": "scantobim-main/yolov8n 2.pt",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A (`yolov8n.pt`) is loaded by `hybrid_fusion.py` and YOLO detector. Candidate B (`yolov8n 2.pt`) is unreferenced duplicate. SHA256 hashes match.",
+      "unique_logic_preserved": "Exact same YOLOv8 model weights.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-065",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/family_map.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/family_map 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-066",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/project.assets.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/project.assets 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-067",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/ScanToBIMAgent.csproj.nuget.dgspec.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/obj/ScanToBIMAgent.csproj.nuget.dgspec 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-068",
+      "category": "REVIT_ADDIN_OR_BUILD",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent.deps.json",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/ScanToBIMAgent.deps 2.json",
+      "selected": "Candidate A (Canonical)",
+      "evidence": "Candidate A is actively referenced in Visual Studio solution `SCANTOBIM_V10.2.2.sln` and built by msbuild/dotnet. Candidate B is an unreferenced Finder copy.",
+      "unique_logic_preserved": "None needed; byte-for-byte identical.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-069",
+      "category": "CROSS_DIRECTORY_SCRIPT",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/run_stage2_demo.py",
+      "candidate_b": "scantobim-main/run_stage2_demo.py",
+      "selected": "Candidate A (`ScanTOBIM/ScanTOBIM/run_stage2_demo.py`) + Retain Forwarder",
+      "evidence": "Inner script is the full 29 KB implementation. Outer script is a 349-byte forwarder wrapper allowing execution from repository root.",
+      "unique_logic_preserved": "Outer forwarder delegates to inner implementation.",
+      "action_required": "RETAIN_FORWARDER"
+    },
+    {
+      "group_id": "DUP-070",
+      "category": "CROSS_DIRECTORY_CSPROJ",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/ScanToBIMAgent.csproj",
+      "candidate_b": "scantobim-main/ScanToBIMAgent.csproj",
+      "selected": "Candidate A (`revit-addin/ScanToBIMAgent.csproj`)",
+      "evidence": "Candidate A is the canonical project file linked in `.sln`. Outer file in root is an unreferenced copy.",
+      "unique_logic_preserved": "Identical project file.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-071",
+      "category": "EMPTY_DIRECTORY_DUPLICATE",
+      "candidate_a": "scantobim-main/docs/tasks",
+      "candidate_b": "scantobim-main/docs/tasks 2",
+      "selected": "Candidate A (Canonical Directory)",
+      "evidence": "Candidate B is an empty 0-byte directory artifact generated by macOS Finder.",
+      "unique_logic_preserved": "No content.",
+      "action_required": "DELETE_CANDIDATE_B"
+    },
+    {
+      "group_id": "DUP-072",
+      "category": "EMPTY_DIRECTORY_DUPLICATE",
+      "candidate_a": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/Resources",
+      "candidate_b": "scantobim-main/ScanTOBIM/ScanTOBIM/revit-addin/bin/TempBuild/Resources 2",
+      "selected": "Candidate A (Canonical Directory)",
+      "evidence": "Candidate B is an empty 0-byte directory artifact generated by macOS Finder.",
+      "unique_logic_preserved": "No content.",
+      "action_required": "DELETE_CANDIDATE_B"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "audit_title": "SCANTO BIM \u2014 DUPLICATE CLEANUP FINAL AUDIT REPORT",
+  "timestamp": "2026-09-24T22:52:00Z",
+  "status": "PASSED_ALL_GATES",
+  "summary": {
+    "total_groups_audited": 72,
+    "obsolete_entities_removed": 79,
+    "production_modules_consolidated": 18,
+    "test_suites_consolidated": 8,
+    "script_and_cli_consolidated": 5,
+    "audit_and_reports_consolidated": 24,
+    "csharp_and_addin_consolidated": 8,
+    "models_consolidated": 1,
+    "empty_dirs_removed": 2,
+    "pycache_artifacts_cleaned": 8,
+    "cross_dir_duplicates_resolved": 2,
+    "unique_logic_merged": [
+      {
+        "source": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/registration_tools 2.py",
+        "target": "scantobim-main/ScanTOBIM/ScanTOBIM/agent/tools/registration_tools.py",
+        "symbol": "downsample_for_icp",
+        "action": "Defined backward-compatible alias downsample_for_icp = downsample_for_registration"
+      }
+    ],
+    "broken_imports_detected": 0,
+    "shadowed_modules_detected": 0
+  },
+  "acceptance_gates": {
+    "entire_repository_searched": true,
+    "all_duplicate_groups_identified": true,
+    "every_duplicate_has_documented_decision": true,
+    "every_production_module_has_one_authoritative_implementation": true,
+    "useful_unique_logic_preserved": true,
+    "obsolete_implementations_removed": true,
+    "no_production_import_points_to_deleted_variants": true,
+    "no_duplicate_modules_shadow_canonical_imports": true,
+    "phase_1_tests_still_pass": true,
+    "full_repository_tests_still_pass": true,
+    "no_new_hardcoded_geometry_introduced": true,
+    "no_phase_1_behavior_regressed": true
+  },
+  "test_verification": {
+    "phase2_spatial_foundation": "15/15 PASSED",
+    "phase1_generality": "10/10 PASSED",
+    "stage2_core": "11/11 PASSED",
+    "stage2_pipeline": "5/5 PASSED",
+    "processor_cli": "24/24 PASSED",
+    "classifier_internal": "7/7 PASSED",
+    "hybrid_fusion": "6/6 PASSED",
+    "revit_wall_contract": "4/4 PASSED",
+    "registration": "14/14 PASSED",
+    "canonical_test_files_total": 36,
+    "canonical_test_files_passed": 36,
+    "canonical_test_files_failed": 0
+  }
+}

@@ -229,6 +229,10 @@ def downsample_for_registration(
     return down
 
 
+# Backward compatibility alias for earlier pre-Phase 2 caller interfaces
+downsample_for_icp = downsample_for_registration
+
+
 def extract_fpfh_features(
     pcd: o3d.geometry.PointCloud,
     voxel_size: float = _DEFAULT_VOXEL_SIZE,
